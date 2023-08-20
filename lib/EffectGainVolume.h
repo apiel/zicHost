@@ -2,9 +2,8 @@
 #define _EFFECT_GAIN_VOLUME_H_
 
 #include "audioPlugin.h"
-// #include <stdint.h>
-// #include <string.h>
-// #include <unistd.h>
+
+#include <cstdio> // printf to be removed
 
 class EffectGainVolume : public AudioPlugin {
 public:
@@ -12,9 +11,8 @@ public:
     float volume = 1.0f;
     float volumeWithGain = gain * volume;
 
-    EffectGainVolume() {
-        // set(drive);
-    };
+    EffectGainVolume(AudioPluginProps& props)
+        : AudioPlugin(props) {};
 
     float sample(float in)
     {
@@ -32,14 +30,13 @@ public:
         volume = vol;
         volumeWithGain = gain * vol;
 
-        // TODO would need to somehow pass this on build?
-        // debug("setMaster: volume %f\n", vol);
+        debug("setMaster: volume %f\n", vol);
         return *this;
     }
 
     EffectGainVolume& setGain(float _gain)
     {
-        // debug("setGain: gain %f\n", _gain);
+        debug("setGain: gain %f\n", _gain);
         return set(volume, _gain);
     }
 

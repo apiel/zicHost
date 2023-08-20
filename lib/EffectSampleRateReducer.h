@@ -36,7 +36,8 @@ protected:
 public:
     uint8_t sampleStep = 0; // the number of samples to double up.
 
-    EffectSampleRateReducer()
+    EffectSampleRateReducer(AudioPluginProps& props)
+        : AudioPlugin(props)
     {
         set(0);
         // set(0.5);
@@ -47,10 +48,10 @@ public:
         sampleStep = value * 128.0;
         if (sampleStep == 0) {
             samplePtr = &EffectSampleRateReducer::skipSample;
-            // debug("SampleRateReducer: disabled\n");
+            debug("SampleRateReducer: disabled\n");
         } else {
             samplePtr = &EffectSampleRateReducer::processSample;
-            // debug("SampleRateReducer: sampleStep=%d\n", sampleStep);
+            debug("SampleRateReducer: sampleStep=%d\n", sampleStep);
         }
         return *this;
     }

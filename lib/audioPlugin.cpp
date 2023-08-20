@@ -10,9 +10,9 @@
 
 extern "C"
 {
-	PLUGIN_NAME *allocator()
+	PLUGIN_NAME *allocator(AudioPluginProps& props)
 	{
-		return new PLUGIN_NAME();
+		return new PLUGIN_NAME(props);
 	}
 
 	void deleter(PLUGIN_NAME *ptr)

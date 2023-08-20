@@ -1,16 +1,21 @@
 #ifndef _EFFECT_FILTER_H_
 #define _EFFECT_FILTER_H_
 
-#include "audioPlugin.h"
 #include "../helpers/range.h"
+#include "audioPlugin.h"
 
 #include <math.h>
 
 // FIXME split filters in multiples lib
 
-class EffectFilterInterface: public AudioPlugin {
+class EffectFilterInterface : public AudioPlugin {
 public:
     float resonance = 0.0;
+
+    EffectFilterInterface(AudioPluginProps& props)
+        : AudioPlugin(props)
+    {
+    }
 
     virtual float sample(float inputValue) = 0;
     virtual EffectFilterInterface& setCutoff(float value) = 0;
@@ -121,6 +126,11 @@ public:
         return *this;
     };
 
+    EffectFilter(AudioPluginProps& props)
+        : EffectFilterInterface(props)
+    {
+    }
+
     const char* name()
     {
         return "EffectFilter";
@@ -137,7 +147,8 @@ protected:
 public:
     float resonance = 0.0;
 
-    EffectFilterMultiMode()
+    EffectFilterMultiMode(AudioPluginProps& props)
+        : EffectFilterInterface(props)
     {
         setCutoff(0.5);
     };
@@ -170,7 +181,7 @@ public:
         lpf.setResonance(resonance);
         hpf.setResonance(resonance);
 
-        // debug("Filter: resonance=%f\n", resonance);
+        debug("Filter: resonance=%f\n", resonance);
 
         return *this;
     };
@@ -193,7 +204,8 @@ protected:
 public:
     float resonance = 0.0;
 
-    EffectFilterMultiMode2()
+    EffectFilterMultiMode2(AudioPluginProps& props)
+        : EffectFilterInterface(props)
     {
         setCutoff(0.5);
     };
@@ -226,7 +238,7 @@ public:
             lpf.setCutoff(cutoff);
         }
 
-        // debug("Filter: cutoff=%f\n", value);
+        debug("Filter: cutoff=%f\n", value);
 
         return *this;
     }
@@ -237,7 +249,7 @@ public:
         lpf.setResonance(resonance);
         hpf.setResonance(resonance);
 
-        // debug("Filter: resonance=%f\n", resonance);
+        debug("Filter: resonance=%f\n", resonance);
 
         return *this;
     };
@@ -265,13 +277,14 @@ protected:
         f = p + p - 1.0f;
         q = _resonance * (1.0f + 0.5f * q * (1.0f - q + 5.6f * q * q));
 
-        // debug("mix %f cutoff %f q=%f\n", mix, _cutoff, q);
+        debug("mix %f cutoff %f q=%f\n", mix, _cutoff, q);
     }
 
 public:
     float resonance = 0.0;
 
-    EffectFilterMultiModeMoog()
+    EffectFilterMultiModeMoog(AudioPluginProps& props)
+        : EffectFilterInterface(props)
     {
         setCutoff(0.5);
     };

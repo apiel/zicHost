@@ -1,12 +1,12 @@
 #ifndef _EFFECT_DISTORTION_H_
 #define _EFFECT_DISTORTION_H_
 
-#include "audioPlugin.h"
 #include "../helpers/range.h"
+#include "audioPlugin.h"
 
 #include <math.h>
 
-class EffectDistortion: public AudioPlugin {
+class EffectDistortion : public AudioPlugin {
 protected:
     float shape;
 
@@ -29,7 +29,8 @@ protected:
 public:
     float drive = 0.0;
 
-    EffectDistortion()
+    EffectDistortion(AudioPluginProps& props)
+        : AudioPlugin(props)
     {
         set(drive);
     };
@@ -44,11 +45,11 @@ public:
         drive = range(_drive, 0.0, 1.0);
         if (drive == 0.0) {
             samplePtr = &EffectDistortion::skipSample;
-            // debug("Distortion: disabled\n");
+            debug("Distortion: disabled\n");
         } else {
             samplePtr = &EffectDistortion::processSample;
             shape = 2 * (drive - 0.000001) / (1 - (drive - 0.000001));
-            // debug("Distortion: drive=%f shape=%f\n", drive, shape);
+            debug("Distortion: drive=%f shape=%f\n", drive, shape);
         }
         return *this;
     }

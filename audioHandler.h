@@ -19,7 +19,10 @@ protected:
 
     uint16_t pluginCount = 0;
 
-    AudioHandler() { }
+    AudioHandler()
+    {
+        printf("AudioHandler constructor\n");
+    }
 
 public:
     static AudioHandler& get()
@@ -42,6 +45,8 @@ public:
 
     void loadPlugin(const char* path)
     {
+        AudioPluginProps pluginProps = AudioPluginProps(debug);
+
         if (pluginCount >= AUDIO_PLUGIN_COUNT) {
             APP_PRINT("Cannot load plugin: %s, reached max plugin count %d\n", path, AUDIO_PLUGIN_COUNT);
             return;
@@ -63,7 +68,7 @@ public:
             return;
         }
 
-        plugins[pluginCount].instance = ((AudioPlugin * (*)()) allocator)();
+        plugins[pluginCount].instance = ((AudioPlugin * (*)(AudioPluginProps & props)) allocator)(pluginProps);
         APP_PRINT("plugin loaded\n");
         APP_PRINT("plugin: %s\n", plugins[pluginCount].instance->name());
 

@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#include "audioBuffer.h"
 #include "EffectFilter.h"
+#include "audioBuffer.h"
 #include "audioPlugin.h"
 
 #define MAX_DELAY_VOICES 16
@@ -12,7 +12,7 @@
 // TODO load/save different kind of delay and reverb from a config file
 // TODO add lfo on time ratio
 
-class EffectDelay: public AudioPlugin {
+class EffectDelay : public AudioPlugin {
 protected:
     AudioBuffer<> buffer;
 
@@ -32,8 +32,11 @@ public:
 
     EffectFilter filter;
 
-    EffectDelay()
+    EffectDelay(AudioPluginProps& props)
+        : AudioPlugin(props)
+        , filter(props)
     {
+
         // setVoice(0, 0.1f, 0.6f, 0.0f);
         // setVoice(1, 0.2f, 0.5f, 0.0f);
         // setVoice(2, 0.3f, 0.4f, 0.0f);

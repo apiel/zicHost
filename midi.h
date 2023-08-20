@@ -54,14 +54,12 @@ void midiControllerCallback(double deltatime, std::vector<unsigned char>* messag
                 return;
             }
         }
-        if (debugMode) {
-            debug("Midi controller message: ");
-            unsigned int nBytes = message->size();
-            for (unsigned int i = 0; i < nBytes; i++) {
-                debug("%02x ", (int)message->at(i));
-            }
-            debug("\n");
+        debug("Midi controller message: ");
+        unsigned int nBytes = message->size();
+        for (unsigned int i = 0; i < nBytes; i++) {
+            debug("%02x ", (int)message->at(i));
         }
+        debug("\n");
     }
 }
 
