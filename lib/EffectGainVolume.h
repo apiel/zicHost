@@ -57,7 +57,7 @@ public:
         return setters.set(param, value);
     }
 
-    uint16_t getParamKey(const char* name)
+    int16_t getParamKey(const char* name)
     {
         return setters.getParamKey(name);
     }
