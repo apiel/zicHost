@@ -11,7 +11,7 @@ LIBSND=`pkg-config --cflags --libs sndfile`
 LIBLO=`pkg-config --cflags --libs liblo`
 
 all:
-	make clean_so effectGainVolume effectSampleRateReducer effectFilter effectDistortion clean_o
+	make clean_so effectGainVolume effectSampleRateReducer effectFilter effectDistortion effectDelay clean_o
 
 clean:
 	make clean_so clean_o
@@ -37,3 +37,6 @@ effectFilter:
 
 effectDistortion:
 	make compile LIBNAME=EffectDistortion
+
+effectDelay:
+	make compile LIBNAME=EffectDelay

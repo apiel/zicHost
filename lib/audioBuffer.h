@@ -1,7 +1,9 @@
 #ifndef _AUDIO_BUFFER_H_
 #define _AUDIO_BUFFER_H_
 
-#include "def.h"
+#include <stdint.h>
+
+#include "audioDef.h"
 
 #ifndef AUDIO_BUFFER_SECONDS
 #define AUDIO_BUFFER_SECONDS 5

@@ -26,7 +26,6 @@ protected:
     AudioHandler()
     // : delay(&buffer)
     {
-        // loadPlugin("./lib/build/libzic_EffectSampleRateReducer.so");
     }
 
 public:

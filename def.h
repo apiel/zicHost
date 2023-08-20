@@ -9,26 +9,14 @@
 #include <unistd.h>
 #include <dlfcn.h>
 
+#include "lib/audioDef.h"
+
 #ifndef APP_PRINT
 #define APP_PRINT printf
 #endif
 
 #ifndef APP_INFO
 #define APP_INFO APP_PRINT
-#endif
-
-#ifndef SAMPLE_RATE
-// #define SAMPLE_RATE 44100
-#define SAMPLE_RATE 48000
-#endif
-
-#ifndef APP_CHANNELS
-#define APP_CHANNELS 2
-// #define APP_CHANNELS 1
-#endif
-
-#ifndef APP_AUDIO_CHUNK
-#define APP_AUDIO_CHUNK 128
 #endif
 
 float midiFreq[128] = {
