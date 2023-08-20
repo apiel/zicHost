@@ -28,10 +28,10 @@ public:
         return in * volumeWithGain;
     }
 
-    void setVolume(float vol)
+    EffectGainVolume& setVolume(float vol)
     {
         debug("setMaster: volume %f\n", vol);
-        setVolumeWithGain(vol, gain);
+        return setVolumeWithGain(vol, gain);
     }
 
     EffectGainVolume& setVolumeWithGain(float vol, float _gain)
@@ -43,10 +43,10 @@ public:
         return *this;
     }
 
-    void setGain(float _gain)
+    EffectGainVolume& setGain(float _gain)
     {
         debug("setGain: gain %f\n", _gain);
-        setVolumeWithGain(volume, _gain);
+        return setVolumeWithGain(volume, _gain);
     }
 
     const char* name()

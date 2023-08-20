@@ -4,19 +4,20 @@
 #include <stdint.h>
 #include <string.h>
 
-#define SETTER_METHODS bool set(uint16_t param, float value) \
-    { \
+#define SETTER_METHODS                    \
+    bool set(uint16_t param, float value) \
+    {                                     \
         return setters.set(param, value); \
-    } \
+    }                                     \
     int16_t getParamKey(const char* name) \
-    {\
-        return setters.getParamKey(name);\
+    {                                     \
+        return setters.getParamKey(name); \
     }
 
 template <typename T>
 class AudioPluginSetter {
 public:
-    void (T::*setPtr)(float value);
+    T& (T::*setPtr)(float value);
     const char* key;
 };
 
@@ -40,10 +41,7 @@ public:
             return false;
         }
 
-        typedef void (T::*setPtr)(float value);
-        setPtr fnc_ptr = setters[param].setPtr;
-        (instance->*fnc_ptr)(value);
-
+        (instance->*(setters[param].setPtr))(value);
         return true;
     }
 
