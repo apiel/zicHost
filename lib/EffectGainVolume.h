@@ -53,7 +53,7 @@ public:
 
     bool set(uint16_t param, float value)
     {
-        return setters.set(param, value);
+        return setters.set(this, param, value);
     }
 
     uint16_t getParamKey(const char* name)

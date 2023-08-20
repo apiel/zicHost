@@ -19,20 +19,33 @@ public:
     uint16_t setterCount;
     AudioPluginSetter<T>* setters;
 
-    AudioPluginSetters(AudioPluginSetter<T> * setters, uint16_t setterCount)
+    AudioPluginSetters(AudioPluginSetter<T>* setters, uint16_t setterCount)
         : setters(setters)
         , setterCount(setterCount)
     {
     }
 
-    bool set(uint16_t param, float value)
+    bool set(T * obj, uint16_t param, float value)
     {
         if (param >= setterCount) {
             return false;
         }
-        // (this->*setters[param].setPtr)(value);
-        // (*setters[param].setPtr)(value);
         printf(">>>>>>>>>>>>>>> set %d %f for %s\n", param, value, setters[param].key);
+        // setters[param].setPtr(value);
+        // (this->*setters[param].setPtr)(value);
+        // (this->*setters[param].setPtr)(value);
+
+        // typedef void (Some_class::*Some_fnc_ptr)();
+        // Some_fnc_ptr fnc_ptr = &Some_class::some_function;
+        // Some_class sc;
+        // (sc.*fnc_ptr)();
+
+        typedef void (T::*setPtr)(float value);
+        setPtr fnc_ptr = setters[param].setPtr;
+        // (this->*fnc_ptr)(value);
+        // (obj.*fnc_ptr)(value);
+        (obj->*fnc_ptr)(value);
+
         return true;
     }
 
