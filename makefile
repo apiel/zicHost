@@ -1,9 +1,6 @@
 # for FTP EOF
 .ONESHELL:
 
-# default
-CC=g++ -o zicHost
-
 RTAUDIO=`pkg-config --cflags --libs rtaudio`
 
 RTMIDI=`pkg-config --cflags --libs rtmidi`
@@ -15,13 +12,20 @@ LIBLO=`pkg-config --cflags --libs liblo`
 # PULSEAUDIO=`pkg-config --cflags --libs libpulse-simple` -DAUDIO_API=1
 # ALSA=`pkg-config --cflags --libs alsa` -DAUDIO_API=2
 
-BUILD=-Wall zicHost.cpp -fopenmp -Wno-narrowing $(RTAUDIO) $(LIBSND) $(RTMIDI) $(PULSEAUDIO) $(ALSA) $(LIBLO)
+BUILD=
 
-linux: build run
+linux: libs build run
+
+libs:
+	@echo "\n------------------ lib ------------------\n"
+	make -C lib
+	@echo "\nbuild lib done."
 
 build:
-	$(CC) $(BUILD)
+	@echo "\n------------------ build ------------------\n"
+	g++ -o zicHost -Wall zicHost.cpp -fopenmp -Wno-narrowing $(RTAUDIO) $(LIBSND) $(RTMIDI) $(PULSEAUDIO) $(ALSA) $(LIBLO)
+	@echo "build zicHost done."
 
 run:
-	echo start zicHost
+	@echo "\n------------------ run ------------------\n"
 	./zicHost
