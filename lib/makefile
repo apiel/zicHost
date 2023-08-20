@@ -11,14 +11,17 @@ LIBSND=`pkg-config --cflags --libs sndfile`
 LIBLO=`pkg-config --cflags --libs liblo`
 
 all:
-	make clean effectGainVolume effectSampleRateReducer
+	make clean_so effectGainVolume effectSampleRateReducer clean_o
 
-clean:
-	rm -f *.o *.so
+clean_so:
+	rm -f build/*.so
+
+clean_o:
+	rm -f *.o
 
 compile:
 	g++ -c -o $(LIBNAME).o audioPlugin.cpp -fPIC -DPLUGIN_NAME=$(LIBNAME) -DPLUGIN_INCLUDE=\"$(LIBNAME).h\"
-	g++ -shared -o libzic_$(LIBNAME).so $(LIBNAME).o
+	g++ -shared -o build/libzic_$(LIBNAME).so $(LIBNAME).o
 
 effectGainVolume:
 	make compile LIBNAME=EffectGainVolume
