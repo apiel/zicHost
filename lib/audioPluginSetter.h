@@ -4,6 +4,15 @@
 #include <stdint.h>
 #include <string.h>
 
+#define SETTER_METHODS bool set(uint16_t param, float value) \
+    { \
+        return setters.set(param, value); \
+    } \
+    int16_t getParamKey(const char* name) \
+    {\
+        return setters.getParamKey(name);\
+    }
+
 template <typename T>
 class AudioPluginSetter {
 public:

@@ -14,6 +14,8 @@ protected:
     AudioPluginSetters<EffectGainVolume> setters = AudioPluginSetters<EffectGainVolume>(this, setterList, setterCount);
 
 public:
+    SETTER_METHODS
+
     float gain = 1.0f;
     float volume = 1.0f;
     float volumeWithGain = gain * volume;
@@ -50,16 +52,6 @@ public:
     const char* name()
     {
         return "EffectGainVolume";
-    }
-
-    bool set(uint16_t param, float value)
-    {
-        return setters.set(param, value);
-    }
-
-    int16_t getParamKey(const char* name)
-    {
-        return setters.getParamKey(name);
     }
 };
 
