@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <vector>
 
 class AudioPluginProps {
 public:
@@ -14,14 +15,6 @@ public:
     }
 };
 
-// TODO somehow would be great to give an ID or key to the plugin
-// so we can set config by this value instead of
-// VOLUME=1.0
-// we would have
-// MASTER:VOLUME=1.0
-// or something like that
-// no no no
-// there is not need to do this, just assign params in the same order
 class AudioPlugin {
 public:
     AudioPlugin(AudioPluginProps& props)
@@ -31,8 +24,8 @@ public:
 
     virtual float sample(float in) = 0;
     virtual const char* name() = 0;
-    virtual bool set(uint16_t param, float value) = 0;
-    virtual int16_t getParamKey(const char* name) = 0;
+    virtual bool midi(std::vector<unsigned char>* message) = 0;
+    virtual bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1) = 0;
 
     int (*debug)(const char* format, ...);
 };

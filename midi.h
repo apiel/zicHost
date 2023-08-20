@@ -4,33 +4,33 @@
 #include "audioHandler.h"
 #include "def.h"
 #include "fs.h"
-#include "midiMapping.h"
+// #include "midiMapping.h"
 
 RtMidiIn midiController;
 RtMidiOut midiOut;
 
-MidiMapping midiMappings[] = {
-    MidiMapping("MASTER_VOLUME", [](float value) {
-        // AudioHandler::get().gainVolume.set(value);
-    }),
-    MidiMapping("SAMPLE_RATE_REDUCER", [](float value) {
-        // AudioHandler::get().sampleRateReducer.set(value);
-    }),
-    MidiMapping("GRANULAR_SAMPLE_SELECTOR", [](float value) {
-        // AudioHandler::get().synthGranular.open(value);
-    }),
-    MidiMapping("DISTORTION", [](float value) {
-        // AudioHandler::get().distortion.set(value);
-    }),
-    MidiMapping("FILTER_CUTOFF", [](float value) {
-        // AudioHandler::get().filter.setCutoff(value);
-    }),
-    MidiMapping("FILTER_RESONANCE", [](float value) {
-        // AudioHandler::get().filter.setResonance(value);
-    }),
-};
+// MidiMapping midiMappings[] = {
+//     MidiMapping("MASTER_VOLUME", [](float value) {
+//         // AudioHandler::get().gainVolume.set(value);
+//     }),
+//     MidiMapping("SAMPLE_RATE_REDUCER", [](float value) {
+//         // AudioHandler::get().sampleRateReducer.set(value);
+//     }),
+//     MidiMapping("GRANULAR_SAMPLE_SELECTOR", [](float value) {
+//         // AudioHandler::get().synthGranular.open(value);
+//     }),
+//     MidiMapping("DISTORTION", [](float value) {
+//         // AudioHandler::get().distortion.set(value);
+//     }),
+//     MidiMapping("FILTER_CUTOFF", [](float value) {
+//         // AudioHandler::get().filter.setCutoff(value);
+//     }),
+//     MidiMapping("FILTER_RESONANCE", [](float value) {
+//         // AudioHandler::get().filter.setResonance(value);
+//     }),
+// };
 
-const uint8_t MIDI_MAPS = sizeof(midiMappings) / sizeof(midiMappings[0]);
+// const uint8_t MIDI_MAPS = sizeof(midiMappings) / sizeof(midiMappings[0]);
 
 void midiControllerCallback(double deltatime, std::vector<unsigned char>* message, void* userData = NULL)
 {
@@ -49,11 +49,10 @@ void midiControllerCallback(double deltatime, std::vector<unsigned char>* messag
             // AudioHandler::get().synthGranular.noteOff(message->at(1), message->at(2));
         }
     } else {
-        for (int i = 0; i < MIDI_MAPS; i++) {
-            if (midiMappings[i].handle(message)) {
-                return;
-            }
+        if (AudioHandler::get().midi(message)) {
+            return;
         }
+
         debug("Midi controller message: ");
         unsigned int nBytes = message->size();
         for (unsigned int i = 0; i < nBytes; i++) {

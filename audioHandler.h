@@ -77,6 +77,40 @@ public:
 
         pluginCount++;
     }
+
+    bool assignMidiMapping(char* key, char* value)
+    {
+        if (pluginCount > 0) {
+            // split value by space
+            char* msg0 = strtok(value, " ");
+            char* msg1 = strtok(NULL, " ");
+            char* msg2 = strtok(NULL, " ");
+
+            if (msg0 == NULL || msg1 == NULL) {
+                APP_INFO("Invalid midi mapping\n");
+                return false;
+            }
+
+            uint8_t size = msg2 == NULL ? 2 : 3;
+            uint8_t valuePosition = msg1[0] == 'x' && msg1[1] == 'x' ? 2 : 3;
+            uint8_t msg0Int = strtol(msg0, NULL, 16);
+            uint8_t msg1Int = strtol(msg1, NULL, 16);
+
+            // debug("Midi mapping: %02x %02x, size: %d valuePosition: %d\n", msg0Int, msg1Int, size, valuePosition);
+            return plugins[pluginCount - 1].instance->assignMidiMapping(key, size, valuePosition, msg0Int, msg1Int);
+        }
+        return false;
+    }
+
+    bool midi(std::vector<unsigned char>* message)
+    {
+        for (int i = 0; i < pluginCount; i++) {
+            if (plugins[i].instance->midi(message)) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 AudioHandler* AudioHandler::instance = NULL;
