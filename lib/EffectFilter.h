@@ -1,8 +1,8 @@
 #ifndef _EFFECT_FILTER_H_
 #define _EFFECT_FILTER_H_
 
-#include "def.h"
 #include "audioPlugin.h"
+#include "../helpers/range.h"
 
 #include <math.h>
 
@@ -163,7 +163,7 @@ public:
         lpf.setResonance(resonance);
         hpf.setResonance(resonance);
 
-        debug("Filter: resonance=%f\n", resonance);
+        // debug("Filter: resonance=%f\n", resonance);
 
         return *this;
     };
@@ -214,7 +214,7 @@ public:
             lpf.setCutoff(cutoff);
         }
 
-        debug("Filter: cutoff=%f\n", value);
+        // debug("Filter: cutoff=%f\n", value);
 
         return *this;
     }
@@ -225,7 +225,7 @@ public:
         lpf.setResonance(resonance);
         hpf.setResonance(resonance);
 
-        debug("Filter: resonance=%f\n", resonance);
+        // debug("Filter: resonance=%f\n", resonance);
 
         return *this;
     };

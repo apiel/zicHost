@@ -3,12 +3,13 @@
 
 #include "audioBuffer.h"
 #include "def.h"
-#include "effectDelay.h"
-#include "effectDistortion.h"
-#include "effectFilter.h"
-#include "effectSampleRateReducer.h"
-#include "effectGainVolume.h"
-#include "synthGranular.h"
+
+// #include "effectDelay.h"
+// #include "effectDistortion.h"
+// #include "effectFilter.h"
+// #include "effectSampleRateReducer.h"
+// #include "effectGainVolume.h"
+// #include "synthGranular.h"
 
 class AudioHandler {
 protected:
@@ -18,19 +19,19 @@ protected:
     AudioBuffer<> buffer;
 
     AudioHandler()
-        : delay(&buffer)
+        // : delay(&buffer)
     {
     }
 
 public:
-    // EffectFilterMultiMode filter;
-    EffectFilterMultiMode2 filter;
-    // EffectFilterMultiModeMoog filter;
-    EffectDistortion distortion;
-    EffectSampleRateReducer sampleRateReducer;
-    EffectDelay delay;
-    SynthGranular synthGranular;
-    EffectGainVolume gainVolume;
+    // // EffectFilterMultiMode filter;
+    // EffectFilterMultiMode2 filter;
+    // // EffectFilterMultiModeMoog filter;
+    // EffectDistortion distortion;
+    // EffectSampleRateReducer sampleRateReducer;
+    // EffectDelay delay;
+    // SynthGranular synthGranular;
+    // EffectGainVolume gainVolume;
 
     static AudioHandler& get()
     {
@@ -44,15 +45,15 @@ public:
     {
         for (int i = 0; i < len; i++) {
             out[i] = in[i];
-            // TODO make a list of AudioPlugin and loop through them
-            out[i] = synthGranular.sample(out[i]);
-            out[i] = filter.sample(out[i]);
-            out[i] = distortion.sample(out[i]);
-            out[i] = sampleRateReducer.sample(out[i]);
-            buffer.addSample(out[i]);
+            // // TODO make a list of AudioPlugin and loop through them
+            // out[i] = synthGranular.sample(out[i]);
+            // out[i] = filter.sample(out[i]);
+            // out[i] = distortion.sample(out[i]);
+            // out[i] = sampleRateReducer.sample(out[i]);
+            // buffer.addSample(out[i]);
 
-            out[i] = delay.sample(out[i]);
-            out[i] = gainVolume.sample(out[i]);
+            // out[i] = delay.sample(out[i]);
+            // out[i] = gainVolume.sample(out[i]);
         }
     }
 };

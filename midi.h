@@ -11,22 +11,22 @@ RtMidiOut midiOut;
 
 MidiMapping midiMappings[] = {
     MidiMapping("MASTER_VOLUME", [](float value) {
-        AudioHandler::get().gainVolume.set(value);
+        // AudioHandler::get().gainVolume.set(value);
     }),
     MidiMapping("SAMPLE_RATE_REDUCER", [](float value) {
-        AudioHandler::get().sampleRateReducer.set(value);
+        // AudioHandler::get().sampleRateReducer.set(value);
     }),
     MidiMapping("GRANULAR_SAMPLE_SELECTOR", [](float value) {
-        AudioHandler::get().synthGranular.open(value);
+        // AudioHandler::get().synthGranular.open(value);
     }),
     MidiMapping("DISTORTION", [](float value) {
-        AudioHandler::get().distortion.set(value);
+        // AudioHandler::get().distortion.set(value);
     }),
     MidiMapping("FILTER_CUTOFF", [](float value) {
-        AudioHandler::get().filter.setCutoff(value);
+        // AudioHandler::get().filter.setCutoff(value);
     }),
     MidiMapping("FILTER_RESONANCE", [](float value) {
-        AudioHandler::get().filter.setResonance(value);
+        // AudioHandler::get().filter.setResonance(value);
     }),
 };
 
@@ -41,12 +41,12 @@ void midiControllerCallback(double deltatime, std::vector<unsigned char>* messag
     } else if (message->at(0) >= 0x90 && message->at(0) < 0xa0) {
         uint8_t channel = message->at(0) - 0x90;
         if (channel == midiNoteChannel) {
-            AudioHandler::get().synthGranular.noteOn(message->at(1), message->at(2));
+            // AudioHandler::get().synthGranular.noteOn(message->at(1), message->at(2));
         }
     } else if (message->at(0) >= 0x80 && message->at(0) < 0x90) {
         uint8_t channel = message->at(0) - 0x80;
         if (channel == midiNoteChannel) {
-            AudioHandler::get().synthGranular.noteOff(message->at(1), message->at(2));
+            // AudioHandler::get().synthGranular.noteOff(message->at(1), message->at(2));
         }
     } else {
         for (int i = 0; i < MIDI_MAPS; i++) {
