@@ -7,6 +7,13 @@ GAIN_OUTPUT=20.0
 MIDIIN=Elektron Digitone MIDI 1
 # Channel where midi notes are sent
 MIDI_NOTE_CHANNEL=0
+
+# PLUGINS loaded in orders
+AUDIO_PLUGIN=./lib/build/libzic_EffectSampleRateReducer.so
+AUDIO_PLUGIN=./lib/build/libzic_EffectDistortion.so
+AUDIO_PLUGIN=./lib/build/libzic_EffectFilter.so
+AUDIO_PLUGIN=./lib/build/libzic_EffectGainVolume.so
+
 # Set sample rate reducer steps
 SAMPLE_RATE_REDUCER=b0 4a xx
 # set master volume

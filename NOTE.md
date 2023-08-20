@@ -17,6 +17,10 @@
 
 pipe stream into app https://gist.github.com/ghedo/963382?permalink_comment_id=3509255
 
+# IDEA
+
+- multiple input and output stream, instead to have only one input and one output, we could pass array of input and array of output
+
 # Build lib
 
 g++ -c -o effectGainVolume.o effectGainVolume.cpp -fPIC

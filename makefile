@@ -14,7 +14,8 @@ LIBLO=`pkg-config --cflags --libs liblo`
 
 BUILD=
 
-linux: libs build run
+all: libs build run
+host: build run
 
 libs:
 	@echo "\n------------------ lib ------------------\n"

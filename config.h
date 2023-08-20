@@ -54,6 +54,8 @@ void assignKeyValue(char* key, char* value)
     } else if (strcmp(key, "AUDIO_INPUT") == 0) {
         strcpy(audioInputName, value);
         APP_INFO("Audio input set: %s\n", audioInputName);
+    } else if (strcmp(key, "AUDIO_PLUGIN") == 0) {
+        AudioHandler::get().loadPlugin(value);
     } else if (strcmp(key, "OSC_SERVER_PORT") == 0) {
         oscServer(value);
     } else if (strcmp(key, "GAIN_OUTPUT") == 0) {
