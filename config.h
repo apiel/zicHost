@@ -69,11 +69,7 @@ void assignKeyValue(char* key, char* value)
             enableDebug();
         }
     } else {
-        if (AudioHandler::get().assignMidiMapping(key, value)) {
-            APP_INFO("Midi mapping assigned: %s\n", key);
-            return;
-        }
-        APP_INFO("unknown config key: %s\n", key);
+        AudioHandler::get().assignMidiMapping(key, value);
     }
 }
 

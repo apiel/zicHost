@@ -97,7 +97,13 @@ public:
             uint8_t msg1Int = strtol(msg1, NULL, 16);
 
             // debug("Midi mapping: %02x %02x, size: %d valuePosition: %d\n", msg0Int, msg1Int, size, valuePosition);
-            return plugins[pluginCount - 1].instance->assignMidiMapping(key, size, valuePosition, msg0Int, msg1Int);
+            bool success = plugins[pluginCount - 1].instance->assignMidiMapping(key, size, valuePosition, msg0Int, msg1Int);
+            if (success) {
+                APP_INFO("[%s] Midi mapping assigned: %s\n", plugins[pluginCount - 1].instance->name(), key);
+            } else {
+                APP_INFO("[%s] Unknown midi mapping key: %s\n", plugins[pluginCount - 1].instance->name(), key);
+            }
+            return success;
         }
         return false;
     }
