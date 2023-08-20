@@ -5,17 +5,18 @@
 #include "audioPluginSetter.h"
 
 class EffectGainVolume : public AudioPlugin {
+protected:
+    const static int16_t setterCount = 2;
+    AudioPluginSetter<EffectGainVolume> setterList[setterCount] = {
+        { &EffectGainVolume::setVolume, "VOLUME" },
+        { &EffectGainVolume::setGain, "GAIN" },
+    };
+    AudioPluginSetters<EffectGainVolume> setters = AudioPluginSetters<EffectGainVolume>(this, setterList, setterCount);
+
 public:
     float gain = 1.0f;
     float volume = 1.0f;
     float volumeWithGain = gain * volume;
-
-    const static uint16_t setterCount = 2;
-    AudioPluginSetter<EffectGainVolume> setterList[setterCount] = {
-        { &EffectGainVolume::setVolume, "volume" },
-        { &EffectGainVolume::setGain, "gain" },
-    };
-    AudioPluginSetters<EffectGainVolume> setters = AudioPluginSetters<EffectGainVolume>(setterList, setterCount);
 
     EffectGainVolume(AudioPluginProps& props)
         : AudioPlugin(props) {};
@@ -53,7 +54,7 @@ public:
 
     bool set(uint16_t param, float value)
     {
-        return setters.set(this, param, value);
+        return setters.set(param, value);
     }
 
     uint16_t getParamKey(const char* name)
