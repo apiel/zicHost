@@ -13,6 +13,9 @@ LIBLO=`pkg-config --cflags --libs liblo`
 all:
 	make clean_so effectGainVolume effectSampleRateReducer effectFilter effectDistortion clean_o
 
+clean:
+	make clean_so clean_o
+
 clean_so:
 	rm -f build/*.so
 

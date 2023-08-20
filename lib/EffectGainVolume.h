@@ -42,6 +42,11 @@ public:
         // debug("setGain: gain %f\n", _gain);
         return set(volume, _gain);
     }
+
+    const char* name()
+    {
+        return "EffectGainVolume";
+    }
 };
 
 #endif

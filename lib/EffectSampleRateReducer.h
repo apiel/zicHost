@@ -38,7 +38,8 @@ public:
 
     EffectSampleRateReducer()
     {
-        set(sampleStep);
+        set(0);
+        // set(0.5);
     };
 
     EffectSampleRateReducer set(float value)
@@ -57,6 +58,11 @@ public:
     float sample(float buf)
     {
         return (this->*samplePtr)(buf);
+    }
+
+    const char* name()
+    {
+        return "EffectSampleRateReducer";
     }
 };
 

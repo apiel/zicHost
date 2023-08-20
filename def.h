@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
+#include <dlfcn.h>
 
 #ifndef APP_PRINT
 #define APP_PRINT printf

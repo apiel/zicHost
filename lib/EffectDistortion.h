@@ -52,6 +52,11 @@ public:
         }
         return *this;
     }
+
+    const char* name()
+    {
+        return "EffectDistortion";
+    }
 };
 
 #endif

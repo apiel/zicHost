@@ -6,6 +6,8 @@
 
 #include <math.h>
 
+// FIXME split filters in multiples lib
+
 class EffectFilterInterface: public AudioPlugin {
 public:
     float resonance = 0.0;
@@ -118,6 +120,11 @@ public:
         setCutoff(cutoff);
         return *this;
     };
+
+    const char* name()
+    {
+        return "EffectFilter";
+    }
 };
 
 class EffectFilterMultiMode : public EffectFilterInterface {
@@ -167,6 +174,11 @@ public:
 
         return *this;
     };
+
+    const char* name()
+    {
+        return "EffectFilterMultiMode";
+    }
 };
 
 // another version of the same filter but with a small clicking at 0.5
@@ -229,6 +241,11 @@ public:
 
         return *this;
     };
+
+    const char* name()
+    {
+        return "EffectFilterMultiMode2";
+    }
 };
 
 // Paul Kellet version of the classic Stilson/Smith "Moog" filter
@@ -297,6 +314,11 @@ public:
         calculateVar(cutoff, resonance);
         return *this;
     };
+
+    const char* name()
+    {
+        return "EffectFilterMultiModeMoog";
+    }
 };
 
 #endif

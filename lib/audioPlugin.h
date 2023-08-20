@@ -10,6 +10,7 @@ public:
     // TODO add config, e.g.: gainOutput
 
     virtual float sample(float in) = 0;
+    virtual const char* name() = 0;
 };
 
 #endif
