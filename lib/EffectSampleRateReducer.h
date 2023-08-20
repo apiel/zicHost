@@ -3,7 +3,6 @@
 
 #include "audioPlugin.h"
 
-#include <stdint.h>
 #include <math.h>
 
 class EffectSampleRateReducer: public AudioPlugin {

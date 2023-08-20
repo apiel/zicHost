@@ -1,8 +1,6 @@
 #ifndef _EFFECT_DELAY_H_
 #define _EFFECT_DELAY_H_
 
-#include <stdint.h>
-
 #include "EffectFilter.h"
 #include "audioBuffer.h"
 #include "audioPlugin.h"

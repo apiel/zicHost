@@ -72,6 +72,9 @@ public:
         APP_PRINT("plugin loaded\n");
         APP_PRINT("plugin: %s\n", plugins[pluginCount].instance->name());
 
+        plugins[pluginCount].instance->set(0, 0.5f);
+        printf("---> getParamKey: %d\n", plugins[pluginCount].instance->getParamKey("volume"));
+
         pluginCount++;
     }
 };
