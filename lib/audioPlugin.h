@@ -20,6 +20,8 @@ public:
 // we would have
 // MASTER:VOLUME=1.0
 // or something like that
+// no no no
+// there is not need to do this, just assign params in the same order
 class AudioPlugin {
 public:
     AudioPlugin(AudioPluginProps& props)
