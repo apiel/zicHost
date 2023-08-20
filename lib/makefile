@@ -10,16 +10,15 @@ LIBSND=`pkg-config --cflags --libs sndfile`
 # used for OSC
 LIBLO=`pkg-config --cflags --libs liblo`
 
-#g++ -c -o effectGainVolume.o effectGainVolume.cpp -fPIC
-#g++ -shared -o libzic_effectGainVolume.so effectGainVolume.o
-
 all:
 	make effectGainVolume
 
 clean:
 	rm -f *.o *.so
 
-effectGainVolume:
-	g++ -c -o effectGainVolume.o audioPlugin.cpp -fPIC
-	g++ -shared -o libzic_effectGainVolume.so effectGainVolume.o
+compile:
+	g++ -c -o $(LIBNAME).o audioPlugin.cpp -fPIC -DPLUGIN_NAME=$(LIBNAME) -DPLUGIN_INCLUDE=\"$(LIBNAME).h\"
+	g++ -shared -o libzic_$(LIBNAME).so $(LIBNAME).o
 
+effectGainVolume:
+	make compile LIBNAME=EffectGainVolume
