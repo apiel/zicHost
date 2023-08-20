@@ -1,20 +1,16 @@
 #ifndef _AUDIO_HANDLER_H_
 #define _AUDIO_HANDLER_H_
 
-#include "audioBuffer.h"
 #include "def.h"
 #include "lib/audioPlugin.h"
 
 #ifndef AUDIO_PLUGIN_COUNT
-#define AUDIO_PLUGIN_COUNT 4
+#define AUDIO_PLUGIN_COUNT 100
 #endif
 
 class AudioHandler {
 protected:
     static AudioHandler* instance;
-
-    // Keep buffer for echo, delay, granular, etc.
-    AudioBuffer<> buffer;
 
     struct Plugin {
         void* handle;
@@ -23,10 +19,7 @@ protected:
 
     uint16_t pluginCount = 0;
 
-    AudioHandler()
-    // : delay(&buffer)
-    {
-    }
+    AudioHandler() { }
 
 public:
     static AudioHandler& get()
@@ -41,18 +34,6 @@ public:
     {
         for (int i = 0; i < len; i++) {
             out[i] = in[i];
-            // // TODO make a list of AudioPlugin and loop through them
-            // out[i] = synthGranular.sample(out[i]);
-            // out[i] = filter.sample(out[i]);
-            // out[i] = distortion.sample(out[i]);
-            // out[i] = sampleRateReducer.sample(out[i]);
-
-            // TODO this must be a plugin as well!! or should there even a shared audio buffer between plugins?...
-            // buffer.addSample(out[i]);
-
-            // out[i] = delay.sample(out[i]);
-            // out[i] = gainVolume.sample(out[i]);
-
             for (int j = 0; j < pluginCount; j++) {
                 out[i] = plugins[j].instance->sample(out[i]);
             }
