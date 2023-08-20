@@ -11,7 +11,7 @@ LIBSND=`pkg-config --cflags --libs sndfile`
 LIBLO=`pkg-config --cflags --libs liblo`
 
 all:
-	make effectGainVolume
+	make clean effectGainVolume effectSampleRateReducer
 
 clean:
 	rm -f *.o *.so
@@ -22,3 +22,6 @@ compile:
 
 effectGainVolume:
 	make compile LIBNAME=EffectGainVolume
+
+effectSampleRateReducer:
+	make compile LIBNAME=EffectSampleRateReducer
