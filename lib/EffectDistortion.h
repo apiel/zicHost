@@ -3,6 +3,7 @@
 
 #include "../helpers/range.h"
 #include "audioPlugin.h"
+#include "midiMapping.h"
 
 #include <math.h>
 
@@ -26,13 +27,20 @@ protected:
         return (1 + shape) * buf / (1 + shape * fabsf(buf));
     }
 
+    const static int16_t mapCount = 1;
+    MidiMapping<EffectDistortion> midiMappings[mapCount] = {
+        MidiMapping(this, "SET_DRIVE", &EffectDistortion::setDrive),
+    };
+
 public:
+    MIDI_MAPPING_HANDLER
+
     float drive = 0.0;
 
     EffectDistortion(AudioPluginProps& props)
         : AudioPlugin(props)
     {
-        set(drive);
+        setDrive(drive);
     };
 
     float sample(float buf)
@@ -40,7 +48,7 @@ public:
         return (this->*samplePtr)(buf);
     }
 
-    EffectDistortion& set(float _drive)
+    EffectDistortion& setDrive(float _drive)
     {
         drive = range(_drive, 0.0, 1.0);
         if (drive == 0.0) {
