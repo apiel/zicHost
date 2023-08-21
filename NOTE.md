@@ -1,7 +1,15 @@
 # TODO
 
 - TODO give a way to retrieve all midi mapping keys
-- TODO make it base on plugin and the maybe call it zicContainer or zicHost :p
+- TODO save state
+       - per plugin
+       - global
+- TODO plugin interface
+       - UI
+       - rotary ecnoder
+       - how to share state between interface?
+
+
 - TODO implement input for alsa and pulse audio api
 - TODO reverb, delay
      - load/save different kind of delay and reverb from a config file

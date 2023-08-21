@@ -6,7 +6,7 @@
 #include "audioPlugin.h"
 #include "midiMapping.h"
 
-#define MAX_DELAY_VOICES 16
+#define MAX_DELAY_VOICES 8
 
 // TODO load/save different kind of delay and reverb from a config file
 // TODO add lfo on time ratio
@@ -26,13 +26,37 @@ protected:
 
     // FIXME
     // TODO handle voices values
-    const static int16_t mapCount = 5;
+    const static int16_t mapCount = 5 + 3 * MAX_DELAY_VOICES;
     MidiMapping<EffectDelay> midiMappings[mapCount] = {
         MidiMapping(this, "SET_TIME_RATIO", &EffectDelay::setTimeRatio),
         MidiMapping(this, "SET_MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude),
         MidiMapping(this, "SET_FILTER_CUTOFF", &EffectDelay::setCutoff),
         MidiMapping(this, "SET_FILTER_RESONANCE", &EffectDelay::setResonance),
         MidiMapping(this, "SET_FILTER_MODE", &EffectDelay::setMode),
+        MidiMapping(this, "SET_SEC_0", &EffectDelay::setSec0),
+        MidiMapping(this, "SET_SEC_1", &EffectDelay::setSec1),
+        MidiMapping(this, "SET_SEC_2", &EffectDelay::setSec2),
+        MidiMapping(this, "SET_SEC_3", &EffectDelay::setSec3),
+        MidiMapping(this, "SET_SEC_4", &EffectDelay::setSec4),
+        MidiMapping(this, "SET_SEC_5", &EffectDelay::setSec5),
+        MidiMapping(this, "SET_SEC_6", &EffectDelay::setSec6),
+        MidiMapping(this, "SET_SEC_7", &EffectDelay::setSec7),
+        MidiMapping(this, "SET_AMPLITUDE_0", &EffectDelay::setAmplitude0),
+        MidiMapping(this, "SET_AMPLITUDE_1", &EffectDelay::setAmplitude1),
+        MidiMapping(this, "SET_AMPLITUDE_2", &EffectDelay::setAmplitude2),
+        MidiMapping(this, "SET_AMPLITUDE_3", &EffectDelay::setAmplitude3),
+        MidiMapping(this, "SET_AMPLITUDE_4", &EffectDelay::setAmplitude4),
+        MidiMapping(this, "SET_AMPLITUDE_5", &EffectDelay::setAmplitude5),
+        MidiMapping(this, "SET_AMPLITUDE_6", &EffectDelay::setAmplitude6),
+        MidiMapping(this, "SET_AMPLITUDE_7", &EffectDelay::setAmplitude7),
+        MidiMapping(this, "SET_FEEDBACK_0", &EffectDelay::setFeedback0),
+        MidiMapping(this, "SET_FEEDBACK_1", &EffectDelay::setFeedback1),
+        MidiMapping(this, "SET_FEEDBACK_2", &EffectDelay::setFeedback2),
+        MidiMapping(this, "SET_FEEDBACK_3", &EffectDelay::setFeedback3),
+        MidiMapping(this, "SET_FEEDBACK_4", &EffectDelay::setFeedback4),
+        MidiMapping(this, "SET_FEEDBACK_5", &EffectDelay::setFeedback5),
+        MidiMapping(this, "SET_FEEDBACK_6", &EffectDelay::setFeedback6),
+        MidiMapping(this, "SET_FEEDBACK_7", &EffectDelay::setFeedback7),
     };
 
 public:
@@ -58,57 +82,76 @@ public:
         // filter.setCutoff(0.5f).setResonance(0.95f).setMode(EffectFilter::Mode::HPF);
 
         // // make reverb
-        // setVoice(0, 0.01f, 0.9f, 0.0f);
-        // setVoice(1, 0.02f, 0.85f, 0.0f);
-        // setVoice(2, 0.03f, 0.8f, 0.0f);
-        // setVoice(3, 0.004f, 0.75f, 0.0f);
-        // setVoice(4, 0.05f, 0.7f, 0.0f);
-        // setVoice(5, 0.06f, 0.65f, 0.0f);
-        // setVoice(6, 0.07f, 0.6f, 0.0f);
-        // setVoice(7, 0.08f, 0.55f, 0.0f);
-        // setVoice(8, 0.09f, 0.5f, 0.0f);
-        // setVoice(9, 0.10f, 0.45f, 0.0f);
-        // setVoice(10, 0.11f, 0.4f, 0.0f);
-        // setVoice(11, 0.12f, 0.35f, 0.0f);
-        // setVoice(12, 0.13f, 0.3f, 0.0f);
-        // setVoice(13, 0.14f, 0.25f, 0.0f);
-        // setVoice(14, 0.15f, 0.2f, 0.0f);
-        // setVoice(15, 0.16f, 0.15f, 0.0f);
+        // setVoice(0, 0.05f, 0.9f, 0.0f);
+        // setVoice(1, 0.10f, 0.85f, 0.0f);
+        // setVoice(2, 0.15f, 0.8f, 0.0f);
+        // setVoice(3, 0.20f, 0.75f, 0.0f);
+        // setVoice(4, 0.25f, 0.7f, 0.0f);
+        // setVoice(5, 0.30f, 0.65f, 0.0f);
+        // setVoice(6, 0.35f, 0.6f, 0.0f);
+        // setVoice(7, 0.40f, 0.55f, 0.0f);
     }
 
-    EffectDelay* setSec(uint8_t voiceIndex, float sec)
+    EffectDelay& setSec0(float sec) { return setSec(0, sec); }
+    EffectDelay& setSec1(float sec) { return setSec(1, sec); }
+    EffectDelay& setSec2(float sec) { return setSec(2, sec); }
+    EffectDelay& setSec3(float sec) { return setSec(3, sec); }
+    EffectDelay& setSec4(float sec) { return setSec(4, sec); }
+    EffectDelay& setSec5(float sec) { return setSec(5, sec); }
+    EffectDelay& setSec6(float sec) { return setSec(6, sec); }
+    EffectDelay& setSec7(float sec) { return setSec(7, sec); }
+
+    EffectDelay& setSec(uint8_t voiceIndex, float sec)
     {
         voices[voiceIndex].sec = sec;
         voices[voiceIndex].index = (buffer.index + buffer.size - (uint32_t)(SAMPLE_RATE * sec * timeRatio)) % buffer.size;
-        return this;
+        return *this;
     }
 
-    EffectDelay* setAmplitude(uint8_t voiceIndex, float amplitude)
+    EffectDelay& setAmplitude0(float amplitude) { return setAmplitude(0, amplitude); }
+    EffectDelay& setAmplitude1(float amplitude) { return setAmplitude(1, amplitude); }
+    EffectDelay& setAmplitude2(float amplitude) { return setAmplitude(2, amplitude); }
+    EffectDelay& setAmplitude3(float amplitude) { return setAmplitude(3, amplitude); }
+    EffectDelay& setAmplitude4(float amplitude) { return setAmplitude(4, amplitude); }
+    EffectDelay& setAmplitude5(float amplitude) { return setAmplitude(5, amplitude); }
+    EffectDelay& setAmplitude6(float amplitude) { return setAmplitude(6, amplitude); }
+    EffectDelay& setAmplitude7(float amplitude) { return setAmplitude(7, amplitude); }
+
+    EffectDelay& setAmplitude(uint8_t voiceIndex, float amplitude)
     {
         voices[voiceIndex].amplitude = range(amplitude, 0.0f, 1.0f);
-        return this;
+        return *this;
     }
 
-    EffectDelay* setFeedback(uint8_t voiceIndex, float feedback)
+    EffectDelay& setFeedback0(float feedback) { return setFeedback(0, feedback); }
+    EffectDelay& setFeedback1(float feedback) { return setFeedback(1, feedback); }
+    EffectDelay& setFeedback2(float feedback) { return setFeedback(2, feedback); }
+    EffectDelay& setFeedback3(float feedback) { return setFeedback(3, feedback); }
+    EffectDelay& setFeedback4(float feedback) { return setFeedback(4, feedback); }
+    EffectDelay& setFeedback5(float feedback) { return setFeedback(5, feedback); }
+    EffectDelay& setFeedback6(float feedback) { return setFeedback(6, feedback); }
+    EffectDelay& setFeedback7(float feedback) { return setFeedback(7, feedback); }
+
+    EffectDelay& setFeedback(uint8_t voiceIndex, float feedback)
     {
         voices[voiceIndex].feedback = range(feedback, 0.0f, 1.0f);
-        return this;
+        return *this;
     }
 
-    EffectDelay* setFeedback(float feedback)
-    {
-        for (uint8_t i = 0; i < MAX_DELAY_VOICES; i++) {
-            setFeedback(i, feedback);
-        }
-        return this;
-    }
-
-    EffectDelay* setVoice(uint8_t voiceIndex, float sec, float amplitude, float feedback)
+    EffectDelay& setVoice(uint8_t voiceIndex, float sec, float amplitude, float feedback)
     {
         setSec(voiceIndex, sec);
         setAmplitude(voiceIndex, amplitude);
         setFeedback(voiceIndex, feedback);
-        return this;
+        return *this;
+    }
+
+    EffectDelay& setFeedback(float feedback)
+    {
+        for (uint8_t i = 0; i < MAX_DELAY_VOICES; i++) {
+            setFeedback(i, feedback);
+        }
+        return *this;
     }
 
     EffectDelay& setMasterAmplitude(float amplitude)
