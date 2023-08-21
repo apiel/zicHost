@@ -33,6 +33,7 @@ protected:
     };
 
 public:
+// TODO try to put this in AudioPlugin with mapCount = 0
     MIDI_MAPPING_HANDLER
 
     // From 0.0 to 1.0 to apply time ratio to voice in seconds
