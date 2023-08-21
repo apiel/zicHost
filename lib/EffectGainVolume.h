@@ -8,8 +8,8 @@ class EffectGainVolume : public AudioPlugin {
 protected:
     const static int16_t mapCount = 2;
     MidiMapping<EffectGainVolume> midiMappings[mapCount] = {
-        MidiMapping(this, "VOLUME", &EffectGainVolume::setVolume),
-        MidiMapping(this, "GAIN", &EffectGainVolume::setGain),
+        MidiMapping(this, "SET_VOLUME", &EffectGainVolume::setVolume),
+        MidiMapping(this, "SET_GAIN", &EffectGainVolume::setGain),
     };
 
 public:
