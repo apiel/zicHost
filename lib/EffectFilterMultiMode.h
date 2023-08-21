@@ -14,7 +14,15 @@ protected:
 
     float mix = 0.5;
 
+    const static int16_t mapCount = 2;
+    MidiMapping<EffectFilterMultiMode> midiMappings[mapCount] = {
+        MidiMapping(this, "SET_CUTOFF", &EffectFilterMultiMode::setCutoff),
+        MidiMapping(this, "SET_RESONANCE", &EffectFilterMultiMode::setResonance),
+    };
+
 public:
+    MIDI_MAPPING_HANDLER
+
     float resonance = 0.0;
 
     EffectFilterMultiMode(AudioPluginProps& props)
