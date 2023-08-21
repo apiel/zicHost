@@ -4,6 +4,7 @@
 #include "EffectFilter.h"
 #include "audioBuffer.h"
 #include "audioPlugin.h"
+#include "midiMapping.h"
 
 #define MAX_DELAY_VOICES 16
 
@@ -23,11 +24,23 @@ protected:
         { 0, 0.0f, 0.0f, 0.1f },
     };
 
+    // FIXME
+    // TODO handle voices values
+    const static int16_t mapCount = 2;
+    MidiMapping<EffectDelay> midiMappings[mapCount] = {
+        MidiMapping(this, "SET_TIME_RATIO", &EffectDelay::setTimeRatio),
+        MidiMapping(this, "SET_MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude),
+    };
+
 public:
+    MIDI_MAPPING_HANDLER
+
     // From 0.0 to 1.0 to apply time ratio to voice in seconds
     float timeRatio = 1.0f;
     float masterAmplitude = 1.0f;
 
+    // FIXME
+    // TODO how  to handle this? Should there be a function pointing to the filter...
     EffectFilter filter;
 
     EffectDelay(AudioPluginProps& props)
