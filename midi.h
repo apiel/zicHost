@@ -4,33 +4,9 @@
 #include "audioHandler.h"
 #include "def.h"
 #include "fs.h"
-// #include "midiMapping.h"
 
 RtMidiIn midiController;
 RtMidiOut midiOut;
-
-// MidiMapping midiMappings[] = {
-//     MidiMapping("MASTER_VOLUME", [](float value) {
-//         // AudioHandler::get().gainVolume.set(value);
-//     }),
-//     MidiMapping("SAMPLE_RATE_REDUCER", [](float value) {
-//         // AudioHandler::get().sampleRateReducer.set(value);
-//     }),
-//     MidiMapping("GRANULAR_SAMPLE_SELECTOR", [](float value) {
-//         // AudioHandler::get().synthGranular.open(value);
-//     }),
-//     MidiMapping("DISTORTION", [](float value) {
-//         // AudioHandler::get().distortion.set(value);
-//     }),
-//     MidiMapping("FILTER_CUTOFF", [](float value) {
-//         // AudioHandler::get().filter.setCutoff(value);
-//     }),
-//     MidiMapping("FILTER_RESONANCE", [](float value) {
-//         // AudioHandler::get().filter.setResonance(value);
-//     }),
-// };
-
-// const uint8_t MIDI_MAPS = sizeof(midiMappings) / sizeof(midiMappings[0]);
 
 void midiControllerCallback(double deltatime, std::vector<unsigned char>* message, void* userData = NULL)
 {

@@ -32,9 +32,6 @@ effectGainVolume:
 effectSampleRateReducer:
 	make compile LIBNAME=EffectSampleRateReducer
 
-effectFilter:
-	make compile LIBNAME=EffectFilter
-
 effectDistortion:
 	make compile LIBNAME=EffectDistortion
 
