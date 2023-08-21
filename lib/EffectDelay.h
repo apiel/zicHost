@@ -33,7 +33,6 @@ protected:
     };
 
 public:
-// TODO try to put this in AudioPlugin with mapCount = 0
     MIDI_MAPPING_HANDLER
 
     // From 0.0 to 1.0 to apply time ratio to voice in seconds
@@ -111,19 +110,19 @@ public:
         return this;
     }
 
-    EffectDelay* setMasterAmplitude(float amplitude)
+    EffectDelay& setMasterAmplitude(float amplitude)
     {
         masterAmplitude = range(amplitude, 0.0f, 1.0f);
-        return this;
+        return *this;
     }
 
-    EffectDelay* setTimeRatio(float ratio)
+    EffectDelay& setTimeRatio(float ratio)
     {
         timeRatio = range(ratio, 0.0f, 1.0f);
         for (uint8_t i = 0; i < MAX_DELAY_VOICES; i++) {
             setSec(i, voices[i].sec);
         }
-        return this;
+        return *this;
     }
 
     float sample(float in)
