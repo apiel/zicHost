@@ -26,10 +26,13 @@ protected:
 
     // FIXME
     // TODO handle voices values
-    const static int16_t mapCount = 2;
+    const static int16_t mapCount = 5;
     MidiMapping<EffectDelay> midiMappings[mapCount] = {
         MidiMapping(this, "SET_TIME_RATIO", &EffectDelay::setTimeRatio),
         MidiMapping(this, "SET_MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude),
+        MidiMapping(this, "SET_FILTER_CUTOFF", &EffectDelay::setCutoff),
+        MidiMapping(this, "SET_FILTER_RESONANCE", &EffectDelay::setResonance),
+        MidiMapping(this, "SET_FILTER_MODE", &EffectDelay::setMode),
     };
 
 public:
@@ -39,8 +42,6 @@ public:
     float timeRatio = 1.0f;
     float masterAmplitude = 1.0f;
 
-    // FIXME
-    // TODO how  to handle this? Should there be a function pointing to the filter...
     EffectFilter filter;
 
     EffectDelay(AudioPluginProps& props)
@@ -122,6 +123,24 @@ public:
         for (uint8_t i = 0; i < MAX_DELAY_VOICES; i++) {
             setSec(i, voices[i].sec);
         }
+        return *this;
+    }
+
+    EffectDelay& setCutoff(float cutoff)
+    {
+        filter.setCutoff(cutoff);
+        return *this;
+    }
+
+    EffectDelay& setResonance(float resonance)
+    {
+        filter.setResonance(resonance);
+        return *this;
+    }
+
+    EffectDelay& setMode(float mode)
+    {
+        filter.setMode(mode);
         return *this;
     }
 
