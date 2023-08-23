@@ -48,7 +48,7 @@ public:
         AudioPluginProps pluginProps = AudioPluginProps(debug);
 
         if (pluginCount >= AUDIO_PLUGIN_COUNT) {
-            APP_PRINT("Cannot load plugin: %s, reached max plugin count %d\n", path, AUDIO_PLUGIN_COUNT);
+            APP_PRINT("Cannot load plugin: %s, reached max audio plugin count %d\n", path, AUDIO_PLUGIN_COUNT);
             return;
         }
 
@@ -63,13 +63,13 @@ public:
         void* allocator = (AudioPlugin*)dlsym(plugins[pluginCount].handle, "allocator");
         const char* dlsym_error = dlerror();
         if (dlsym_error) {
-            APP_PRINT("Cannot load symbol 'hello': %s\n", dlsym_error);
+            APP_PRINT("Cannot load symbol: %s\n", dlsym_error);
             dlclose(plugins[pluginCount].handle);
             return;
         }
 
         plugins[pluginCount].instance = ((AudioPlugin * (*)(AudioPluginProps & props)) allocator)(pluginProps);
-        APP_PRINT("plugin loaded\n");
+        APP_PRINT("audio plugin loaded\n");
         APP_PRINT("plugin: %s\n", plugins[pluginCount].instance->name());
 
         // plugins[pluginCount].instance->set(0, 0.1f);

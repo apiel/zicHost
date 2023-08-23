@@ -9,7 +9,7 @@
        - rotary ecnoder
        - how to share state between interface?
 - TODO dont make delay dependent of sample rate...
-
+- TODO generate config file sample
 
 - TODO implement input for alsa and pulse audio api
 - TODO reverb, delay

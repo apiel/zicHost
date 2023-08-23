@@ -1,6 +1,3 @@
-# for FTP EOF
-.ONESHELL:
-
 # used for OSC
 LIBLO=`pkg-config --cflags --libs liblo`
 
@@ -18,7 +15,7 @@ clean_o:
 
 compile:
 	g++ -c -o $(LIBNAME).o interfacePlugin.cpp -fPIC -DPLUGIN_NAME=$(LIBNAME) -DPLUGIN_INCLUDE=\"$(LIBNAME).h\"
-	g++ -shared -o build/libzic_$(LIBNAME).so $(LIBNAME).o
+	g++ -shared -o build/libzic_$(LIBNAME).so $(LIBNAME).o $(EXTRA)
 
 osc:
-	make compile LIBNAME=OscInterface
+	make compile LIBNAME=OscInterface EXTRA=$(LIBLO)

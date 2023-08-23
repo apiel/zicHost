@@ -1,11 +1,6 @@
-# for FTP EOF
-.ONESHELL:
-
 RTAUDIO=`pkg-config --cflags --libs rtaudio`
 
 RTMIDI=`pkg-config --cflags --libs rtmidi`
-
-LIBLO=`pkg-config --cflags --libs liblo`
 
 # AUDIO_API by default will use RT audio
 # else uncomment one of the following to use the other audio API

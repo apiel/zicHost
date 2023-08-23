@@ -10,10 +10,14 @@ MIDIIN=Elektron Digitone MIDI 1
 # Channel where midi notes are sent
 MIDI_NOTE_CHANNEL=0
 
-# PLUGINS loaded in orders
+# INTERFACE PLUGINS
+INTERFACE_PLUGIN=./interface/build/libzic_OscInterface.so
+
+# AUDIO PLUGINS
 AUDIO_PLUGIN=./lib/build/libzic_EffectSampleRateReducer.so
 AUDIO_PLUGIN=./lib/build/libzic_EffectDistortion.so
-AUDIO_PLUGIN=./lib/build/libzic_EffectFilter.so
+AUDIO_PLUGIN=./lib/build/libzic_EffectFilterMultiMode.so
+AUDIO_PLUGIN=./lib/build/libzic_EffectDelay.so
 AUDIO_PLUGIN=./lib/build/libzic_EffectGainVolume.so
 
 # Set sample rate reducer steps

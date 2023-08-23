@@ -2,6 +2,8 @@
 #include "config.h"
 #include "def.h"
 
+#include "pluginState.h"
+
 #define AUDIO_API_PULSE 1
 #define AUDIO_API_ALSA 2
 
@@ -40,6 +42,8 @@ int main(int argc, char* args[])
     if (loadConfig() == false) {
         return 1;
     }
+
+    startPluginInterface();
 
     return audioApi.open();
 }
