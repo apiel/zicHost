@@ -8,7 +8,7 @@
 RtMidiIn midiController;
 RtMidiOut midiOut;
 
-void midiControllerCallback(double deltatime, std::vector<unsigned char>* message, void* userData = NULL)
+void midiHandler(std::vector<unsigned char>* message)
 {
     if (message->at(0) == 0xf8) {
         // ignore midi clock
@@ -36,6 +36,11 @@ void midiControllerCallback(double deltatime, std::vector<unsigned char>* messag
         }
         debug("\n");
     }
+}
+
+void midiControllerCallback(double deltatime, std::vector<unsigned char>* message, void* userData = NULL)
+{
+    midiHandler(message);
 }
 
 int getMidiDevice(RtMidi& midi, const char* portName)

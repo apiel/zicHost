@@ -8,6 +8,7 @@
        - UI
        - rotary ecnoder
        - how to share state between interface?
+- TODO dont make delay dependent of sample rate...
 
 
 - TODO implement input for alsa and pulse audio api
@@ -20,7 +21,6 @@
 - TODO ? use lv2 plugin
        https://github.com/lv2/lilv/blob/master/tools/lv2apply.c
        https://github.com/jeremysalwen/lv2file
-- TODO randomly change pitch... ?? (using pitchbend?)
 
 # NOTE
 

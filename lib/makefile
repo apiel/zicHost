@@ -1,14 +1,8 @@
 # for FTP EOF
 .ONESHELL:
 
-# default
-CC=g++ -o zicEffect
-
 # used for granular synth
 LIBSND=`pkg-config --cflags --libs sndfile`
-
-# used for OSC
-LIBLO=`pkg-config --cflags --libs liblo`
 
 all:
 	make clean_so effectGainVolume effectSampleRateReducer effectFilter effectDistortion effectDelay effectFilter effectFilterMultiMode effectFilterMultiMode2 effectFilterMultiModeMoog clean_o
