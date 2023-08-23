@@ -26,6 +26,7 @@ public:
     {
         if (strcmp(key, "PORT") == 0) {
             strcpy(port, value);    
+            return true;
         }
         return false;
     }
