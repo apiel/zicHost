@@ -24,7 +24,7 @@ public:
 
     bool config(const char* key, const char* value)
     {
-        if (strcmp(key, "port") == 0) {
+        if (strcmp(key, "PORT") == 0) {
             strcpy(port, value);    
         }
         return false;

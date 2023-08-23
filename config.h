@@ -47,6 +47,8 @@ void assignKeyValue(char* key, char* value)
         if (strcmp(value, "true") == 0) {
             enableDebug();
         }
+    } else if (configPluginStart(key, value)) {
+        return;
     } else {
         AudioHandler::get().assignMidiMapping(key, value);
     }

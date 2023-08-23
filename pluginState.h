@@ -56,4 +56,15 @@ void startPluginInterface()
     }
 }
 
+bool configPluginStart(char* key, char* value)
+{
+    if (interfacePluginCount > 0) {
+        if (interfacePlugins[interfacePluginCount - 1].instance->config(key, value)) {
+            APP_INFO("[%s] Config started: %s\n", interfacePlugins[interfacePluginCount - 1].instance->name(), key);
+            return true;
+        }
+    }
+    return false;
+}
+
 #endif
