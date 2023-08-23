@@ -1,6 +1,3 @@
-# for FTP EOF
-.ONESHELL:
-
 # used for granular synth
 LIBSND=`pkg-config --cflags --libs sndfile`
 
@@ -18,7 +15,7 @@ clean_o:
 
 compile:
 	g++ -c -o $(LIBNAME).o audioPlugin.cpp -fPIC -DPLUGIN_NAME=$(LIBNAME) -DPLUGIN_INCLUDE=\"$(LIBNAME).h\"
-	g++ -shared -o build/libzic_$(LIBNAME).so $(LIBNAME).o
+	g++ -shared -o build/libzic_$(LIBNAME).so $(LIBNAME).o $(EXTRA)
 
 effectGainVolume:
 	make compile LIBNAME=EffectGainVolume
@@ -40,5 +37,6 @@ effectFilterMultiMode:
 
 effectFilterMultiMode2:
 	make compile LIBNAME=EffectFilterMultiMode2
+
 effectFilterMultiModeMoog:
 	make compile LIBNAME=EffectFilterMultiModeMoog
