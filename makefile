@@ -9,8 +9,13 @@ RTMIDI=`pkg-config --cflags --libs rtmidi`
 
 BUILD=
 
-all: libs build run
+all: interfaces libs build run
 host: build run
+
+interfaces:
+	@echo "\n------------------ interface ------------------\n"
+	make -C interface
+	@echo "\nbuild interface done."
 
 libs:
 	@echo "\n------------------ lib ------------------\n"
