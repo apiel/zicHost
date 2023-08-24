@@ -1,5 +1,7 @@
 # TODO
 
+- FIXME yoyoyo checkthis out https://www.linkedin.com/pulse/five-alternatives-github-copilot-yonas-enchalew
+
 - TODO give a way to retrieve all midi mapping keys
 - TODO save state
        - per plugin
