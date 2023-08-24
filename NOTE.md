@@ -3,7 +3,9 @@
 - FIXME yoyoyo checkthis out https://www.linkedin.com/pulse/five-alternatives-github-copilot-yonas-enchalew
 https://www.linkedin.com/pulse/five-alternatives-github-copilot-yonas-enchalew
 
-- TODO input/output should have multiple possible values, when in[0] and out[0] are default ones, and all the others are pointer to empty audio buffer...
+- TODO input/output should have multiple possible values, when in[0] and out[0] are default ones, and all the others are pointer to empty audio buffer or just simple sample float...
+       Is it even the job of the plugin to decide which sample goes where
+       Or should it be on the routing of the plugin that decide whih plugin is apply to what....?
 - TODO give a way to retrieve all midi mapping keys
 - TODO save state
        - per plugin
