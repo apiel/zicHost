@@ -10,6 +10,10 @@ RTMIDI=`pkg-config --cflags --libs rtmidi`
 all: interfaces libs build run
 host: build run
 
+ui:
+	make -C interface lib_ui
+	make build run
+
 interfaces:
 	@echo "\n------------------ interface ------------------\n"
 	make -C interface
