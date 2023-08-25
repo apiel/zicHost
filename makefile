@@ -7,8 +7,6 @@ RTMIDI=`pkg-config --cflags --libs rtmidi`
 # PULSEAUDIO=`pkg-config --cflags --libs libpulse-simple` -DAUDIO_API=1
 # ALSA=`pkg-config --cflags --libs alsa` -DAUDIO_API=2
 
-BUILD=
-
 all: interfaces libs build run
 host: build run
 
