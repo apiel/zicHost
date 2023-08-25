@@ -24,13 +24,29 @@
 #define SCREEN_H 480
 
 struct Size {
-    uint32_t w;
-    uint32_t h;
+    int w;
+    int h;
 };
 
 struct Point {
-    uint32_t x;
-    uint32_t y;
+    int x;
+    int y;
 };
+
+#ifndef COLOR_WHITE
+#define COLOR_WHITE { 255, 255, 255, 255 }
+#endif
+
+#ifndef COLOR_BACKGROUND // #21252b
+#define COLOR_BACKGROUND { 0x21, 0x25, 0x2b, 255 }
+#endif
+
+#ifndef COLOR_FOREGROUND // #2b2c2e
+#define COLOR_FOREGROUND { 0x2b, 0x2c, 0x2e, 255 }
+#endif
+
+#ifndef APP_DEFAULT_FONT_COLOR
+#define APP_DEFAULT_FONT_COLOR COLOR_WHITE
+#endif
 
 #endif

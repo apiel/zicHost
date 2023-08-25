@@ -4,6 +4,7 @@
 #include "def.h"
 #include "state.h"
 #include "../interfacePlugin.h"
+#include "viewMain.h"
 
 bool handleEvent()
 {
@@ -21,9 +22,14 @@ bool handleEvent()
 
 int eventThread(void* data)
 {
+    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Event thread started");
+
     InterfacePlugin* userInterface = (InterfacePlugin*)data;
 
-    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Event thread started");
+    ViewMain& viewMain = ViewMain::get();
+    viewMain.render();
+    draw();
+
     unsigned long lastUpdate = SDL_GetTicks();
     while (handleEvent()) {
         unsigned long now = SDL_GetTicks();
