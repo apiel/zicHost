@@ -116,7 +116,7 @@ public:
         try {
             audio->openStream(&audioParams, &audioInputParams, RTAUDIO_FLOAT32, SAMPLE_RATE, &bufferFrames, &audioCallback);
             audio->startStream();
-            while (audio->isStreamRunning()) {
+            while (audio->isStreamRunning() && isRunning) {
                 usleep(100000); // 100ms
             }
         } catch (RtAudioError& e) {

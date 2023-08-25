@@ -3,6 +3,7 @@
 
 #include "def.h"
 #include "state.h"
+#include "../interfacePlugin.h"
 
 bool handleEvent()
 {
@@ -20,7 +21,7 @@ bool handleEvent()
 
 int eventThread(void* data)
 {
-    // UserInterface* userInterface = (UserInterface*)data;
+    InterfacePlugin* userInterface = (InterfacePlugin*)data;
 
     SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "Event thread started");
     unsigned long lastUpdate = SDL_GetTicks();
@@ -34,6 +35,7 @@ int eventThread(void* data)
     SDL_DestroyWindow(window);
 
     SDL_Quit();
+    userInterface->quit();
     return 0;
 }
 

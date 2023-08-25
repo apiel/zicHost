@@ -120,7 +120,7 @@ public:
 
         uint8_t bufferMultiplier = sizeof(float) / sizeof(uint8_t);
 
-        while (1) {
+        while (isRunning) {
             float outputBuffer[APP_AUDIO_CHUNK];
             audioHandler.samples((float*)outputBuffer, APP_AUDIO_CHUNK);
 

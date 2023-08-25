@@ -18,7 +18,7 @@ uint16_t interfacePluginCount = 0;
 
 void loadPluginInterface(const char* path)
 {
-    InterfacePluginProps pluginProps = InterfacePluginProps(debug, midiHandler);
+    InterfacePluginProps pluginProps = InterfacePluginProps(debug, midiHandler, quit);
 
     if (interfacePluginCount >= INTERFACE_PLUGIN_COUNT) {
         APP_PRINT("Cannot load plugin: %s, reached max interface plugin count %d\n", path, INTERFACE_PLUGIN_COUNT);

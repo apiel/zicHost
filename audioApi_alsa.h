@@ -50,12 +50,12 @@ public:
             return 1;
         }
 
-        // while (1) {
+        // while (isRunning) {
         //     float outputBuffer[APP_AUDIO_CHUNK * APP_CHANNELS];
         //     audioHandler.samples((float*)outputBuffer, APP_AUDIO_CHUNK * APP_CHANNELS);
         //     snd_pcm_writei(handle, outputBuffer, APP_AUDIO_CHUNK);
         // }
-        while (1) {
+        while (isRunning) {
             float outputBuffer[APP_AUDIO_CHUNK * APP_CHANNELS];
             audioHandler.samples((float*)outputBuffer, APP_AUDIO_CHUNK * APP_CHANNELS);
             int32_t outputBuffer32[APP_AUDIO_CHUNK * APP_CHANNELS];

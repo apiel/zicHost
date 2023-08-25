@@ -9,12 +9,15 @@ class InterfacePluginProps {
 public:
     int (*debug)(const char* format, ...);
     void (*midiHandler)(std::vector<unsigned char>* message);
+    void (*quit)();
 
     InterfacePluginProps(
         int (*debug)(const char* format, ...),
-        void (*midiHandler)(std::vector<unsigned char>* message))
+        void (*midiHandler)(std::vector<unsigned char>* message),
+        void (*quit)())
         : debug(debug)
         , midiHandler(midiHandler)
+        , quit(quit)
     {
     }
 };
@@ -23,10 +26,12 @@ class InterfacePlugin {
 public:
     int (*debug)(const char* format, ...);
     void (*midiHandler)(std::vector<unsigned char>* message);
+    void (*quit)();
 
     InterfacePlugin(InterfacePluginProps& props)
         : debug(props.debug)
         , midiHandler(props.midiHandler)
+        , quit(props.quit)
     {
     }
 

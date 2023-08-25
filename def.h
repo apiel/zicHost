@@ -49,4 +49,11 @@ uint8_t midiNoteChannel = 0;
 char audioOutputName[255] = "";
 char audioInputName[255] = "";
 
+bool isRunning = true;
+void quit()
+{
+    debug("Quitting...\n");
+    isRunning = false;
+}
+
 #endif
