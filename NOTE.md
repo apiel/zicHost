@@ -1,7 +1,6 @@
 # TODO
 
-- FIXME yoyoyo checkthis out https://www.linkedin.com/pulse/five-alternatives-github-copilot-yonas-enchalew
-https://www.linkedin.com/pulse/five-alternatives-github-copilot-yonas-enchalew
+- TODO handle rotatry encoder from midi keyboard...
 
 - TODO input/output should have multiple possible values, when in[0] and out[0] are default ones, and all the others are pointer to empty audio buffer or just simple sample float...
        Is it even the job of the plugin to decide which sample goes where
