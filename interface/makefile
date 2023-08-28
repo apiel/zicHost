@@ -1,5 +1,5 @@
 all:
-	make clean_so lib_osc lib_ui clean_o
+	make clean_so lib_osc lib_ui lib_encoder clean_o
 
 clean:
 	make clean_so clean_o

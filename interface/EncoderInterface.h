@@ -43,14 +43,14 @@ public:
     void start()
     {
         if (gpioA != -1 && gpioB != -1 && midiHandler != NULL) {
-            #ifdef PIGPIO
+#ifdef PIGPIO
             gpioSetMode(gpioA, PI_INPUT);
             gpioSetMode(gpioB, PI_INPUT);
             gpioSetPullUpDown(gpioA, PI_PUD_UP);
             gpioSetPullUpDown(gpioB, PI_PUD_UP);
             gpioSetAlertFuncEx(gpioA, pulseEx, this);
             gpioSetAlertFuncEx(gpioB, pulseEx, this);
-            #endif
+#endif
         }
     }
 
@@ -103,8 +103,14 @@ public:
                 &encoders[encodersActive].channel,
                 &encoders[encodersActive].cc);
 
+            debug("Load encoder gpioA=%d gpioB=%d channel=%hhd cc=%hhd\n",
+                encoders[encodersActive].gpioA,
+                encoders[encodersActive].gpioB,
+                encoders[encodersActive].channel,
+                encoders[encodersActive].cc);
+
             encoders[encodersActive].midiHandler = midiHandler;
-            
+
             return true;
         }
         return false;
