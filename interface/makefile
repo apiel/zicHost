@@ -20,3 +20,9 @@ lib_osc:
 lib_ui:
 	make compile LIBNAME=UserInterface \
 		EXTRA="$(shell sdl2-config --cflags --libs) $(shell pkg-config --cflags --libs SDL2_ttf)"
+
+# FIXME need to do something with makefile depending libpigpio is available
+# $(shell pkg-config --cflags --libs libpigpio)
+
+lib_encoder:
+	make compile LIBNAME=EncoderInterface
