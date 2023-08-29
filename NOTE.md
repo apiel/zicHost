@@ -1,6 +1,8 @@
 # TODO
 
-- TODO handle rotatry encoder from midi keyboard...
+- TODO handle rotatry encoder from midi... (keyboard and osc)
+- TODO run SDL without X
+maybe https://lektiondestages.art.blog/2020/03/18/compiling-sdl2-image-mixer-ttf-for-the-raspberry-pi-without-x11/
 
 - TODO input/output should have multiple possible values, when in[0] and out[0] are default ones, and all the others are pointer to empty audio buffer or just simple sample float...
        Is it even the job of the plugin to decide which sample goes where

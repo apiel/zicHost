@@ -1,6 +1,17 @@
 #ifndef _ENCODER_INTERFACE_H_
 #define _ENCODER_INTERFACE_H_
 
+// The problem is that GPIO need to run as root
+//
+// INTERFACE_PLUGIN=./interface/build/libzic_EncoderInterface.so
+// ENCODER=4 27 1 80
+// ENCODER=25 24 1 81
+// ENCODER=19 16 1 82
+// ENCODER=21 20 1 83
+//
+// lib_encoder:
+// 	make compile LIBNAME=EncoderInterface EXTRA="-lpigpio -lrt -DPIGPIO=1"
+
 #ifdef PIGPIO
 // sudo apt-get install libpigpio-dev
 #include <pigpio.h>
@@ -110,6 +121,7 @@ public:
                 encoders[encodersActive].cc);
 
             encoders[encodersActive].midiHandler = midiHandler;
+            encodersActive++;
 
             return true;
         }

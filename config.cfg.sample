@@ -14,12 +14,6 @@ MIDI_NOTE_CHANNEL=0
 INTERFACE_PLUGIN=./interface/build/libzic_OscInterface.so
 INTERFACE_PLUGIN=./interface/build/libzic_UserInterface.so
 
-INTERFACE_PLUGIN=./interface/build/libzic_EncoderInterface.so
-ENCODER=4 27 1 80
-ENCODER=25 24 1 81
-ENCODER=19 16 1 82
-ENCODER=21 20 1 83
-
 # AUDIO PLUGINS
 AUDIO_PLUGIN=./lib/build/libzic_EffectSampleRateReducer.so
 AUDIO_PLUGIN=./lib/build/libzic_EffectDistortion.so
