@@ -35,7 +35,7 @@ protected:
 
     const static int16_t mapCount = 1;
     MidiMapping<EffectSampleRateReducer> midiMappings[mapCount] = {
-        MidiMapping(this, "SET_SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep),
+        MidiMapping<EffectSampleRateReducer>(this, "SET_SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep),
     };
 
 public:

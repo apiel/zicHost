@@ -13,9 +13,9 @@ protected:
     
     const static int16_t mapCount = 3;
     MidiMapping<EffectFilter> midiMappings[mapCount] = {
-        MidiMapping(this, "SET_CUTOFF", &EffectFilter::setCutoff),
-        MidiMapping(this, "SET_RESONANCE", &EffectFilter::setResonance),
-        MidiMapping(this, "SET_MODE", &EffectFilter::setMode),
+        MidiMapping<EffectFilter>(this, "SET_CUTOFF", &EffectFilter::setCutoff),
+        MidiMapping<EffectFilter>(this, "SET_RESONANCE", &EffectFilter::setResonance),
+        MidiMapping<EffectFilter>(this, "SET_MODE", &EffectFilter::setMode),
     };
 
 public:

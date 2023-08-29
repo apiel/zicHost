@@ -29,7 +29,7 @@ protected:
 
     const static int16_t mapCount = 1;
     MidiMapping<EffectDistortion> midiMappings[mapCount] = {
-        MidiMapping(this, "SET_DRIVE", &EffectDistortion::setDrive),
+        MidiMapping<EffectDistortion>(this, "SET_DRIVE", &EffectDistortion::setDrive),
     };
 
 public:
