@@ -26,7 +26,7 @@ libs:
 
 build:
 	@echo "\n------------------ build ------------------\n"
-	g++ -o zicHost -Wall zicHost.cpp -fopenmp -Wno-narrowing $(RTAUDIO) $(LIBSND) $(RTMIDI) $(PULSEAUDIO) $(ALSA) $(LIBLO)
+	g++ -o zicHost -Wall zicHost.cpp -fopenmp -Wno-narrowing -ldl $(RTAUDIO) $(LIBSND) $(RTMIDI) $(PULSEAUDIO) $(ALSA) $(LIBLO)
 	@echo "build zicHost done."
 
 run:
