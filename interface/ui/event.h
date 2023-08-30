@@ -18,6 +18,10 @@ void handleMotion(int x, int y, int id)
 void handleMotionUp(int x, int y, int id)
 {
     SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "MotionUp %d, %d (id: %d)", x, y, id);
+
+    ViewMain& viewMain = ViewMain::get();
+    viewMain.render();
+    draw();
 }
 
 void handleMotionDown(int x, int y, int id)
@@ -70,10 +74,6 @@ int eventThread(void* data)
     InterfacePlugin* userInterface = (InterfacePlugin*)data;
 
     ViewMain& viewMain = ViewMain::get();
-    viewMain.render();
-    draw();
-
-    SDL_Delay(100);
     viewMain.render();
     draw();
 
