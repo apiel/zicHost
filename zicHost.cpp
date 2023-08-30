@@ -1,8 +1,5 @@
 #include "audioApi.h"
-#include "config.h"
-#include "def.h"
 
-#include "pluginState.h"
 
 #define AUDIO_API_PULSE 1
 #define AUDIO_API_ALSA 2
@@ -21,6 +18,12 @@ AudioApi& audioApi = AudioApiAlsa::get();
 #include "audioApi_rt.h"
 AudioApi& audioApi = AudioApiRT::get();
 #endif
+
+
+#include "config.h"
+#include "def.h"
+
+#include "pluginState.h"
 
 int main(int argc, char* args[])
 {

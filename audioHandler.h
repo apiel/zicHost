@@ -33,13 +33,28 @@ public:
         return *instance;
     }
 
-    void samples(float* in, float* out, int len)
-    {
+#ifdef AUDIO_FORMAT_INT32_TO_FLOAT
+void samples(int32_t* in, int32_t* out32, int len)
+{
+    float out[len];
+#else
+void samples(float* in, float* out, int len)
+{
+#endif
+
         for (int i = 0; i < len; i++) {
             out[i] = in[i];
+            #ifdef AUDIO_FORMAT_INT32_TO_FLOAT
+            out[i] = in[i] / 2147483647.0f;
+            #endif
+
             for (int j = 0; j < pluginCount; j++) {
                 out[i] = plugins[j].instance->sample(out[i]);
             }
+            
+            #ifdef AUDIO_FORMAT_INT32_TO_FLOAT
+            out32[i] = out[i] * 2147483647.0f;
+            #endif
         }
     }
 

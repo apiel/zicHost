@@ -1,10 +1,12 @@
 #ifndef _AUDIO_API_INTERFACE_H_
 #define _AUDIO_API_INTERFACE_H_
 
+#define AUDIO_FORMAT_INT32_TO_FLOAT 1
+
 #include <alsa/asoundlib.h>
 
-#include "audioHandler.h"
 #include "audioApi.h"
+#include "audioHandler.h"
 #include "def.h"
 
 class AudioApiAlsa : public AudioApi {
@@ -75,22 +77,34 @@ public:
         }
 
         while (isRunning) {
-            float inputBuffer[APP_AUDIO_CHUNK * APP_CHANNELS];
+            // Instead to use AUDIO_FORMAT_INT32_TO_FLOAT
+            //
+            // float inputBuffer[APP_AUDIO_CHUNK * APP_CHANNELS];
+            // int32_t inputBuffer32[APP_AUDIO_CHUNK * APP_CHANNELS];
+            // if (snd_pcm_readi(handleIn, inputBuffer32, APP_AUDIO_CHUNK) < 0) {
+            //     APP_INFO("Audio card read error: %s\n", snd_strerror(err));
+            //     return 1;
+            // }
+            // for (int i = 0; i < APP_AUDIO_CHUNK * APP_CHANNELS; i++) {
+            //     inputBuffer[i] = (float)inputBuffer32[i] / 2147483647.0f;
+            // }
+
+            // float outputBuffer[APP_AUDIO_CHUNK * APP_CHANNELS];
+            // audioHandler.samples(inputBuffer, (float*)outputBuffer, APP_AUDIO_CHUNK * APP_CHANNELS);
+            // int32_t outputBuffer32[APP_AUDIO_CHUNK * APP_CHANNELS];
+            // for (int i = 0; i < APP_AUDIO_CHUNK * APP_CHANNELS; i++) {
+            //     outputBuffer32[i] = (int32_t)(outputBuffer[i] * 2147483647.0f);
+            // }
+            // snd_pcm_writei(handleOut, outputBuffer32, APP_AUDIO_CHUNK);
+
             int32_t inputBuffer32[APP_AUDIO_CHUNK * APP_CHANNELS];
             if (snd_pcm_readi(handleIn, inputBuffer32, APP_AUDIO_CHUNK) < 0) {
                 APP_INFO("Audio card read error: %s\n", snd_strerror(err));
                 return 1;
             }
-            for (int i = 0; i < APP_AUDIO_CHUNK * APP_CHANNELS; i++) {
-                inputBuffer[i] = (float)inputBuffer32[i] / 2147483647.0f;
-            }    
 
-            float outputBuffer[APP_AUDIO_CHUNK * APP_CHANNELS];
-            audioHandler.samples(inputBuffer, (float*)outputBuffer, APP_AUDIO_CHUNK * APP_CHANNELS);
             int32_t outputBuffer32[APP_AUDIO_CHUNK * APP_CHANNELS];
-            for (int i = 0; i < APP_AUDIO_CHUNK * APP_CHANNELS; i++) {
-                outputBuffer32[i] = (int32_t)(outputBuffer[i] * 2147483647.0f);
-            }
+            audioHandler.samples(inputBuffer32, outputBuffer32, APP_AUDIO_CHUNK * APP_CHANNELS);
             snd_pcm_writei(handleOut, outputBuffer32, APP_AUDIO_CHUNK);
         }
 
