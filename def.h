@@ -1,7 +1,6 @@
 #ifndef _DEF_H_
 #define _DEF_H_
 
-#include <RtAudio.h>
 #include <RtMidi.h>
 #include <math.h>
 #include <stdint.h>

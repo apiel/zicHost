@@ -1,6 +1,8 @@
 #ifndef _AUDIO_API_INTERFACE_H_
 #define _AUDIO_API_INTERFACE_H_
 
+#include <RtAudio.h>
+
 #include "audioApi.h"
 #include "audioHandler.h"
 #include "def.h"
