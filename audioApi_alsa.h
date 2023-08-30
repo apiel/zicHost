@@ -56,8 +56,14 @@ public:
         //     snd_pcm_writei(handle, outputBuffer, APP_AUDIO_CHUNK);
         // }
         while (isRunning) {
+            // FIXME
+            float inputBuffer[APP_AUDIO_CHUNK * APP_CHANNELS];
+            for (int i = 0; i < APP_AUDIO_CHUNK * APP_CHANNELS; i++) {
+                inputBuffer[i] = 0.0f;
+            }
+
             float outputBuffer[APP_AUDIO_CHUNK * APP_CHANNELS];
-            audioHandler.samples((float*)outputBuffer, APP_AUDIO_CHUNK * APP_CHANNELS);
+            audioHandler.samples(inputBuffer, (float*)outputBuffer, APP_AUDIO_CHUNK * APP_CHANNELS);
             int32_t outputBuffer32[APP_AUDIO_CHUNK * APP_CHANNELS];
             for (int i = 0; i < APP_AUDIO_CHUNK * APP_CHANNELS; i++) {
                 outputBuffer32[i] = (int32_t)(outputBuffer[i] * 2147483647.0f);

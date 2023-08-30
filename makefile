@@ -1,11 +1,10 @@
-RTAUDIO=`pkg-config --cflags --libs rtaudio`
-
 RTMIDI=`pkg-config --cflags --libs rtmidi`
 
 # AUDIO_API by default will use RT audio
 # else uncomment one of the following to use the other audio API
+# RTAUDIO=`pkg-config --cflags --libs rtaudio`
 # PULSEAUDIO=`pkg-config --cflags --libs libpulse-simple` -DAUDIO_API=1
-# ALSA=`pkg-config --cflags --libs alsa` -DAUDIO_API=2
+ALSA=`pkg-config --cflags --libs alsa` -DAUDIO_API=2
 
 all: interfaces libs build run
 host: build run
