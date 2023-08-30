@@ -73,6 +73,10 @@ int eventThread(void* data)
     viewMain.render();
     draw();
 
+    SDL_Delay(100);
+    viewMain.render();
+    draw();
+
     unsigned long lastUpdate = SDL_GetTicks();
     while (handleEvent()) {
         unsigned long now = SDL_GetTicks();
