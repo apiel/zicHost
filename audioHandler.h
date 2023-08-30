@@ -41,10 +41,10 @@ public:
         return *instance;
     }
 
-    void samples(int32_t* in, int32_t* out32, int len)
+    void samples(int32_t* in32, int32_t* out32, int len)
     {
         for (int i = 0; i < len; i++) {
-            out32[i] = sample(in[i] / 2147483647.0f) * 2147483647.0f;
+            out32[i] = sample(in32[i] / 2147483647.0f) * 2147483647.0f;
         }
     }
 
