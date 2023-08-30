@@ -23,6 +23,7 @@ public:
     {
         drawClear();
         drawText({10, 10}, "Hello World! 12345 # $ +");
+        drawRect({10, 20}, {100, 100}, {255, 0, 0, 255});
         draw();
     }
 
