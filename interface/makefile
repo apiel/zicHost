@@ -1,5 +1,5 @@
 all:
-	make clean_so lib_osc lib_ui clean_o
+	make clean_so lib_osc clean_o
 
 clean:
 	make clean_so clean_o
@@ -17,7 +17,3 @@ compile:
 # sudo apt-get install liblo-dev
 lib_osc:
 	make compile LIBNAME=OscInterface EXTRA=$(shell pkg-config --cflags --libs liblo)
-
-lib_ui:
-	make compile LIBNAME=UserInterface \
-		EXTRA="$(shell sdl2-config --cflags --libs) $(shell pkg-config --cflags --libs SDL2_ttf)"

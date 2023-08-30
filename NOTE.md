@@ -1,5 +1,6 @@
 # TODO
 
+- TODO dynamically load and unload module
 - TODO handle rotatry encoder from midi... (keyboard and osc)
 - TODO run SDL without X
 maybe https://lektiondestages.art.blog/2020/03/18/compiling-sdl2-image-mixer-ttf-for-the-raspberry-pi-without-x11/

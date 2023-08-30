@@ -12,7 +12,6 @@ MIDI_NOTE_CHANNEL=0
 
 # INTERFACE PLUGINS
 INTERFACE_PLUGIN=./interface/build/libzic_OscInterface.so
-INTERFACE_PLUGIN=./interface/build/libzic_UserInterface.so
 
 # AUDIO PLUGINS
 AUDIO_PLUGIN=./lib/build/libzic_EffectSampleRateReducer.so
