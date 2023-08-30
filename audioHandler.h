@@ -24,6 +24,14 @@ protected:
         printf("AudioHandler constructor\n");
     }
 
+    float sample(float s)
+    {
+        for (int j = 0; j < pluginCount; j++) {
+            s = plugins[j].instance->sample(s);
+        }
+        return s;
+    }
+
 public:
     static AudioHandler& get()
     {
@@ -33,28 +41,17 @@ public:
         return *instance;
     }
 
-#ifdef AUDIO_FORMAT_INT32_TO_FLOAT
-void samples(int32_t* in, int32_t* out32, int len)
-{
-    float out[len];
-#else
-void samples(float* in, float* out, int len)
-{
-#endif
-
+    void samples(int32_t* in, int32_t* out32, int len)
+    {
         for (int i = 0; i < len; i++) {
-            out[i] = in[i];
-            #ifdef AUDIO_FORMAT_INT32_TO_FLOAT
-            out[i] = in[i] / 2147483647.0f;
-            #endif
+            out32[i] = sample(in[i] / 2147483647.0f) * 2147483647.0f;
+        }
+    }
 
-            for (int j = 0; j < pluginCount; j++) {
-                out[i] = plugins[j].instance->sample(out[i]);
-            }
-            
-            #ifdef AUDIO_FORMAT_INT32_TO_FLOAT
-            out32[i] = out[i] * 2147483647.0f;
-            #endif
+    void samples(float* in, float* out, int len)
+    {
+        for (int i = 0; i < len; i++) {
+            out[i] = sample(in[i]);
         }
     }
 

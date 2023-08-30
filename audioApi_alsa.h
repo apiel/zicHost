@@ -1,8 +1,6 @@
 #ifndef _AUDIO_API_INTERFACE_H_
 #define _AUDIO_API_INTERFACE_H_
 
-#define AUDIO_FORMAT_INT32_TO_FLOAT 1
-
 #include <alsa/asoundlib.h>
 
 #include "audioApi.h"
@@ -77,8 +75,6 @@ public:
         }
 
         while (isRunning) {
-            // Instead to use AUDIO_FORMAT_INT32_TO_FLOAT
-            //
             // float inputBuffer[APP_AUDIO_CHUNK * APP_CHANNELS];
             // int32_t inputBuffer32[APP_AUDIO_CHUNK * APP_CHANNELS];
             // if (snd_pcm_readi(handleIn, inputBuffer32, APP_AUDIO_CHUNK) < 0) {
