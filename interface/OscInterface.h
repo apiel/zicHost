@@ -1,6 +1,8 @@
 #ifndef _OSC_INTERFACE_H_
 #define _OSC_INTERFACE_H_
 
+// sudo apt-get install liblo-dev
+
 #include <lo/lo.h>
 #include <stdio.h>
 #include <stdlib.h>

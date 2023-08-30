@@ -18,8 +18,8 @@ protected:
 
     const static int16_t mapCount = 2;
     MidiMapping<EffectFilterMultiMode2> midiMappings[mapCount] = {
-        MidiMapping<EffectFilterMultiMode2>(this, "SET_CUTOFF", &EffectFilterMultiMode2::setCutoff),
-        MidiMapping<EffectFilterMultiMode2>(this, "SET_RESONANCE", &EffectFilterMultiMode2::setResonance),
+        {this, "SET_CUTOFF", &EffectFilterMultiMode2::setCutoff},
+        {this, "SET_RESONANCE", &EffectFilterMultiMode2::setResonance},
     };
 
 public:

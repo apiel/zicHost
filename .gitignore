@@ -8,3 +8,4 @@ config.cfg
 list_pulse
 *.so
 *.o
+test

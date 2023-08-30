@@ -2,25 +2,25 @@
 #define _EFFECT_FILTER_H_
 
 #include "../helpers/range.h"
-#include "midiMapping.h"
 #include "filter.h"
+#include "midiMapping.h"
 
 // #include <math.h>
 
 class EffectFilter : public EffectFilterInterface {
 protected:
     EffectFilterData data;
-    
+
     const static int16_t mapCount = 3;
     MidiMapping<EffectFilter> midiMappings[mapCount] = {
-        MidiMapping<EffectFilter>(this, "SET_CUTOFF", &EffectFilter::setCutoff),
-        MidiMapping<EffectFilter>(this, "SET_RESONANCE", &EffectFilter::setResonance),
-        MidiMapping<EffectFilter>(this, "SET_MODE", &EffectFilter::setMode),
+        { this, "SET_CUTOFF", &EffectFilter::setCutoff },
+        { this, "SET_RESONANCE", &EffectFilter::setResonance },
+        { this, "SET_MODE", &EffectFilter::setMode },
     };
 
 public:
     MIDI_MAPPING_HANDLER
-    
+
     float resonance = 0.0;
     float cutoff = 0.0;
 

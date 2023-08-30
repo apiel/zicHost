@@ -1,15 +1,15 @@
 #ifndef _EFFECT_GAIN_VOLUME_H_
 #define _EFFECT_GAIN_VOLUME_H_
 
-#include "midiMapping.h"
 #include "audioPlugin.h"
+#include "midiMapping.h"
 
 class EffectGainVolume : public AudioPlugin {
 protected:
     const static int16_t mapCount = 2;
     MidiMapping<EffectGainVolume> midiMappings[mapCount] = {
-        MidiMapping<EffectGainVolume>(this, "SET_VOLUME", &EffectGainVolume::setVolume),
-        MidiMapping<EffectGainVolume>(this, "SET_GAIN", &EffectGainVolume::setGain),
+        { this, "SET_VOLUME", &EffectGainVolume::setVolume },
+        { this, "SET_GAIN", &EffectGainVolume::setGain },
     };
 
 public:

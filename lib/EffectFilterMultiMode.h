@@ -2,8 +2,8 @@
 #define _EFFECT_FILTER_H_
 
 #include "../helpers/range.h"
-#include "midiMapping.h"
 #include "filter.h"
+#include "midiMapping.h"
 
 // #include <math.h>
 
@@ -16,8 +16,8 @@ protected:
 
     const static int16_t mapCount = 2;
     MidiMapping<EffectFilterMultiMode> midiMappings[mapCount] = {
-        MidiMapping<EffectFilterMultiMode>(this, "SET_CUTOFF", &EffectFilterMultiMode::setCutoff),
-        MidiMapping<EffectFilterMultiMode>(this, "SET_RESONANCE", &EffectFilterMultiMode::setResonance),
+        { this, "SET_CUTOFF", &EffectFilterMultiMode::setCutoff },
+        { this, "SET_RESONANCE", &EffectFilterMultiMode::setResonance },
     };
 
 public:
