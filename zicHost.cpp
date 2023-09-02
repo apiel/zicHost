@@ -1,6 +1,5 @@
 #include "audioApi.h"
 
-
 #define AUDIO_API_PULSE 1
 #define AUDIO_API_ALSA 2
 
@@ -19,26 +18,16 @@ AudioApi& audioApi = AudioApiAlsa::get();
 AudioApi& audioApi = AudioApiRT::get();
 #endif
 
-
 #include "config.h"
 #include "def.h"
 
 #include "pluginState.h"
 
-int main(int argc, char* args[])
+extern "C" {
+int start()
 {
-    if (argc > 1) {
-        if (strcmp(args[1], "-h") == 0 || strcmp(args[1], "--help") == 0) {
-            APP_PRINT("Usage:\n    %s\n    %s --list\n", args[0], args[0]);
-            return 0;
-        }
-
-        if (strcmp(args[1], "--list") == 0) {
-            // showAudioDeviceInfo();
-            audioApi.list();
-            return 0;
-        }
-    }
+    APP_PRINT("List of available audio interfaces:\n");
+    audioApi.list();
 
     // TODO make config.cfg a parameter
     // make default config
@@ -49,4 +38,10 @@ int main(int argc, char* args[])
     startPluginInterface();
 
     return audioApi.open();
+}
+}
+
+int main()
+{
+    return start();
 }

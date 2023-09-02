@@ -19,10 +19,7 @@ protected:
 
     uint16_t pluginCount = 0;
 
-    AudioHandler()
-    {
-        printf("AudioHandler constructor\n");
-    }
+    AudioHandler() { }
 
     float sample(float s)
     {

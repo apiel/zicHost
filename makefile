@@ -6,8 +6,10 @@ RTMIDI=`pkg-config --cflags --libs rtmidi`
 # PULSEAUDIO=`pkg-config --cflags --libs libpulse-simple` -DAUDIO_API=1
 ALSA=`pkg-config --cflags --libs alsa` -DAUDIO_API=2
 
-all: interfaces libs build run
+BUILD=-Wno-narrowing -ldl $(RTAUDIO) $(LIBSND) $(RTMIDI) $(PULSEAUDIO) $(ALSA) $(LIBLO)
+
 host: build run
+all: interfaces libs build so run
 
 ui:
 	make -C interface lib_ui
@@ -23,10 +25,15 @@ libs:
 	make -C lib
 	@echo "\nbuild lib done."
 
+so:
+	@echo "\n------------------ build_so ------------------\n"
+	g++ -shared -o zicHost.so zicHost.cpp -fPIC -fopenmp $(BUILD)
+	@echo "\nbuild zicHost.so done."
+
 build:
 	@echo "\n------------------ build ------------------\n"
-	g++ -o zicHost -Wall zicHost.cpp -fopenmp -Wno-narrowing -ldl $(RTAUDIO) $(LIBSND) $(RTMIDI) $(PULSEAUDIO) $(ALSA) $(LIBLO)
-	@echo "build zicHost done."
+	g++ -o zicHost -Wall zicHost.cpp -fopenmp $(BUILD)
+	@echo "\nbuild zicHost done."
 
 run:
 	@echo "\n------------------ run ------------------\n"
