@@ -5,6 +5,8 @@
 #include <string.h>
 #include <vector>
 
+#include "midiMapping.h"
+
 class AudioPluginProps {
 public:
     int (*debug)(const char* format, ...);

@@ -10,13 +10,7 @@
 class EffectFilter : public EffectFilterInterface {
 protected:
     EffectFilterData data;
-
-    const static int16_t mapCount = 3;
-    MidiMapping<EffectFilter> midiMappings[mapCount] = {
-        { this, "SET_CUTOFF", &EffectFilter::setCutoff },
-        { this, "SET_RESONANCE", &EffectFilter::setResonance },
-        { this, "SET_MODE", &EffectFilter::setMode },
-    };
+    MidiMapping<EffectFilter> midiMapping;
 
 public:
     MIDI_MAPPING_HANDLER
@@ -32,6 +26,15 @@ public:
         MODE_COUNT,
     } mode
         = OFF;
+
+    EffectFilter(AudioPluginProps& props)
+        : EffectFilterInterface(props)
+        , midiMapping(this)
+    {
+        midiMapping.add("SET_CUTOFF", &EffectFilter::setCutoff);
+        midiMapping.add("SET_RESONANCE", &EffectFilter::setResonance);
+        midiMapping.add("SET_MODE", &EffectFilter::setMode);
+    }
 
     float sample(float inputValue)
     {
@@ -84,11 +87,6 @@ public:
     {
         mode = (Mode)range(value * 128, 0, (uint8_t)MODE_COUNT);
         return setMode(mode);
-    }
-
-    EffectFilter(AudioPluginProps& props)
-        : EffectFilterInterface(props)
-    {
     }
 
     const char* name()

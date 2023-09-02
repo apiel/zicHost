@@ -27,10 +27,7 @@ protected:
         return (1 + shape) * buf / (1 + shape * fabsf(buf));
     }
 
-    const static int16_t mapCount = 1;
-    MidiMapping<EffectDistortion> midiMappings[mapCount] = {
-        { this, "SET_DRIVE", &EffectDistortion::setDrive },
-    };
+    MidiMapping<EffectDistortion> midiMapping;
 
 public:
     MIDI_MAPPING_HANDLER
@@ -39,7 +36,9 @@ public:
 
     EffectDistortion(AudioPluginProps& props)
         : AudioPlugin(props)
+        , midiMapping(this)
     {
+        midiMapping.add("SET_DRIVE", &EffectDistortion::setDrive);
         setDrive(drive);
     };
 

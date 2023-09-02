@@ -2,7 +2,7 @@
 LIBSND=`pkg-config --cflags --libs sndfile`
 
 all:
-	make clean_so effectGainVolume effectSampleRateReducer effectFilter effectDistortion effectDelay effectFilter effectFilterMultiMode effectFilterMultiMode2 effectFilterMultiModeMoog clean_o
+	make clean_so EffectGainVolume EffectSampleRateReducer EffectFilter EffectDistortion EffectDelay EffectFilter EffectFilterMultiMode EffectFilterMultiMode2 EffectFilterMultiModeMoog clean_o
 
 clean:
 	make clean_so clean_o
@@ -17,26 +17,26 @@ compile:
 	g++ -c -o $(LIBNAME).o audioPlugin.cpp -fPIC -DPLUGIN_NAME=$(LIBNAME) -DPLUGIN_INCLUDE=\"$(LIBNAME).h\"
 	g++ -shared -o build/libzic_$(LIBNAME).so $(LIBNAME).o $(EXTRA)
 
-effectGainVolume:
+EffectGainVolume:
 	make compile LIBNAME=EffectGainVolume
 
-effectSampleRateReducer:
+EffectSampleRateReducer:
 	make compile LIBNAME=EffectSampleRateReducer
 
-effectDistortion:
+EffectDistortion:
 	make compile LIBNAME=EffectDistortion
 
-effectDelay:
+EffectDelay:
 	make compile LIBNAME=EffectDelay
 
-effectFilter:
+EffectFilter:
 	make compile LIBNAME=EffectFilter
 
-effectFilterMultiMode:
+EffectFilterMultiMode:
 	make compile LIBNAME=EffectFilterMultiMode
 
-effectFilterMultiMode2:
+EffectFilterMultiMode2:
 	make compile LIBNAME=EffectFilterMultiMode2
 
-effectFilterMultiModeMoog:
+EffectFilterMultiModeMoog:
 	make compile LIBNAME=EffectFilterMultiModeMoog

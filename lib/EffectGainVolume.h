@@ -6,21 +6,23 @@
 
 class EffectGainVolume : public AudioPlugin {
 protected:
-    const static int16_t mapCount = 2;
-    MidiMapping<EffectGainVolume> midiMappings[mapCount] = {
-        { this, "SET_VOLUME", &EffectGainVolume::setVolume },
-        { this, "SET_GAIN", &EffectGainVolume::setGain },
-    };
+    MidiMapping<EffectGainVolume> midiMapping;
 
 public:
     MIDI_MAPPING_HANDLER
 
-    float gain = 1.0f;
+    float gain
+        = 1.0f;
     float volume = 1.0f;
     float volumeWithGain = gain * volume;
 
     EffectGainVolume(AudioPluginProps& props)
-        : AudioPlugin(props) {};
+        : AudioPlugin(props)
+        , midiMapping(this)
+    {
+        midiMapping.add("SET_VOLUME", &EffectGainVolume::setVolume);
+        midiMapping.add("SET_GAIN", &EffectGainVolume::setGain);
+    };
 
     float sample(float in)
     {

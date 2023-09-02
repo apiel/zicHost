@@ -2,8 +2,8 @@
 #define _EFFECT_FILTER_H_
 
 #include "../helpers/range.h"
-#include "midiMapping.h"
 #include "filter.h"
+#include "midiMapping.h"
 
 // #include <math.h>
 
@@ -27,11 +27,7 @@ protected:
         debug("mix %f cutoff %f q=%f\n", mix, _cutoff, q);
     }
 
-    const static int16_t mapCount = 2;
-    MidiMapping<EffectFilterMultiModeMoog> midiMappings[mapCount] = {
-        {this, "SET_CUTOFF", &EffectFilterMultiModeMoog::setCutoff},
-        {this, "SET_RESONANCE", &EffectFilterMultiModeMoog::setResonance},
-    };
+    MidiMapping<EffectFilterMultiModeMoog> midiMapping;
 
 public:
     MIDI_MAPPING_HANDLER
@@ -40,7 +36,11 @@ public:
 
     EffectFilterMultiModeMoog(AudioPluginProps& props)
         : EffectFilterInterface(props)
+        , midiMapping(this)
     {
+        midiMapping.add("SET_CUTOFF", &EffectFilterMultiModeMoog::setCutoff);
+        midiMapping.add("SET_RESONANCE", &EffectFilterMultiModeMoog::setResonance);
+
         setCutoff(0.5);
     };
 

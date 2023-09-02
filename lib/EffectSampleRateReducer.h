@@ -33,10 +33,7 @@ protected:
         return sampleSqueeze;
     }
 
-    const static int16_t mapCount = 1;
-    MidiMapping<EffectSampleRateReducer> midiMappings[mapCount] = {
-        { this, "SET_SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep },
-    };
+    MidiMapping<EffectSampleRateReducer> midiMapping;
 
 public:
     MIDI_MAPPING_HANDLER
@@ -45,7 +42,10 @@ public:
 
     EffectSampleRateReducer(AudioPluginProps& props)
         : AudioPlugin(props)
+        , midiMapping(this)
     {
+        midiMapping.add("SET_SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep);
+
         setSampleStep(0);
         // set(0.5);
     };

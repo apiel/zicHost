@@ -6,29 +6,20 @@
 
 #define MIDI_MAPPING_HANDLER     bool midi(std::vector<unsigned char>* message)\
     {\
-        for (int i = 0; i < mapCount; i++) {\
-            if (midiMappings[i].handle(message)) {\
-                return true;\
-            }\
-        }\
-        return false;\
+        return midiMapping.handle(message);\
     }\
     bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1)\
     {\
-        for (int i = 0; i < mapCount; i++) {\
-            if (strcmp(midiMappings[i].key, key) == 0) {\
-                midiMappings[i].set(size, valuePosition, msg0, msg1);\
-                return true;\
-            }\
-        }\
-        return false;\
+        return midiMapping.assign(key, size, valuePosition, msg0, msg1);\
     }
 
+
+
 template <typename T>
-class MidiMapping {
+class MidiMappingItem {
 protected:
     T* instance;
-    bool (MidiMapping::*handlePtr)(std::vector<unsigned char>* message) = &MidiMapping::handleNone;
+    bool (MidiMappingItem::*handlePtr)(std::vector<unsigned char>* message) = &MidiMappingItem::handleNone;
     uint8_t size = 0;
     uint8_t msg[2] = { 0x00, 0x00 };
 
@@ -62,7 +53,7 @@ public:
     const char* key;
     T& (T::*callback)(float value);
 
-    MidiMapping(T* instance, const char* _key, T& (T::*_callback)(float value))
+    MidiMappingItem(T* instance, const char* _key, T& (T::*_callback)(float value))
         : instance(instance)
         , key(_key)
         , callback(_callback)
@@ -80,21 +71,62 @@ public:
         return (this->*handlePtr)(message);
     }
 
-    MidiMapping& set(uint8_t _size, uint8_t valuePosition, uint8_t _msg0, uint8_t _msg1)
+    MidiMappingItem& set(uint8_t _size, uint8_t valuePosition, uint8_t _msg0, uint8_t _msg1)
     {
         msg[0] = _msg0;
         msg[1] = _msg1;
         size = _size;
         if (valuePosition == _size) {
             if (size == 2) {
-                handlePtr = &MidiMapping::handleUint8Position1;
+                handlePtr = &MidiMappingItem::handleUint8Position1;
             } else if (size == 3) {
-                handlePtr = &MidiMapping::handleUint8Position2;
+                handlePtr = &MidiMappingItem::handleUint8Position2;
             }
         } else {
-            handlePtr = &MidiMapping::handleUint16;
+            handlePtr = &MidiMappingItem::handleUint16;
         }
         return *this;
+    }
+};
+
+template <typename T>
+class MidiMapping {
+protected:
+    T* instance;
+    std::vector<MidiMappingItem<T>> items;
+
+public:
+    MidiMapping(T* _instance)
+        : instance(_instance)
+    {
+    }
+
+    bool handle(std::vector<unsigned char>* message)
+    {
+        for (int i = 0; i < items.size(); i++) {
+            if (items[i].handle(message)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    MidiMapping& add(const char* _key, T& (T::*_callback)(float value))
+    {
+        MidiMappingItem<T> item(instance, _key, _callback);
+        items.push_back(item);
+        return *this;
+    }
+
+    bool assign(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1)
+    {
+        for (int i = 0; i < items.size(); i++) {
+            if (strcmp(items[i].key, key) == 0) {
+                items[i].set(size, valuePosition, msg0, msg1);
+                return true;
+            }
+        }
+        return false;
     }
 };
 

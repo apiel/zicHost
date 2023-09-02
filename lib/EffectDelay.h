@@ -26,38 +26,7 @@ protected:
 
     // FIXME
     // TODO handle voices values
-    const static int16_t mapCount = 5 + 3 * MAX_DELAY_VOICES;
-    MidiMapping<EffectDelay> midiMappings[mapCount] = {
-        { this, "SET_TIME_RATIO", &EffectDelay::setTimeRatio },
-        { this, "SET_MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude },
-        { this, "SET_FILTER_CUTOFF", &EffectDelay::setCutoff },
-        { this, "SET_FILTER_RESONANCE", &EffectDelay::setResonance },
-        { this, "SET_FILTER_MODE", &EffectDelay::setMode },
-        { this, "SET_SEC_0", &EffectDelay::setSec0 },
-        { this, "SET_SEC_1", &EffectDelay::setSec1 },
-        { this, "SET_SEC_2", &EffectDelay::setSec2 },
-        { this, "SET_SEC_3", &EffectDelay::setSec3 },
-        { this, "SET_SEC_4", &EffectDelay::setSec4 },
-        { this, "SET_SEC_5", &EffectDelay::setSec5 },
-        { this, "SET_SEC_6", &EffectDelay::setSec6 },
-        { this, "SET_SEC_7", &EffectDelay::setSec7 },
-        { this, "SET_AMPLITUDE_0", &EffectDelay::setAmplitude0 },
-        { this, "SET_AMPLITUDE_1", &EffectDelay::setAmplitude1 },
-        { this, "SET_AMPLITUDE_2", &EffectDelay::setAmplitude2 },
-        { this, "SET_AMPLITUDE_3", &EffectDelay::setAmplitude3 },
-        { this, "SET_AMPLITUDE_4", &EffectDelay::setAmplitude4 },
-        { this, "SET_AMPLITUDE_5", &EffectDelay::setAmplitude5 },
-        { this, "SET_AMPLITUDE_6", &EffectDelay::setAmplitude6 },
-        { this, "SET_AMPLITUDE_7", &EffectDelay::setAmplitude7 },
-        { this, "SET_FEEDBACK_0", &EffectDelay::setFeedback0 },
-        { this, "SET_FEEDBACK_1", &EffectDelay::setFeedback1 },
-        { this, "SET_FEEDBACK_2", &EffectDelay::setFeedback2 },
-        { this, "SET_FEEDBACK_3", &EffectDelay::setFeedback3 },
-        { this, "SET_FEEDBACK_4", &EffectDelay::setFeedback4 },
-        { this, "SET_FEEDBACK_5", &EffectDelay::setFeedback5 },
-        { this, "SET_FEEDBACK_6", &EffectDelay::setFeedback6 },
-        { this, "SET_FEEDBACK_7", &EffectDelay::setFeedback7 },
-    };
+    MidiMapping<EffectDelay> midiMapping;
 
 public:
     MIDI_MAPPING_HANDLER
@@ -71,8 +40,38 @@ public:
     EffectDelay(AudioPluginProps& props)
         : AudioPlugin(props)
         , filter(props)
+        , midiMapping(this)
     {
-
+        midiMapping.add("SET_TIME_RATIO", &EffectDelay::setTimeRatio);
+        midiMapping.add("SET_MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude);
+        midiMapping.add("SET_FILTER_CUTOFF", &EffectDelay::setCutoff);
+        midiMapping.add("SET_FILTER_RESONANCE", &EffectDelay::setResonance);
+        midiMapping.add("SET_FILTER_MODE", &EffectDelay::setMode);
+        midiMapping.add("SET_SEC_0", &EffectDelay::setSec0);
+        midiMapping.add("SET_SEC_1", &EffectDelay::setSec1);
+        midiMapping.add("SET_SEC_2", &EffectDelay::setSec2);
+        midiMapping.add("SET_SEC_3", &EffectDelay::setSec3);
+        midiMapping.add("SET_SEC_4", &EffectDelay::setSec4);
+        midiMapping.add("SET_SEC_5", &EffectDelay::setSec5);
+        midiMapping.add("SET_SEC_6", &EffectDelay::setSec6);
+        midiMapping.add("SET_SEC_7", &EffectDelay::setSec7);
+        midiMapping.add("SET_AMPLITUDE_0", &EffectDelay::setAmplitude0);
+        midiMapping.add("SET_AMPLITUDE_1", &EffectDelay::setAmplitude1);
+        midiMapping.add("SET_AMPLITUDE_2", &EffectDelay::setAmplitude2);
+        midiMapping.add("SET_AMPLITUDE_3", &EffectDelay::setAmplitude3);
+        midiMapping.add("SET_AMPLITUDE_4", &EffectDelay::setAmplitude4);
+        midiMapping.add("SET_AMPLITUDE_5", &EffectDelay::setAmplitude5);
+        midiMapping.add("SET_AMPLITUDE_6", &EffectDelay::setAmplitude6);
+        midiMapping.add("SET_AMPLITUDE_7", &EffectDelay::setAmplitude7);
+        midiMapping.add("SET_FEEDBACK_0", &EffectDelay::setFeedback0);
+        midiMapping.add("SET_FEEDBACK_1", &EffectDelay::setFeedback1);
+        midiMapping.add("SET_FEEDBACK_2", &EffectDelay::setFeedback2);
+        midiMapping.add("SET_FEEDBACK_3", &EffectDelay::setFeedback3);
+        midiMapping.add("SET_FEEDBACK_4", &EffectDelay::setFeedback4);
+        midiMapping.add("SET_FEEDBACK_5", &EffectDelay::setFeedback5);
+        midiMapping.add("SET_FEEDBACK_6", &EffectDelay::setFeedback6);
+        midiMapping.add("SET_FEEDBACK_7", &EffectDelay::setFeedback7);
+        
         // setVoice(0, 0.1f, 0.6f, 0.0f);
         // setVoice(1, 0.2f, 0.5f, 0.0f);
         // setVoice(2, 0.3f, 0.4f, 0.0f);
