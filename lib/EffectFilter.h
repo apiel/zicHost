@@ -31,9 +31,9 @@ public:
         : EffectFilterInterface(props)
         , midiMapping(this)
     {
-        midiMapping.add("SET_CUTOFF", &EffectFilter::setCutoff);
-        midiMapping.add("SET_RESONANCE", &EffectFilter::setResonance);
-        midiMapping.add("SET_MODE", &EffectFilter::setMode);
+        midiMapping.add("CUTOFF", &EffectFilter::setCutoff);
+        midiMapping.add("RESONANCE", &EffectFilter::setResonance);
+        midiMapping.add("MODE", &EffectFilter::setMode);
     }
 
     float sample(float inputValue)

@@ -38,7 +38,7 @@ public:
         : AudioPlugin(props)
         , midiMapping(this)
     {
-        midiMapping.add("SET_DRIVE", &EffectDistortion::setDrive);
+        midiMapping.add("DRIVE", &EffectDistortion::setDrive);
         setDrive(drive);
     };
 

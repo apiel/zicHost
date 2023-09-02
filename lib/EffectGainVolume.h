@@ -20,8 +20,8 @@ public:
         : AudioPlugin(props)
         , midiMapping(this)
     {
-        midiMapping.add("SET_VOLUME", &EffectGainVolume::setVolume);
-        midiMapping.add("SET_GAIN", &EffectGainVolume::setGain);
+        midiMapping.add("VOLUME", &EffectGainVolume::setVolume);
+        midiMapping.add("GAIN", &EffectGainVolume::setGain);
     };
 
     float sample(float in)

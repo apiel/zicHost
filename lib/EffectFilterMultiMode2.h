@@ -27,8 +27,8 @@ public:
         : EffectFilterInterface(props)
         , midiMapping(this)
     {
-        midiMapping.add("SET_CUTOFF", &EffectFilterMultiMode2::setCutoff);
-        midiMapping.add("SET_RESONANCE", &EffectFilterMultiMode2::setResonance);
+        midiMapping.add("CUTOFF", &EffectFilterMultiMode2::setCutoff);
+        midiMapping.add("RESONANCE", &EffectFilterMultiMode2::setResonance);
 
         setCutoff(0.5);
     };

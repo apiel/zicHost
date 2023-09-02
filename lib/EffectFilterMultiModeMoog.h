@@ -38,8 +38,8 @@ public:
         : EffectFilterInterface(props)
         , midiMapping(this)
     {
-        midiMapping.add("SET_CUTOFF", &EffectFilterMultiModeMoog::setCutoff);
-        midiMapping.add("SET_RESONANCE", &EffectFilterMultiModeMoog::setResonance);
+        midiMapping.add("CUTOFF", &EffectFilterMultiModeMoog::setCutoff);
+        midiMapping.add("RESONANCE", &EffectFilterMultiModeMoog::setResonance);
 
         setCutoff(0.5);
     };

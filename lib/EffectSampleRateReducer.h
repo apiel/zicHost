@@ -44,7 +44,7 @@ public:
         : AudioPlugin(props)
         , midiMapping(this)
     {
-        midiMapping.add("SET_SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep);
+        midiMapping.add("SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep);
 
         setSampleStep(0);
         // set(0.5);
