@@ -209,7 +209,7 @@ public:
 
     const char* name()
     {
-        return "EffectDelay";
+        return "Delay";
     }
 };
 

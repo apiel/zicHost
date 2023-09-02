@@ -63,7 +63,7 @@ public:
 
     const char* name()
     {
-        return "EffectDistortion";
+        return "Distortion";
     }
 };
 

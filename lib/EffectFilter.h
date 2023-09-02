@@ -91,7 +91,7 @@ public:
 
     const char* name()
     {
-        return "EffectFilter";
+        return "Filter";
     }
 };
 

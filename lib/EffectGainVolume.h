@@ -52,7 +52,7 @@ public:
 
     const char* name()
     {
-        return "EffectGainVolume";
+        return "GainVolume";
     }
 };
 

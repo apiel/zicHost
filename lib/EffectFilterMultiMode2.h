@@ -79,7 +79,7 @@ public:
 
     const char* name()
     {
-        return "EffectFilterMultiMode2";
+        return "MultiModeFilter2";
     }
 };
 

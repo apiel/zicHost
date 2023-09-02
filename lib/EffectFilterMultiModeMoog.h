@@ -85,7 +85,7 @@ public:
 
     const char* name()
     {
-        return "EffectFilterMultiModeMoog";
+        return "MultiModeFilterMoog";
     }
 };
 

@@ -66,7 +66,7 @@ public:
 
     const char* name()
     {
-        return "EffectFilterMultiMode";
+        return "MultiModeFilter";
     }
 };
 

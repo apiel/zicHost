@@ -70,7 +70,7 @@ public:
 
     const char* name()
     {
-        return "EffectSampleRateReducer";
+        return "SampleRateReducer";
     }
 };
 
