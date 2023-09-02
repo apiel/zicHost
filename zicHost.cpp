@@ -39,6 +39,11 @@ int start()
 
     return audioApi.open();
 }
+
+void midi(std::vector<unsigned char>* message)
+{
+    midiHandler(message);
+}
 }
 
 int main()
