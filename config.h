@@ -4,7 +4,6 @@
 #include "def.h"
 #include "fs.h"
 #include "midi.h"
-#include "pluginState.h"
 
 #define CONFIG_FILE "./config.cfg"
 
@@ -35,8 +34,6 @@ void assignKeyValue(char* key, char* value)
         APP_INFO("Audio input set: %s\n", audioInputName);
     } else if (strcmp(key, "AUDIO_PLUGIN") == 0) {
         AudioHandler::get().loadPlugin(value);
-    } else if (strcmp(key, "INTERFACE_PLUGIN") == 0) {
-        loadPluginInterface(value);
     } else if (strcmp(key, "GAIN_OUTPUT") == 0) {
         // float gain = AudioHandler::get().gainVolume.setGain(atof(value)).gain;
         // APP_INFO("Gain output set: %f\n", gain);
@@ -47,8 +44,6 @@ void assignKeyValue(char* key, char* value)
         if (strcmp(value, "true") == 0) {
             enableDebug();
         }
-    } else if (configPluginStart(key, value)) {
-        return;
     } else {
         AudioHandler::get().assignMidiMapping(key, value);
     }

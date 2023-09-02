@@ -15,11 +15,6 @@ ui:
 	make -C interface lib_ui
 	make build run
 
-interfaces:
-	@echo "\n------------------ interface ------------------\n"
-	make -C interface
-	@echo "\nbuild interface done."
-
 libs:
 	@echo "\n------------------ lib ------------------\n"
 	make -C lib

@@ -21,8 +21,6 @@ AudioApi& audioApi = AudioApiRT::get();
 #include "config.h"
 #include "def.h"
 
-#include "pluginState.h"
-
 extern "C" {
 int start()
 {
@@ -34,8 +32,6 @@ int start()
     if (loadConfig() == false) {
         return 1;
     }
-
-    startPluginInterface();
 
     return audioApi.open();
 }
