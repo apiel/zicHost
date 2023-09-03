@@ -4,12 +4,13 @@
 #include <stdint.h>
 #include <vector>
 
+#include "../helpers/range.h"
 #include "midiMapping.h"
 
 #define MAPPING_HANDLER                                                                                      \
     bool midi(std::vector<unsigned char>* message)                                                           \
     {                                                                                                        \
-        return mapping.midi(message);                                                                  \
+        return mapping.midi(message);                                                                        \
     }                                                                                                        \
     bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1) \
     {                                                                                                        \
@@ -23,17 +24,29 @@ protected:
 
 public:
     const char* key;
-    float value;
+    float value_f;
+    uint8_t value_i;
     T& (T::*callback)(float value);
     MidiMappingItem<T> midi;
 
     MappingItem(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value))
         : instance(instance)
-        , value(initValue)
+        , value_f(initValue)
         , key(_key)
         , callback(_callback)
         , midi(instance, _key, _callback)
     {
+        // set getter to return float
+    }
+
+    MappingItem(T* instance, uint8_t initValue, const char* _key, T& (T::*_callback)(float value))
+        : instance(instance)
+        , value_i(initValue)
+        , key(_key)
+        , callback(_callback)
+        , midi(instance, _key, _callback)
+    {
+        // set getter to return int / 128
     }
 };
 
@@ -63,8 +76,14 @@ public:
     {
         MappingItem<T> item(instance, initvalue, _key, _callback);
         items.push_back(item);
-        // return items[items.size() - 1].value;
-        return items.back().value;
+        return items.back().value_f;
+    }
+
+    uint8_t& addInt(uint8_t initvalue, const char* _key, T& (T::*_callback)(float value))
+    {
+        MappingItem<T> item(instance, initvalue, _key, _callback);
+        items.push_back(item);
+        return items.back().value_i;
     }
 
     bool assignMidi(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1)

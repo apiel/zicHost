@@ -38,21 +38,17 @@ protected:
 public:
     MAPPING_HANDLER
 
-    float& f_sampleStep = mapping.addFloat(0.0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep);
-    uint8_t sampleStep = 0; // the number of samples to double up.
+    uint8_t& sampleStep = mapping.addInt(0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep);; // the number of samples to double up.
 
     EffectSampleRateReducer(AudioPluginProps& props)
         : AudioPlugin(props)
         , mapping(this)
     {
         setSampleStep(0);
-        // set(0.5);
     };
 
     EffectSampleRateReducer& setSampleStep(float value)
     {
-        f_sampleStep = value;
-        // TODO find better solution...
         sampleStep = value * 128.0;
         if (sampleStep == 0) {
             samplePtr = &EffectSampleRateReducer::skipSample;
