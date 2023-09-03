@@ -1,22 +1,20 @@
 # TODO
 
-- TODO dynamically load and unload module
+- TODO dont make delay dependent of sample rate...
 - TODO handle rotatry encoder from midi... (keyboard and osc)
-- TODO run SDL without X
-maybe https://lektiondestages.art.blog/2020/03/18/compiling-sdl2-image-mixer-ttf-for-the-raspberry-pi-without-x11/
 
 - TODO input/output should have multiple possible values, when in[0] and out[0] are default ones, and all the others are pointer to empty audio buffer or just simple sample float...
        Is it even the job of the plugin to decide which sample goes where
        Or should it be on the routing of the plugin that decide whih plugin is apply to what....?
+- TODO make plugin lib name configurable
+       default: AUDIO_PLUGIN=./lib/build/libzic_EffectSampleRateReducer.so
+       custom: AUDIO_PLUGIN=./lib/build/libzic_EffectSampleRateReducer.so SampleReducer
+       > it will only make sense when there is multiples voices/tracks...
+
 - TODO give a way to retrieve all midi mapping keys
 - TODO save state
        - per plugin
        - global
-- TODO plugin interface
-       - UI
-       - rotary ecnoder
-       - how to share state between interface?
-- TODO dont make delay dependent of sample rate...
 - TODO generate config file sample
 
 - TODO implement input for alsa and pulse audio api
@@ -30,21 +28,6 @@ maybe https://lektiondestages.art.blog/2020/03/18/compiling-sdl2-image-mixer-ttf
        https://github.com/lv2/lilv/blob/master/tools/lv2apply.c
        https://github.com/jeremysalwen/lv2file
 
-# NOTE
-
-pipe stream into app https://gist.github.com/ghedo/963382?permalink_comment_id=3509255
-
 # IDEA
 
 - multiple input and output stream, instead to have only one input and one output, we could pass array of input and array of output
-
-# Build lib
-
-g++ -c -o effectGainVolume.o effectGainVolume.cpp -fPIC
-g++ -shared -o libzic_effectGainVolume.so effectGainVolume.o
-
-https://iq.opengenus.org/create-shared-library-in-cpp/
-https://theo-penavaire.medium.com/loading-of-a-c-class-from-a-shared-library-modern-c-722d6a830a2b
-https://domiyanyue.medium.com/c-development-tutorial-4-static-and-dynamic-libraries-7b537656163e
-
-dlopen

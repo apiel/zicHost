@@ -1,12 +1,10 @@
 #ifndef _AUDIO_HANDLER_H_
 #define _AUDIO_HANDLER_H_
 
+#include <vector>
+
 #include "def.h"
 #include "lib/audioPlugin.h"
-
-#ifndef AUDIO_PLUGIN_COUNT
-#define AUDIO_PLUGIN_COUNT 100
-#endif
 
 class AudioHandler {
 protected:
@@ -15,16 +13,15 @@ protected:
     struct Plugin {
         void* handle;
         AudioPlugin* instance;
-    } plugins[AUDIO_PLUGIN_COUNT];
-
-    uint16_t pluginCount = 0;
+    };
+    std::vector<Plugin> plugins;
 
     AudioHandler() { }
 
     float sample(float s)
     {
-        for (int j = 0; j < pluginCount; j++) {
-            s = plugins[j].instance->sample(s);
+        for (std::size_t i = 0; i < plugins.size(); i++) {
+            s = plugins[i].instance->sample(s);
         }
         return s;
     }
@@ -56,40 +53,37 @@ public:
     {
         AudioPluginProps pluginProps = AudioPluginProps(debug);
 
-        if (pluginCount >= AUDIO_PLUGIN_COUNT) {
-            APP_PRINT("Cannot load plugin: %s, reached max audio plugin count %d\n", path, AUDIO_PLUGIN_COUNT);
-            return;
-        }
+        Plugin plugin;
 
-        plugins[pluginCount].handle = dlopen(path, RTLD_LAZY);
+        plugin.handle = dlopen(path, RTLD_LAZY);
 
-        if (!plugins[pluginCount].handle) {
+        if (!plugin.handle) {
             APP_PRINT("Cannot open library: %s\n", dlerror());
             return;
         }
 
         dlerror();
-        void* allocator = (AudioPlugin*)dlsym(plugins[pluginCount].handle, "allocator");
+        void* allocator = (AudioPlugin*)dlsym(plugin.handle, "allocator");
         const char* dlsym_error = dlerror();
         if (dlsym_error) {
             APP_PRINT("Cannot load symbol: %s\n", dlsym_error);
-            dlclose(plugins[pluginCount].handle);
+            dlclose(plugin.handle);
             return;
         }
 
-        plugins[pluginCount].instance = ((AudioPlugin * (*)(AudioPluginProps & props)) allocator)(pluginProps);
+        plugin.instance = ((AudioPlugin * (*)(AudioPluginProps & props)) allocator)(pluginProps);
         APP_PRINT("audio plugin loaded\n");
-        APP_PRINT("plugin: %s\n", plugins[pluginCount].instance->name());
+        APP_PRINT("plugin: %s\n", plugin.instance->name());
 
-        // plugins[pluginCount].instance->set(0, 0.1f);
-        // printf("---> getParamKey: %d\n", plugins[pluginCount].instance->getParamKey("volume"));
+        // plugin.instance->set(0, 0.1f);
+        // printf("---> getParamKey: %d\n", plugin.instance->getParamKey("volume"));
 
-        pluginCount++;
+        plugins.push_back(plugin);
     }
 
     bool assignMidiMapping(char* key, char* value)
     {
-        if (pluginCount > 0) {
+        if (plugins.size() > 0) {
             // split value by space
             char* msg0 = strtok(value, " ");
             char* msg1 = strtok(NULL, " ");
@@ -105,8 +99,9 @@ public:
             uint8_t msg0Int = strtol(msg0, NULL, 16);
             uint8_t msg1Int = strtol(msg1, NULL, 16);
 
-            if (plugins[pluginCount - 1].instance->assignMidiMapping(key, size, valuePosition, msg0Int, msg1Int)) {
-                APP_INFO("[%s] Midi mapping assigned: %s\n", plugins[pluginCount - 1].instance->name(), key);
+            // try to assign value to last plugin
+            if (plugins.back().instance->assignMidiMapping(key, size, valuePosition, msg0Int, msg1Int)) {
+                APP_INFO("[%s] Midi mapping assigned: %s\n", plugins.back().instance->name(), key);
                 return true;
             }
         }
@@ -115,7 +110,7 @@ public:
 
     bool midi(std::vector<unsigned char>* message)
     {
-        for (int i = 0; i < pluginCount; i++) {
+        for (std::size_t i = 0; i < plugins.size(); i++) {
             if (plugins[i].instance->midi(message)) {
                 return true;
             }
