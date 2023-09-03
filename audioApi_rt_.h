@@ -20,23 +20,15 @@ class AudioApiRT : public AudioApi {
 protected:
     RtAudio* audio = 0;
 
-    // Do not set `audio = new RtAudio();` in constructor, else dlopen get stuck
-    RtAudio* getAudio()
-    {
-        if (audio == 0) {
-            audio = new RtAudio();
-        }
-        return audio;
-    }
-
     static AudioApiRT* instance;
     AudioApiRT()
     {
+        // audio = new RtAudio();
     }
 
     const char* getApiName()
     {
-        switch (getAudio()->getCurrentApi()) {
+        switch (audio->getCurrentApi()) {
         case RtAudio::UNSPECIFIED:
             return "UNSPECIFIED";
         case RtAudio::LINUX_ALSA:
@@ -64,12 +56,12 @@ protected:
 
     void showAudioDeviceInfo()
     {
-        unsigned int deviceCount = getAudio()->getDeviceCount();
+        unsigned int deviceCount = audio->getDeviceCount();
 
         APP_PRINT("Found %d audio devices (%s):\n\n", deviceCount, getApiName());
         RtAudio::DeviceInfo rtInfo;
         for (unsigned int i = 0; i < deviceCount; i++) {
-            rtInfo = getAudio()->getDeviceInfo(i);
+            rtInfo = audio->getDeviceInfo(i);
             if (rtInfo.probed == true) {
                 APP_PRINT(" (%d) %s\n", i, rtInfo.name.c_str());
                 if (rtInfo.outputChannels) {
@@ -85,11 +77,11 @@ protected:
 
     unsigned int getAudioDeviceId(char* name)
     {
-        unsigned int deviceCount = getAudio()->getDeviceCount();
+        unsigned int deviceCount = audio->getDeviceCount();
 
         RtAudio::DeviceInfo rtInfo;
         for (unsigned int i = 0; i < deviceCount; i++) {
-            rtInfo = getAudio()->getDeviceInfo(i);
+            rtInfo = audio->getDeviceInfo(i);
             if (rtInfo.probed == true) {
                 if (rtInfo.name.find(name) != std::string::npos) {
                     return i;
@@ -97,7 +89,7 @@ protected:
             }
         }
         debug("/!\\ Warning /!\\ Audio device %s not found\n", name);
-        rtInfo = getAudio()->getDeviceInfo(0);
+        rtInfo = audio->getDeviceInfo(0);
         debug("Using default %s device [%s]\n", getApiName(), rtInfo.name.c_str());
         return 0;
     }
@@ -115,6 +107,8 @@ public:
     {
         APP_PRINT("RT audio::open\n");
 
+        audio = new RtAudio();
+
         RtAudio::StreamParameters audioParams;
         RtAudio::StreamParameters audioInputParams;
 
@@ -124,9 +118,9 @@ public:
         audioInputParams.deviceId = getAudioDeviceId(audioInputName);
         audioInputParams.nChannels = APP_CHANNELS;
         try {
-            getAudio()->openStream(&audioParams, &audioInputParams, RTAUDIO_FLOAT32, SAMPLE_RATE, &bufferFrames, &audioCallback);
-            getAudio()->startStream();
-            while (getAudio()->isStreamRunning() && isRunning) {
+            audio->openStream(&audioParams, &audioInputParams, RTAUDIO_FLOAT32, SAMPLE_RATE, &bufferFrames, &audioCallback);
+            audio->startStream();
+            while (audio->isStreamRunning() && isRunning) {
                 usleep(100000); // 100ms
             }
         } catch (RtAudioError& e) {

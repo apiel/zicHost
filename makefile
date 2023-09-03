@@ -22,7 +22,7 @@ libs:
 
 so:
 	@echo "\n------------------ build_so ------------------\n"
-	g++ -shared -o zicHost.so zicHost.cpp -fPIC -fopenmp $(BUILD)
+	g++ -fPIC -shared -o zicHost.so zicHost.cpp -fopenmp $(BUILD)
 	@echo "\nbuild zicHost.so done."
 
 build:
@@ -33,3 +33,7 @@ build:
 run:
 	@echo "\n------------------ run ------------------\n"
 	./zicHost
+
+try_so:
+	g++ -o try_so try_so.cpp
+	./try_so

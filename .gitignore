@@ -9,3 +9,4 @@ list_pulse
 *.so
 *.o
 test
+try_so
