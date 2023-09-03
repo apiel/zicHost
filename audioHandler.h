@@ -7,15 +7,13 @@
 #include "plugin.h"
 class AudioHandler {
 protected:
-
-
     static AudioHandler* instance;
     AudioHandler() { }
 
     float sample(float s)
     {
-        for (std::size_t i = 0; i < plugins.size(); i++) {
-            s = plugins[i].instance->sample(s);
+        for (Plugin& plugin : plugins) {
+            s = plugin.instance->sample(s);
         }
         return s;
     }
@@ -106,8 +104,8 @@ public:
 
     bool midi(std::vector<unsigned char>* message)
     {
-        for (std::size_t i = 0; i < plugins.size(); i++) {
-            if (plugins[i].instance->midi(message)) {
+        for (Plugin& plugin : plugins) {
+            if (plugin.instance->midi(message)) {
                 return true;
             }
         }

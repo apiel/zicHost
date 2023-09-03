@@ -80,8 +80,8 @@ public:
 
     bool midi(std::vector<unsigned char>* message)
     {
-        for (int i = 0; i < items.size(); i++) {
-            if (items[i].midi.handle(message)) {
+        for (MappingItem<T>& item : items) {
+            if (item.midi.handle(message)) {
                 return true;
             }
         }
