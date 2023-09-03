@@ -29,6 +29,11 @@ public:
     virtual bool midi(std::vector<unsigned char>* message) = 0;
     virtual bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1) = 0;
 
+    virtual float getValue(int valueIndex) = 0;
+    virtual void setValue(int valueIndex, float value) = 0;
+    virtual int getValueCount() = 0;
+    virtual const char* getValueName(int valueIndex) = 0;
+
     int (*debug)(const char* format, ...);
 };
 

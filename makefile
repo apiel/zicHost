@@ -9,7 +9,7 @@ RTAUDIO=`pkg-config --cflags --libs rtaudio`
 BUILD=-Wno-narrowing -ldl $(RTAUDIO) $(LIBSND) $(RTMIDI) $(PULSEAUDIO) $(ALSA) $(LIBLO)
 
 host: build run
-all: interfaces libs build so run
+all: libs build so run
 
 ui:
 	make -C interface lib_ui

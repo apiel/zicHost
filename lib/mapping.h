@@ -15,6 +15,22 @@
     bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1) \
     {                                                                                                        \
         return mapping.assignMidi(key, size, valuePosition, msg0, msg1);                                     \
+    }                                                                                                        \
+    float getValue(int valueIndex)                                                                           \
+    {                                                                                                        \
+        return mapping.getValue(valueIndex);                                                                 \
+    }                                                                                                        \
+    void setValue(int valueIndex, float value)                                                               \
+    {                                                                                                        \
+        mapping.setValue(valueIndex, value);                                                                 \
+    }                                                                                                        \
+    int getValueCount()                                                                                      \
+    {                                                                                                        \
+        return mapping.getValueCount();                                                                      \
+    }                                                                                                        \
+    const char* getValueName(int valueIndex)                                                                 \
+    {                                                                                                        \
+        return mapping.getValueName(valueIndex);                                                             \
     }
 
 template <typename T>
@@ -95,6 +111,22 @@ public:
             }
         }
         return false;
+    }
+
+    float getValue(int valueIndex)
+    {
+        return items[valueIndex].value_f;
+    }
+    void setValue(int valueIndex, float value)
+    {
+    }
+    int getValueCount()
+    {
+        return items.size();
+    }
+    const char* getValueName(int valueIndex)
+    {
+        return items[valueIndex].key;
     }
 };
 

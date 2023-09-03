@@ -8,15 +8,31 @@
 
 class AudioHandler {
 protected:
-    static AudioHandler* instance;
-
     struct Plugin {
         void* handle;
         AudioPlugin* instance;
     };
     std::vector<Plugin> plugins;
 
+    struct ValueIndex {
+        int pluginIndex;
+        int valueIndex;
+        const char* pluginName;
+        const char* valueName;
+    };
+    std::vector<ValueIndex> valueIndices;
+
+    static AudioHandler* instance;
     AudioHandler() { }
+
+    void setValueIndices(Plugin& plugin)
+    {
+        for (std::size_t i = 0; i < plugins.size(); i++) {
+            for (int j = 0; j < plugins[i].instance->getValueCount(); j++) {
+                valueIndices.push_back({ i, j, plugins[i].instance->name(), plugins[i].instance->getValueName(j) });
+            }
+        }
+    }
 
     float sample(float s)
     {
@@ -79,6 +95,7 @@ public:
         // printf("---> getParamKey: %d\n", plugin.instance->getParamKey("volume"));
 
         plugins.push_back(plugin);
+        setValueIndices(plugin);
     }
 
     bool assignMidiMapping(char* key, char* value)
@@ -116,6 +133,26 @@ public:
             }
         }
         return false;
+    }
+
+    float getValue(int moduleIndex, int valueIndex)
+    {
+        return plugins[moduleIndex].instance->getValue(valueIndex);
+    }
+
+    float getValue(int index)
+    {
+        return getValue(valueIndices[index].pluginIndex, valueIndices[index].valueIndex);
+    }
+
+    int getValueIndex(const char* moduleName, const char* valueName)
+    {
+        for (std::size_t i = 0; i < valueIndices.size(); i++) {
+            if (strcmp(valueIndices[i].pluginName, moduleName) == 0 && strcmp(valueIndices[i].valueName, valueName) == 0) {
+                return i;
+            }
+        }
+        return -1;
     }
 };
 
