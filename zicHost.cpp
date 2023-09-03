@@ -22,7 +22,7 @@ AudioApi& audioApi = AudioApiRT::get();
 #include "def.h"
 
 extern "C" {
-bool init()
+std::vector<Plugin>* init()
 {
     audioApi.init();
     APP_PRINT("List of available audio interfaces:\n");
@@ -30,7 +30,10 @@ bool init()
 
     // TODO make config.cfg a parameter
     // make default config
-    return loadConfig();
+    if (!loadConfig()) {
+        return NULL;
+    }
+    return &audioHandler.plugins;
 }
 
 int mainLoop()
@@ -42,17 +45,6 @@ void midi(std::vector<unsigned char>* message)
 {
     midiHandler(message);
 }
-
-float getValue(int index)
-{
-    return audioHandler.getValue(index);
-}
-
-int getValueIndex(const char* moduleName, const char* valueName)
-{
-    return audioHandler.getValueIndex(moduleName, valueName);
-}
-
 }
 
 int main()
