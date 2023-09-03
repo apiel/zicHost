@@ -1,19 +1,7 @@
 #ifndef _MIDI_MAPPING_H_
 #define _MIDI_MAPPING_H_
 
-#include <stdint.h>
 #include <vector>
-
-#define MIDI_MAPPING_HANDLER     bool midi(std::vector<unsigned char>* message)\
-    {\
-        return midiMapping.handle(message);\
-    }\
-    bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1)\
-    {\
-        return midiMapping.assign(key, size, valuePosition, msg0, msg1);\
-    }
-
-
 
 template <typename T>
 class MidiMappingItem {
@@ -86,47 +74,6 @@ public:
             handlePtr = &MidiMappingItem::handleUint16;
         }
         return *this;
-    }
-};
-
-template <typename T>
-class MidiMapping {
-protected:
-    T* instance;
-    std::vector<MidiMappingItem<T>> items;
-
-public:
-    MidiMapping(T* _instance)
-        : instance(_instance)
-    {
-    }
-
-    bool handle(std::vector<unsigned char>* message)
-    {
-        for (int i = 0; i < items.size(); i++) {
-            if (items[i].handle(message)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    MidiMapping& add(const char* _key, T& (T::*_callback)(float value))
-    {
-        MidiMappingItem<T> item(instance, _key, _callback);
-        items.push_back(item);
-        return *this;
-    }
-
-    bool assign(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1)
-    {
-        for (int i = 0; i < items.size(); i++) {
-            if (strcmp(items[i].key, key) == 0) {
-                items[i].set(size, valuePosition, msg0, msg1);
-                return true;
-            }
-        }
-        return false;
     }
 };
 

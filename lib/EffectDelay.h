@@ -4,7 +4,7 @@
 #include "EffectFilter.h"
 #include "audioBuffer.h"
 #include "audioPlugin.h"
-#include "midiMapping.h"
+#include "mapping.h"
 
 #define MAX_DELAY_VOICES 8
 
@@ -17,61 +17,65 @@ protected:
 
     struct DelayVoice {
         uint32_t index;
-        float amplitude;
-        float feedback;
-        float sec;
+        float& amplitude;
+        float& feedback;
+        float& sec;
     } voices[MAX_DELAY_VOICES] = {
-        { 0, 0.0f, 0.0f, 0.1f },
+        { 0,
+            mapping.addFloat(0.0, "AMPLITUDE_0", &EffectDelay::setAmplitude0),
+            mapping.addFloat(0.0, "FEEDBACK_0", &EffectDelay::setFeedback0),
+            mapping.addFloat(0.1, "SEC_0", &EffectDelay::setSec0) },
+        { 1,
+            mapping.addFloat(0.0, "AMPLITUDE_1", &EffectDelay::setAmplitude1),
+            mapping.addFloat(0.0, "FEEDBACK_1", &EffectDelay::setFeedback1),
+            mapping.addFloat(0.1, "SEC_1", &EffectDelay::setSec1) },
+        { 2,
+            mapping.addFloat(0.0, "AMPLITUDE_2", &EffectDelay::setAmplitude2),
+            mapping.addFloat(0.0, "FEEDBACK_2", &EffectDelay::setFeedback2),
+            mapping.addFloat(0.1, "SEC_2", &EffectDelay::setSec2) },
+        { 3,
+            mapping.addFloat(0.0, "AMPLITUDE_3", &EffectDelay::setAmplitude3),
+            mapping.addFloat(0.0, "FEEDBACK_3", &EffectDelay::setFeedback3),
+            mapping.addFloat(0.1, "SEC_3", &EffectDelay::setSec3) },
+        { 4,
+            mapping.addFloat(0.0, "AMPLITUDE_4", &EffectDelay::setAmplitude4),
+            mapping.addFloat(0.0, "FEEDBACK_4", &EffectDelay::setFeedback4),
+            mapping.addFloat(0.1, "SEC_4", &EffectDelay::setSec4) },
+        { 5,
+            mapping.addFloat(0.0, "AMPLITUDE_5", &EffectDelay::setAmplitude5),
+            mapping.addFloat(0.0, "FEEDBACK_5", &EffectDelay::setFeedback5),
+            mapping.addFloat(0.1, "SEC_5", &EffectDelay::setSec5) },
+        { 6,
+            mapping.addFloat(0.0, "AMPLITUDE_6", &EffectDelay::setAmplitude6),
+            mapping.addFloat(0.0, "FEEDBACK_6", &EffectDelay::setFeedback6),
+            mapping.addFloat(0.1, "SEC_6", &EffectDelay::setSec6) },
+        { 7,
+            mapping.addFloat(0.0, "AMPLITUDE_7", &EffectDelay::setAmplitude7),
+            mapping.addFloat(0.0, "FEEDBACK_7", &EffectDelay::setFeedback7),
+            mapping.addFloat(0.1, "SEC_7", &EffectDelay::setSec7) },
     };
 
-    // FIXME
-    // TODO handle voices values
-    MidiMapping<EffectDelay> midiMapping;
+    Mapping<EffectDelay> mapping;
 
 public:
-    MIDI_MAPPING_HANDLER
+    MAPPING_HANDLER
 
     // From 0.0 to 1.0 to apply time ratio to voice in seconds
-    float timeRatio = 1.0f;
-    float masterAmplitude = 1.0f;
+    float& timeRatio = mapping.addFloat(1.0f, "TIME_RATIO", &EffectDelay::setTimeRatio);
+    float& masterAmplitude = mapping.addFloat(1.0f, "MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude);
 
     EffectFilter filter;
 
     EffectDelay(AudioPluginProps& props)
         : AudioPlugin(props)
         , filter(props)
-        , midiMapping(this)
+        , mapping(this)
     {
-        midiMapping.add("TIME_RATIO", &EffectDelay::setTimeRatio);
-        midiMapping.add("MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude);
-        midiMapping.add("FILTER_CUTOFF", &EffectDelay::setCutoff);
-        midiMapping.add("FILTER_RESONANCE", &EffectDelay::setResonance);
-        midiMapping.add("FILTER_MODE", &EffectDelay::setMode);
-        midiMapping.add("SEC_0", &EffectDelay::setSec0);
-        midiMapping.add("SEC_1", &EffectDelay::setSec1);
-        midiMapping.add("SEC_2", &EffectDelay::setSec2);
-        midiMapping.add("SEC_3", &EffectDelay::setSec3);
-        midiMapping.add("SEC_4", &EffectDelay::setSec4);
-        midiMapping.add("SEC_5", &EffectDelay::setSec5);
-        midiMapping.add("SEC_6", &EffectDelay::setSec6);
-        midiMapping.add("SEC_7", &EffectDelay::setSec7);
-        midiMapping.add("AMPLITUDE_0", &EffectDelay::setAmplitude0);
-        midiMapping.add("AMPLITUDE_1", &EffectDelay::setAmplitude1);
-        midiMapping.add("AMPLITUDE_2", &EffectDelay::setAmplitude2);
-        midiMapping.add("AMPLITUDE_3", &EffectDelay::setAmplitude3);
-        midiMapping.add("AMPLITUDE_4", &EffectDelay::setAmplitude4);
-        midiMapping.add("AMPLITUDE_5", &EffectDelay::setAmplitude5);
-        midiMapping.add("AMPLITUDE_6", &EffectDelay::setAmplitude6);
-        midiMapping.add("AMPLITUDE_7", &EffectDelay::setAmplitude7);
-        midiMapping.add("FEEDBACK_0", &EffectDelay::setFeedback0);
-        midiMapping.add("FEEDBACK_1", &EffectDelay::setFeedback1);
-        midiMapping.add("FEEDBACK_2", &EffectDelay::setFeedback2);
-        midiMapping.add("FEEDBACK_3", &EffectDelay::setFeedback3);
-        midiMapping.add("FEEDBACK_4", &EffectDelay::setFeedback4);
-        midiMapping.add("FEEDBACK_5", &EffectDelay::setFeedback5);
-        midiMapping.add("FEEDBACK_6", &EffectDelay::setFeedback6);
-        midiMapping.add("FEEDBACK_7", &EffectDelay::setFeedback7);
-        
+        // TODO instead to do this, we could say to mapping to go through filter as well ??
+        filter.cutoff = mapping.addFloat(0.0f, "FILTER_CUTOFF", &EffectDelay::setCutoff);
+        filter.resonance = mapping.addFloat(0.0f, "FILTER_RESONANCE", &EffectDelay::setResonance);
+        filter.f_mode = mapping.addFloat(0.0f, "FILTER_MODE", &EffectDelay::setMode);
+
         // setVoice(0, 0.1f, 0.6f, 0.0f);
         // setVoice(1, 0.2f, 0.5f, 0.0f);
         // setVoice(2, 0.3f, 0.4f, 0.0f);

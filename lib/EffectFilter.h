@@ -3,20 +3,20 @@
 
 #include "../helpers/range.h"
 #include "filter.h"
-#include "midiMapping.h"
+#include "mapping.h"
 
 // #include <math.h>
 
 class EffectFilter : public EffectFilterInterface {
 protected:
     EffectFilterData data;
-    MidiMapping<EffectFilter> midiMapping;
+    Mapping<EffectFilter> mapping;
 
 public:
-    MIDI_MAPPING_HANDLER
+    MAPPING_HANDLER
 
-    float resonance = 0.0;
-    float cutoff = 0.0;
+    float& resonance = mapping.addFloat(0.0f, "RESONANCE", &EffectFilter::setResonance);
+    float& cutoff = mapping.addFloat(0.0f, "CUTOFF", &EffectFilter::setCutoff);
 
     enum Mode {
         OFF,
@@ -26,14 +26,13 @@ public:
         MODE_COUNT,
     } mode
         = OFF;
+    // TODO how to handle mode in a better way?
+    float& f_mode = mapping.addFloat(0.0f, "MODE", &EffectFilter::setMode);
 
     EffectFilter(AudioPluginProps& props)
         : EffectFilterInterface(props)
-        , midiMapping(this)
+        , mapping(this)
     {
-        midiMapping.add("CUTOFF", &EffectFilter::setCutoff);
-        midiMapping.add("RESONANCE", &EffectFilter::setResonance);
-        midiMapping.add("MODE", &EffectFilter::setMode);
     }
 
     float sample(float inputValue)
@@ -85,7 +84,8 @@ public:
 
     EffectFilter& setMode(float value)
     {
-        mode = (Mode)range(value * 128, 0, (uint8_t)MODE_COUNT);
+        f_mode = value;
+        mode = (Mode)range(f_mode * 128, 0, (uint8_t)MODE_COUNT);
         return setMode(mode);
     }
 

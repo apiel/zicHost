@@ -2,27 +2,24 @@
 #define _EFFECT_GAIN_VOLUME_H_
 
 #include "audioPlugin.h"
-#include "midiMapping.h"
+#include "mapping.h"
 
 class EffectGainVolume : public AudioPlugin {
 protected:
-    MidiMapping<EffectGainVolume> midiMapping;
+    Mapping<EffectGainVolume> mapping;
 
 public:
-    MIDI_MAPPING_HANDLER
+    MAPPING_HANDLER
 
-    float gain
-        = 1.0f;
-    float volume = 1.0f;
+    float& volume = mapping.addFloat(1.0f, "VOLUME", &EffectGainVolume::setVolume);
+    float& gain = mapping.addFloat(1.0f, "GAIN", &EffectGainVolume::setGain);
     float volumeWithGain = gain * volume;
 
     EffectGainVolume(AudioPluginProps& props)
         : AudioPlugin(props)
-        , midiMapping(this)
+        , mapping(this)
     {
-        midiMapping.add("VOLUME", &EffectGainVolume::setVolume);
-        midiMapping.add("GAIN", &EffectGainVolume::setGain);
-    };
+    }
 
     float sample(float in)
     {

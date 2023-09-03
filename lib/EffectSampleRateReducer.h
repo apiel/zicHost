@@ -2,7 +2,7 @@
 #define _EFFECT_SAMPLE_RATE_REDUCER_H_
 
 #include "audioPlugin.h"
-#include "midiMapping.h"
+#include "mapping.h"
 
 #include <math.h>
 
@@ -33,25 +33,26 @@ protected:
         return sampleSqueeze;
     }
 
-    MidiMapping<EffectSampleRateReducer> midiMapping;
+    Mapping<EffectSampleRateReducer> mapping;
 
 public:
-    MIDI_MAPPING_HANDLER
+    MAPPING_HANDLER
 
+    float& f_sampleStep = mapping.addFloat(0.0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep);
     uint8_t sampleStep = 0; // the number of samples to double up.
 
     EffectSampleRateReducer(AudioPluginProps& props)
         : AudioPlugin(props)
-        , midiMapping(this)
+        , mapping(this)
     {
-        midiMapping.add("SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep);
-
         setSampleStep(0);
         // set(0.5);
     };
 
     EffectSampleRateReducer& setSampleStep(float value)
     {
+        f_sampleStep = value;
+        // TODO find better solution...
         sampleStep = value * 128.0;
         if (sampleStep == 0) {
             samplePtr = &EffectSampleRateReducer::skipSample;

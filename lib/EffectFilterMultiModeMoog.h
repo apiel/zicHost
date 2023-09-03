@@ -3,7 +3,7 @@
 
 #include "../helpers/range.h"
 #include "filter.h"
-#include "midiMapping.h"
+#include "mapping.h"
 
 // #include <math.h>
 
@@ -15,7 +15,6 @@ protected:
     float f, p, q = 0.00;
     float b0, b1, b2, b3, b4 = 0.0;
     float t1, t2 = 0.0;
-    float mix = 0.5;
 
     void calculateVar(float _cutoff, float _resonance)
     {
@@ -27,20 +26,22 @@ protected:
         debug("mix %f cutoff %f q=%f\n", mix, _cutoff, q);
     }
 
-    MidiMapping<EffectFilterMultiModeMoog> midiMapping;
+    Mapping<EffectFilterMultiModeMoog> mapping;
 
 public:
-    MIDI_MAPPING_HANDLER
+    MAPPING_HANDLER
 
-    float resonance = 0.0;
+    // float resonance = 0.0;
+    float& resonance = mapping.addFloat(0.0, "RESONANCE", &EffectFilterMultiModeMoog::setResonance);
+
+    // Cutoff mix
+    float& mix = mapping.addFloat(0.5, "CUTOFF", &EffectFilterMultiModeMoog::setCutoff);
+
 
     EffectFilterMultiModeMoog(AudioPluginProps& props)
         : EffectFilterInterface(props)
-        , midiMapping(this)
+        , mapping(this)
     {
-        midiMapping.add("CUTOFF", &EffectFilterMultiModeMoog::setCutoff);
-        midiMapping.add("RESONANCE", &EffectFilterMultiModeMoog::setResonance);
-
         setCutoff(0.5);
     };
 

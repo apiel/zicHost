@@ -3,7 +3,7 @@
 
 #include "../helpers/range.h"
 #include "audioPlugin.h"
-#include "midiMapping.h"
+#include "mapping.h"
 
 #include <math.h>
 
@@ -27,18 +27,17 @@ protected:
         return (1 + shape) * buf / (1 + shape * fabsf(buf));
     }
 
-    MidiMapping<EffectDistortion> midiMapping;
+    Mapping<EffectDistortion> mapping;
 
 public:
-    MIDI_MAPPING_HANDLER
+    MAPPING_HANDLER
 
-    float drive = 0.0;
+    float& drive = mapping.addFloat(0.0, "DRIVE", &EffectDistortion::setDrive);
 
     EffectDistortion(AudioPluginProps& props)
         : AudioPlugin(props)
-        , midiMapping(this)
+        , mapping(this)
     {
-        midiMapping.add("DRIVE", &EffectDistortion::setDrive);
         setDrive(drive);
     };
 

@@ -3,7 +3,7 @@
 
 #include "../helpers/range.h"
 #include "filter.h"
-#include "midiMapping.h"
+#include "mapping.h"
 
 // #include <math.h>
 
@@ -12,22 +12,21 @@ protected:
     EffectFilterData hpf;
     EffectFilterData lpf;
 
-    float mix = 0.5;
-
-    MidiMapping<EffectFilterMultiMode> midiMapping;
+    Mapping<EffectFilterMultiMode> mapping;
 
 public:
-    MIDI_MAPPING_HANDLER
+    MAPPING_HANDLER
 
-    float resonance = 0.0;
+    // float resonance = 0.0;
+    float& resonance = mapping.addFloat(0.0, "RESONANCE", &EffectFilterMultiMode::setResonance);
+
+    // Cutoff mix
+    float& mix = mapping.addFloat(0.5, "CUTOFF", &EffectFilterMultiMode::setCutoff);
 
     EffectFilterMultiMode(AudioPluginProps& props)
         : EffectFilterInterface(props)
-        , midiMapping(this)
+        , mapping(this)
     {
-        midiMapping.add("CUTOFF", &EffectFilterMultiMode::setCutoff);
-        midiMapping.add("RESONANCE", &EffectFilterMultiMode::setResonance);
-
         setCutoff(0.5);
     };
 
