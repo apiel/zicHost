@@ -24,8 +24,9 @@ AudioApi& audioApi = AudioApiRT::get();
 extern "C" {
 int start()
 {
+    audioApi.init();
     APP_PRINT("List of available audio interfaces:\n");
-    // audioApi.list();
+    audioApi.list();
 
     // TODO make config.cfg a parameter
     // make default config

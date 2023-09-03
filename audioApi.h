@@ -3,6 +3,7 @@
 
 class AudioApi {
 public:
+    virtual void init() { }
     virtual int open() = 0;
     virtual void list() = 0;
 };
