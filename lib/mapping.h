@@ -119,6 +119,7 @@ public:
     }
     void setValue(int valueIndex, float value)
     {
+        (instance->*(items[valueIndex].callback))(value);
     }
     int getValueCount()
     {

@@ -154,6 +154,11 @@ public:
         }
         return -1;
     }
+
+    void setValue(int index, float value)
+    {
+        plugins[index].instance->setValue(valueIndices[index].valueIndex, value);
+    }
 };
 
 AudioHandler* AudioHandler::instance = NULL;
