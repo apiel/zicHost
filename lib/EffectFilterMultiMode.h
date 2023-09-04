@@ -5,27 +5,20 @@
 #include "filter.h"
 #include "mapping.h"
 
-// #include <math.h>
-
-class EffectFilterMultiMode : public EffectFilterInterface {
+// class EffectFilterMultiMode : public EffectFilterInterface {
+    class EffectFilterMultiMode : public Mapping<EffectFilterMultiMode> {
 protected:
     EffectFilterData hpf;
     EffectFilterData lpf;
 
-    Mapping<EffectFilterMultiMode> mapping;
-
 public:
-    MAPPING_HANDLER
-
-    // float resonance = 0.0;
-    float& resonance = mapping.addFloat(0.0, "RESONANCE", &EffectFilterMultiMode::setResonance);
 
     // Cutoff mix
-    float& mix = mapping.addFloat(0.5, "CUTOFF", &EffectFilterMultiMode::setCutoff);
+    Val<EffectFilterMultiMode> mix = { this, 0.5, "CUTOFF", &EffectFilterMultiMode::setCutoff };
+    Val<EffectFilterMultiMode> resonance = { this, 0.0, "RESONANCE", &EffectFilterMultiMode::setResonance };
 
     EffectFilterMultiMode(AudioPluginProps& props)
-        : EffectFilterInterface(props)
-        , mapping(this)
+        : Mapping(props, { &mix, &resonance })
     {
         setCutoff(0.5);
     };
@@ -39,12 +32,12 @@ public:
         hpf.setSampleData(inputValue);
         lpf.setSampleData(inputValue);
 
-        return lpf.buf1 * (1.0 - mix) + hpf.hp * mix;
+        return lpf.buf1 * (1.0 - mix.value_f) + hpf.hp * mix.value_f;
     }
 
     EffectFilterMultiMode& setCutoff(float value)
     {
-        mix = range(value, 0.00, 1.00);
+        mix.value_f = range(value, 0.00, 1.00);
 
         hpf.setCutoff((0.20 * value) + 0.00707);
         lpf.setCutoff(0.85 * value + 0.1);
@@ -54,11 +47,11 @@ public:
 
     EffectFilterMultiMode& setResonance(float _res)
     {
-        resonance = range(_res, 0.00, 0.99);
-        lpf.setResonance(resonance);
-        hpf.setResonance(resonance);
+        resonance.value_f = range(_res, 0.00, 0.99);
+        lpf.setResonance(resonance.value_f);
+        hpf.setResonance(resonance.value_f);
 
-        debug("Filter: resonance=%f\n", resonance);
+        debug("Filter: resonance=%f\n", resonance.value_f);
 
         return *this;
     };

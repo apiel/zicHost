@@ -3,18 +3,6 @@
 
 #include "audioPlugin.h"
 
-class EffectFilterInterface : public AudioPlugin {
-public:
-    EffectFilterInterface(AudioPluginProps& props)
-        : AudioPlugin(props)
-    {
-    }
-
-    virtual float sample(float inputValue) = 0;
-    virtual EffectFilterInterface& setCutoff(float value) = 0;
-    virtual EffectFilterInterface& setResonance(float _res) = 0;
-};
-
 // https://www.martin-finke.de/articles/audio-plugins-013-filter/
 // https://www.musicdsp.org/en/latest/Filters/29-resonant-filter.html
 

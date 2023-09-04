@@ -7,40 +7,16 @@
 #include "../helpers/range.h"
 #include "midiMapping.h"
 
-#define MAPPING_HANDLER                                                                                      \
-    bool midi(std::vector<unsigned char>* message)                                                           \
-    {                                                                                                        \
-        return mapping.midi(message);                                                                        \
-    }                                                                                                        \
-    bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1) \
-    {                                                                                                        \
-        return mapping.assignMidi(key, size, valuePosition, msg0, msg1);                                     \
-    }                                                                                                        \
-    float getValue(int valueIndex)                                                                           \
-    {                                                                                                        \
-        return mapping.getValue(valueIndex);                                                                 \
-    }                                                                                                        \
-    void setValue(int valueIndex, float value)                                                               \
-    {                                                                                                        \
-        mapping.setValue(valueIndex, value);                                                                 \
-    }                                                                                                        \
-    int getValueCount()                                                                                      \
-    {                                                                                                        \
-        return mapping.getValueCount();                                                                      \
-    }                                                                                                        \
-    const char* getValueName(int valueIndex)                                                                 \
-    {                                                                                                        \
-        return mapping.getValueName(valueIndex);                                                             \
-    }
+#include "audioPlugin.h"
 
 template <typename T>
-class MappingItem {
+class Val {
 protected:
     T* instance;
 
     float getValue_f() { return value_f; }
     float getValue_i() { return value_i * 0.01; }
-    float (MappingItem::*getValuePtr) () = &MappingItem::getValue_f;
+    float (Val::*getValuePtr)() = &Val::getValue_f;
 
 public:
     const char* key;
@@ -49,7 +25,7 @@ public:
     T& (T::*callback)(float value);
     MidiMappingItem<T> midi;
 
-    MappingItem(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value))
+    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value))
         : instance(instance)
         , value_f(initValue)
         , key(_key)
@@ -58,89 +34,77 @@ public:
     {
     }
 
-    MappingItem(T* instance, uint8_t initValue, const char* _key, T& (T::*_callback)(float value))
-        : instance(instance)
-        , value_i(initValue)
-        , key(_key)
-        , callback(_callback)
-        , midi(instance, _key, _callback)
-    {
-        getValuePtr = &MappingItem::getValue_i;
-    }
+    // Val(T* instance, uint8_t initValue, const char* _key, T& (T::*_callback)(float value))
+    //     : instance(instance)
+    //     , value_i(initValue)
+    //     , key(_key)
+    //     , callback(_callback)
+    //     , midi(instance, _key, _callback)
+    // {
+    //     getValuePtr = &Val::getValue_i;
+    // }
 
     float getValue()
     {
         return (*this.*getValuePtr)();
     }
+
+    void setValue(float value)
+    {
+        (instance->*(callback))(value);
+    }
 };
 
 template <typename T>
-class Mapping {
-protected:
-    T* instance;
-
+class Mapping : public AudioPlugin {
 public:
-    std::vector<MappingItem<T>> items;
+    std::vector<Val<T>*> mapping;
 
-    Mapping(T* _instance)
-        : instance(_instance)
+    Mapping(AudioPluginProps& props, std::vector<Val<T>*> mapping)
+        : AudioPlugin(props)
+        , mapping(mapping)
     {
     }
 
+    // TODO move midi logic out of here
     bool midi(std::vector<unsigned char>* message)
     {
-        for (MappingItem<T>& item : items) {
-            if (item.midi.handle(message)) {
+        for (Val<T>* item : mapping) {
+            if (item->midi.handle(message)) {
                 return true;
             }
         }
         return false;
     }
 
-    MappingItem<T> add(float initvalue, const char* _key, T& (T::*_callback)(float value))
+    // TODO move midi logic out of here
+    bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1)
     {
-        items.push_back({ instance, initvalue, _key, _callback });
-        return items.back();
-    }
-
-    float& addFloat(float initvalue, const char* _key, T& (T::*_callback)(float value))
-    {
-        items.push_back({ instance, initvalue, _key, _callback });
-        return items.back().value_f;
-    }
-
-    uint8_t& addInt(uint8_t initvalue, const char* _key, T& (T::*_callback)(float value))
-    {
-        items.push_back({ instance, initvalue, _key, _callback });
-        return items.back().value_i;
-    }
-
-    bool assignMidi(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1)
-    {
-        for (int i = 0; i < items.size(); i++) {
-            if (strcmp(items[i].key, key) == 0) {
-                items[i].midi.set(size, valuePosition, msg0, msg1);
+        for (Val<T>* item : mapping) {
+            if (strcmp(item->key, key) == 0) {
+                item->midi.set(size, valuePosition, msg0, msg1);
                 return true;
             }
         }
         return false;
     }
 
+    int getValueCount()
+    {
+        return mapping.size();
+    }
     float getValue(int valueIndex)
     {
-        return items[valueIndex].getValue();
+        return mapping[valueIndex]->getValue();
     }
     void setValue(int valueIndex, float value)
     {
-        (instance->*(items[valueIndex].callback))(value);
+        mapping[valueIndex]->setValue(value);
     }
-    int getValueCount()
-    {
-        return items.size();
-    }
+
     const char* getValueName(int valueIndex)
     {
-        return items[valueIndex].key;
+        return mapping[valueIndex]->key;
     }
 };
 
