@@ -5,8 +5,6 @@
 
 class EffectFilterInterface : public AudioPlugin {
 public:
-    float resonance = 0.0;
-
     EffectFilterInterface(AudioPluginProps& props)
         : AudioPlugin(props)
     {

@@ -38,6 +38,10 @@ class MappingItem {
 protected:
     T* instance;
 
+    float getValue_f() { return value_f; }
+    float getValue_i() { return value_i * 0.01; }
+    float (MappingItem::*getValuePtr) () = &MappingItem::getValue_f;
+
 public:
     const char* key;
     float value_f;
@@ -52,7 +56,6 @@ public:
         , callback(_callback)
         , midi(instance, _key, _callback)
     {
-        // set getter to return float
     }
 
     MappingItem(T* instance, uint8_t initValue, const char* _key, T& (T::*_callback)(float value))
@@ -62,7 +65,12 @@ public:
         , callback(_callback)
         , midi(instance, _key, _callback)
     {
-        // set getter to return int / 128
+        getValuePtr = &MappingItem::getValue_i;
+    }
+
+    float getValue()
+    {
+        return (*this.*getValuePtr)();
     }
 };
 
@@ -70,9 +78,10 @@ template <typename T>
 class Mapping {
 protected:
     T* instance;
-    std::vector<MappingItem<T>> items;
 
 public:
+    std::vector<MappingItem<T>> items;
+
     Mapping(T* _instance)
         : instance(_instance)
     {
@@ -88,17 +97,21 @@ public:
         return false;
     }
 
+    MappingItem<T> add(float initvalue, const char* _key, T& (T::*_callback)(float value))
+    {
+        items.push_back({ instance, initvalue, _key, _callback });
+        return items.back();
+    }
+
     float& addFloat(float initvalue, const char* _key, T& (T::*_callback)(float value))
     {
-        MappingItem<T> item(instance, initvalue, _key, _callback);
-        items.push_back(item);
+        items.push_back({ instance, initvalue, _key, _callback });
         return items.back().value_f;
     }
 
     uint8_t& addInt(uint8_t initvalue, const char* _key, T& (T::*_callback)(float value))
     {
-        MappingItem<T> item(instance, initvalue, _key, _callback);
-        items.push_back(item);
+        items.push_back({ instance, initvalue, _key, _callback });
         return items.back().value_i;
     }
 
@@ -115,7 +128,7 @@ public:
 
     float getValue(int valueIndex)
     {
-        return items[valueIndex].value_f;
+        return items[valueIndex].getValue();
     }
     void setValue(int valueIndex, float value)
     {
