@@ -44,12 +44,17 @@ public:
     //     getValuePtr = &Val::getValue_i;
     // }
 
-    float getValue()
+    float get()
     {
         return (*this.*getValuePtr)();
     }
 
-    void setValue(float value)
+    void set(float value)
+    {
+        value_f = value;
+    }
+
+    void call(float value)
     {
         (instance->*(callback))(value);
     }
@@ -95,11 +100,11 @@ public:
     }
     float getValue(int valueIndex)
     {
-        return mapping[valueIndex]->getValue();
+        return mapping[valueIndex]->get();
     }
     void setValue(int valueIndex, float value)
     {
-        mapping[valueIndex]->setValue(value);
+        mapping[valueIndex]->call(value);
     }
 
     const char* getValueName(int valueIndex)
