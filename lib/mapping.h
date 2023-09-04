@@ -14,6 +14,9 @@ class Val {
 protected:
     T* instance;
 
+    float min;
+    float max;
+
     float getValue_f() { return value_f; }
     float getValue_i() { return value_i * 0.01; }
     float (Val::*getValuePtr)() = &Val::getValue_f;
@@ -25,8 +28,10 @@ public:
     T& (T::*callback)(float value);
     MidiMappingItem<T> midi;
 
-    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value))
+    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), float min = 0.0, float max = 1.0)
         : instance(instance)
+        , min(min)
+        , max(max)
         , value_f(initValue)
         , key(_key)
         , callback(_callback)
@@ -51,7 +56,7 @@ public:
 
     void set(float value)
     {
-        value_f = value;
+        value_f = range(value, min, max);
     }
 
     void call(float value)

@@ -5,17 +5,15 @@
 #include "filter.h"
 #include "mapping.h"
 
-// class EffectFilterMultiMode : public EffectFilterInterface {
-    class EffectFilterMultiMode : public Mapping<EffectFilterMultiMode> {
+class EffectFilterMultiMode : public Mapping<EffectFilterMultiMode> {
 protected:
     EffectFilterData hpf;
     EffectFilterData lpf;
 
 public:
-
     // Cutoff mix
     Val<EffectFilterMultiMode> mix = { this, 0.5, "CUTOFF", &EffectFilterMultiMode::setCutoff };
-    Val<EffectFilterMultiMode> resonance = { this, 0.0, "RESONANCE", &EffectFilterMultiMode::setResonance };
+    Val<EffectFilterMultiMode> resonance = { this, 0.0, "RESONANCE", &EffectFilterMultiMode::setResonance, 0.00, 0.99 };
 
     EffectFilterMultiMode(AudioPluginProps& props)
         : Mapping(props, { &mix, &resonance })
@@ -37,17 +35,16 @@ public:
 
     EffectFilterMultiMode& setCutoff(float value)
     {
-        mix.set(range(value, 0.00, 1.00));
-
+        mix.set(value);
         hpf.setCutoff((0.20 * value) + 0.00707);
         lpf.setCutoff(0.85 * value + 0.1);
 
         return *this;
     }
 
-    EffectFilterMultiMode& setResonance(float _res)
+    EffectFilterMultiMode& setResonance(float value)
     {
-        resonance.set(range(_res, 0.00, 0.99));
+        resonance.set(value);
         lpf.setResonance(resonance.value_f);
         hpf.setResonance(resonance.value_f);
 
