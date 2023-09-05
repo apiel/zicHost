@@ -51,12 +51,12 @@ public:
         // and make min = 0.0 and max = 256.0
         // then we could also bring this max value to the frontend
         sampleStepInt = sampleStep.get() * 100;
-        if (sampleStep.get() == 0.0) {
+        if (sampleStepInt == 0) {
             samplePtr = &EffectSampleRateReducer::skipSample;
             debug("SampleRateReducer: disabled\n");
         } else {
             samplePtr = &EffectSampleRateReducer::processSample;
-            debug("SampleRateReducer: sampleStep=%d\n", sampleStep);
+            debug("SampleRateReducer: sampleStep=%d\n", sampleStepInt);
         }
         return *this;
     }

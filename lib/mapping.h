@@ -79,29 +79,6 @@ public:
     {
     }
 
-    // // TODO move midi logic out of here
-    // bool midi(std::vector<unsigned char>* message)
-    // {
-    //     for (Val<T>* item : mapping) {
-    //         if (item->midi.handle(message)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // // TODO move midi logic out of here
-    // bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1)
-    // {
-    //     for (Val<T>* item : mapping) {
-    //         if (strcmp(item->key, key) == 0) {
-    //             item->midi.set(size, valuePosition, msg0, msg1);
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
     int getValueIndex(const char* key)
     {
         for (int i = 0; i < mapping.size(); i++) {
