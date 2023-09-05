@@ -35,7 +35,7 @@ protected:
     }
 
 public:
-    Val<EffectSampleRateReducer> sampleStep = { this, 0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep }; // the number of samples to double up.
+    Val<EffectSampleRateReducer> sampleStep = { this, 0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep, 256 };
 
     EffectSampleRateReducer(AudioPluginProps& props)
         : Mapping(props, { &sampleStep })
@@ -46,11 +46,7 @@ public:
     EffectSampleRateReducer& setSampleStep(float value)
     {
         sampleStep.set(value);
-        // FIXME is this right?
-        // or should we just convert float to int
-        // and make min = 0.0 and max = 256.0
-        // then we could also bring this max value to the frontend
-        sampleStepInt = sampleStep.get() * 100;
+        sampleStepInt = sampleStep.get() * sampleStep.getStepCount();
         if (sampleStepInt == 0) {
             samplePtr = &EffectSampleRateReducer::skipSample;
             debug("SampleRateReducer: disabled\n");

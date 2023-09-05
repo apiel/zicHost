@@ -14,7 +14,7 @@ protected:
 public:
     // Cutoff mix
     Val<EffectFilter> cutoff = { this, 0.5, "CUTOFF", &EffectFilter::setCutoff };
-    Val<EffectFilter> resonance = { this, 0.0, "RESONANCE", &EffectFilter::setResonance, 0.00, 0.99 };
+    Val<EffectFilter> resonance = { this, 0.0, "RESONANCE", &EffectFilter::setResonance };
 
     enum Mode {
         OFF,

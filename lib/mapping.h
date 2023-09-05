@@ -13,53 +13,36 @@ class Val {
 protected:
     T* instance;
 
-    float min;
-    float max;
+    int stepCount;
 
     float value_f;
-    uint8_t value_i;
-
-    float getValue_f() { return value_f; }
-    float getValue_i() { return value_i * 0.01; }
-    float (Val::*getValuePtr)() = &Val::getValue_f;
 
 public:
     const char* key;
     T& (T::*callback)(float value);
 
-    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), float min = 0.0, float max = 1.0)
+    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), int stepCount = 100)
         : instance(instance)
-        , min(min)
-        , max(max)
+        , stepCount(stepCount)
         , value_f(initValue)
         , key(_key)
         , callback(_callback)
     {
     }
 
-    // Val(T* instance, uint8_t initValue, const char* _key, T& (T::*_callback)(float value))
-    //     : instance(instance)
-    //     , value_i(initValue)
-    //     , key(_key)
-    //     , callback(_callback)
-    //     , midi(instance, _key, _callback)
-    // {
-    //     getValuePtr = &Val::getValue_i;
-    // }
+    float getStepCount()
+    {
+        return stepCount;
+    }
 
-    // inline float get()
-    // {
-    //     return (*this.*getValuePtr)();
-    // }
-
-   inline float get()
+    inline float get()
     {
         return value_f;
     }
 
     void set(float value)
     {
-        value_f = range(value, min, max);
+        value_f = range(value, 0.0, 1.0);
     }
 
     void call(float value)
@@ -105,6 +88,11 @@ public:
     const char* getValueName(int valueIndex)
     {
         return mapping[valueIndex]->key;
+    }
+
+    int getStepCount(int valueIndex)
+    {
+        return mapping[valueIndex]->getStepCount();
     }
 };
 

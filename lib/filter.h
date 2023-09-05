@@ -30,7 +30,8 @@ public:
             feedback = 0.0f;
             return;
         }
-        feedback = resonance + resonance / (1.0 - cutoff);
+        float reso = resonance * 0.99;
+        feedback = reso + reso / (1.0 - cutoff);
     }
 
     void setSampleData(float inputValue)

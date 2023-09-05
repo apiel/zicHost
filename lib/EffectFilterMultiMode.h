@@ -13,7 +13,7 @@ protected:
 public:
     // Cutoff mix
     Val<EffectFilterMultiMode> mix = { this, 0.5, "CUTOFF", &EffectFilterMultiMode::setCutoff };
-    Val<EffectFilterMultiMode> resonance = { this, 0.0, "RESONANCE", &EffectFilterMultiMode::setResonance, 0.00, 0.99 };
+    Val<EffectFilterMultiMode> resonance = { this, 0.0, "RESONANCE", &EffectFilterMultiMode::setResonance };
 
     EffectFilterMultiMode(AudioPluginProps& props)
         : Mapping(props, { &mix, &resonance })
