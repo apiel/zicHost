@@ -4,9 +4,13 @@
 #include <vector>
 
 #include "def.h"
+#include "midiMapping.h"
 #include "plugin.h"
+
 class AudioHandler {
 protected:
+    std::vector<MidiMapping> midiMapping;
+
     static AudioHandler* instance;
     AudioHandler() { }
 
@@ -94,7 +98,9 @@ public:
             uint8_t msg1Int = strtol(msg1, NULL, 16);
 
             // try to assign value to last plugin
-            if (plugins.back().instance->assignMidiMapping(key, size, valuePosition, msg0Int, msg1Int)) {
+            int valueIndex = plugins.back().instance->getValueIndex(key);
+            if (valueIndex != -1) {
+                midiMapping.push_back({ plugins.back().instance, valueIndex, size, valuePosition, msg0Int, msg1Int });
                 APP_INFO("[%s] Midi mapping assigned: %s\n", plugins.back().instance->name(), key);
                 return true;
             }
@@ -104,8 +110,8 @@ public:
 
     bool midi(std::vector<unsigned char>* message)
     {
-        for (Plugin& plugin : plugins) {
-            if (plugin.instance->midi(message)) {
+        for (MidiMapping& mapping : midiMapping) {
+            if (mapping.handle(message)) {
                 return true;
             }
         }

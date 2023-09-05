@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "../helpers/range.h"
-#include "midiMapping.h"
 
 #include "audioPlugin.h"
 
@@ -27,7 +26,6 @@ protected:
 public:
     const char* key;
     T& (T::*callback)(float value);
-    MidiMappingItem<T> midi;
 
     Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), float min = 0.0, float max = 1.0)
         : instance(instance)
@@ -36,7 +34,6 @@ public:
         , value_f(initValue)
         , key(_key)
         , callback(_callback)
-        , midi(instance, _key, _callback)
     {
     }
 
@@ -82,27 +79,37 @@ public:
     {
     }
 
-    // TODO move midi logic out of here
-    bool midi(std::vector<unsigned char>* message)
-    {
-        for (Val<T>* item : mapping) {
-            if (item->midi.handle(message)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // // TODO move midi logic out of here
+    // bool midi(std::vector<unsigned char>* message)
+    // {
+    //     for (Val<T>* item : mapping) {
+    //         if (item->midi.handle(message)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
-    // TODO move midi logic out of here
-    bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1)
+    // // TODO move midi logic out of here
+    // bool assignMidiMapping(const char* key, uint8_t size, uint8_t valuePosition, uint8_t msg0, uint8_t msg1)
+    // {
+    //     for (Val<T>* item : mapping) {
+    //         if (strcmp(item->key, key) == 0) {
+    //             item->midi.set(size, valuePosition, msg0, msg1);
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+
+    int getValueIndex(const char* key)
     {
-        for (Val<T>* item : mapping) {
-            if (strcmp(item->key, key) == 0) {
-                item->midi.set(size, valuePosition, msg0, msg1);
-                return true;
+        for (int i = 0; i < mapping.size(); i++) {
+            if (strcmp(mapping[i]->key, key) == 0) {
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     int getValueCount()
