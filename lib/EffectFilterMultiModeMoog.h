@@ -9,7 +9,7 @@
 
 // Paul Kellet version of the classic Stilson/Smith "Moog" filter
 // https://www.kvraudio.com/forum/viewtopic.php?t=144625
-class EffectFilterMultiModeMoog : public EffectFilterInterface {
+class EffectFilterMultiModeMoog : public Mapping<EffectFilterMultiModeMoog> {
 protected:
     float cutoff = 0.00;
     float f, p, q = 0.00;
@@ -21,26 +21,20 @@ protected:
         q = 1.0f - _cutoff;
         p = _cutoff + 0.8f * _cutoff * q;
         f = p + p - 1.0f;
-        q = _resonance * (1.0f + 0.5f * q * (1.0f - q + 5.6f * q * q));
+        // resonance should be from 0.0 to 0.90, higher values is too high
+        q = (_resonance * 0.90) * (1.0f + 0.5f * q * (1.0f - q + 5.6f * q * q));
 
         debug("mix %f cutoff %f q=%f\n", mix, _cutoff, q);
     }
 
-    Mapping<EffectFilterMultiModeMoog> mapping;
-
 public:
-    MAPPING_HANDLER
-
-    // float resonance = 0.0;
-    float& resonance = mapping.addFloat(0.0, "RESONANCE", &EffectFilterMultiModeMoog::setResonance);
-
     // Cutoff mix
-    float& mix = mapping.addFloat(0.5, "CUTOFF", &EffectFilterMultiModeMoog::setCutoff);
+    Val<EffectFilterMultiModeMoog> mix = { this, 0.5, "CUTOFF", &EffectFilterMultiModeMoog::setCutoff };
+    Val<EffectFilterMultiModeMoog> resonance = { this, 0.0, "RESONANCE", &EffectFilterMultiModeMoog::setResonance };
 
 
     EffectFilterMultiModeMoog(AudioPluginProps& props)
-        : EffectFilterInterface(props)
-        , mapping(this)
+        : Mapping(props, { &mix, &resonance })
     {
         setCutoff(0.5);
     };
@@ -62,25 +56,25 @@ public:
         // Highpass output:  in - b4;
         // Bandpass output:  3.0f * (b3 - b4);
 
-        return b4 * (1.0 - mix) + (inputValue - b4) * mix;
+        return b4 * (1.0 - mix.get()) + (inputValue - b4) * mix.get();
     }
 
     EffectFilterMultiModeMoog& setCutoff(float value)
     {
-        mix = range(value, 0.00, 1.00);
-        if (mix > 0.5) {
-            cutoff = 1 - mix + 0.0707;
+        mix.set(value);
+        if (mix.get() > 0.5) {
+            cutoff = 1 - mix.get() + 0.0707;
         } else {
-            cutoff = mix + 0.05; // LPF should not be 0.0
+            cutoff = mix.get() + 0.05; // LPF should not be 0.0
         }
-        calculateVar(cutoff, resonance);
+        calculateVar(cutoff, resonance.get());
         return *this;
     }
 
-    EffectFilterMultiModeMoog& setResonance(float _res)
+    EffectFilterMultiModeMoog& setResonance(float value)
     {
-        resonance = range(_res, 0.00, 1.00) * 0.90; // resonance should be from 0.0 to 0.90, higher values is too high
-        calculateVar(cutoff, resonance);
+        resonance.set(value);
+        calculateVar(cutoff, resonance.get());
         return *this;
     };
 

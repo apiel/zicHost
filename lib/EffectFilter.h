@@ -7,16 +7,14 @@
 
 // #include <math.h>
 
-class EffectFilter : public EffectFilterInterface {
+class EffectFilter : public Mapping<EffectFilter> {
 protected:
     EffectFilterData data;
-    Mapping<EffectFilter> mapping;
 
 public:
-    MAPPING_HANDLER
-
-    float& resonance = mapping.addFloat(0.0f, "RESONANCE", &EffectFilter::setResonance);
-    float& cutoff = mapping.addFloat(0.0f, "CUTOFF", &EffectFilter::setCutoff);
+    // Cutoff mix
+    Val<EffectFilter> cutoff = { this, 0.5, "CUTOFF", &EffectFilter::setCutoff };
+    Val<EffectFilter> resonance = { this, 0.0, "RESONANCE", &EffectFilter::setResonance, 0.00, 0.99 };
 
     enum Mode {
         OFF,
@@ -27,11 +25,10 @@ public:
     } mode
         = OFF;
     // TODO how to handle mode in a better way?
-    float& f_mode = mapping.addFloat(0.0f, "MODE", &EffectFilter::setMode);
+    Val<EffectFilter> mode_value = { this, 0.0, "MODE", &EffectFilter::setMode };
 
     EffectFilter(AudioPluginProps& props)
-        : EffectFilterInterface(props)
-        , mapping(this)
+        : Mapping(props, { &cutoff, &resonance, &mode_value })
     {
     }
 
@@ -54,23 +51,23 @@ public:
 
     EffectFilter& setCutoff(float value)
     {
-        cutoff = range(value, 0.00, 1.00);
+        cutoff.set(value);
 
         if (mode == LPF) {
-            data.setCutoff(0.85 * value + 0.1);
+            data.setCutoff(0.85 * cutoff.get() + 0.1);
         } else if (mode == BPF) {
-            data.setCutoff(0.85 * value + 0.1);
+            data.setCutoff(0.85 * cutoff.get() + 0.1);
         } else { // HPF
-            data.setCutoff((0.20 * value) + 0.00707);
+            data.setCutoff((0.20 * cutoff.get()) + 0.00707);
         }
 
         return *this;
     }
 
-    EffectFilter& setResonance(float _res)
+    EffectFilter& setResonance(float value)
     {
-        resonance = range(_res, 0.00, 0.99);
-        data.setResonance(resonance);
+        resonance.set(value);
+        data.setResonance(resonance.get());
 
         return *this;
     };
@@ -78,14 +75,14 @@ public:
     EffectFilter& setMode(EffectFilter::Mode _mode)
     {
         mode = _mode;
-        setCutoff(cutoff);
+        setCutoff(cutoff.get());
         return *this;
     };
 
     EffectFilter& setMode(float value)
     {
-        f_mode = value;
-        mode = (Mode)range(f_mode * 128, 0, (uint8_t)MODE_COUNT);
+        mode_value.set(value);
+        mode = (Mode)range(mode_value.get() * 100, 0, (uint8_t)MODE_COUNT);
         return setMode(mode);
     }
 

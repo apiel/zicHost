@@ -11,73 +11,66 @@
 // TODO load/save different kind of delay and reverb from a config file
 // TODO add lfo on time ratio
 
-class EffectDelay : public AudioPlugin {
+class EffectDelay : public Mapping<EffectDelay> {
 protected:
     AudioBuffer<> buffer;
 
     struct DelayVoice {
         uint32_t index;
-        float& amplitude;
-        float& feedback;
-        float& sec;
+        Val<EffectDelay> amplitude;
+        Val<EffectDelay> feedback;
+        Val<EffectDelay> sec;
     } voices[MAX_DELAY_VOICES] = {
         { 0,
-            mapping.addFloat(0.0, "AMPLITUDE_0", &EffectDelay::setAmplitude0),
-            mapping.addFloat(0.0, "FEEDBACK_0", &EffectDelay::setFeedback0),
-            mapping.addFloat(0.1, "SEC_0", &EffectDelay::setSec0) },
+            { this, 0.0, "AMPLITUDE_0", &EffectDelay::setAmplitude0 },
+            { this, 0.0, "FEEDBACK_0", &EffectDelay::setFeedback0 },
+            { this, 0.1, "SEC_0", &EffectDelay::setSec0 } },
         { 1,
-            mapping.addFloat(0.0, "AMPLITUDE_1", &EffectDelay::setAmplitude1),
-            mapping.addFloat(0.0, "FEEDBACK_1", &EffectDelay::setFeedback1),
-            mapping.addFloat(0.1, "SEC_1", &EffectDelay::setSec1) },
+            { this, 0.0, "AMPLITUDE_1", &EffectDelay::setAmplitude1 },
+            { this, 0.0, "FEEDBACK_1", &EffectDelay::setFeedback1 },
+            { this, 0.1, "SEC_1", &EffectDelay::setSec1 } },
         { 2,
-            mapping.addFloat(0.0, "AMPLITUDE_2", &EffectDelay::setAmplitude2),
-            mapping.addFloat(0.0, "FEEDBACK_2", &EffectDelay::setFeedback2),
-            mapping.addFloat(0.1, "SEC_2", &EffectDelay::setSec2) },
+            { this, 0.0, "AMPLITUDE_2", &EffectDelay::setAmplitude2 },
+            { this, 0.0, "FEEDBACK_2", &EffectDelay::setFeedback2 },
+            { this, 0.1, "SEC_2", &EffectDelay::setSec2 } },
         { 3,
-            mapping.addFloat(0.0, "AMPLITUDE_3", &EffectDelay::setAmplitude3),
-            mapping.addFloat(0.0, "FEEDBACK_3", &EffectDelay::setFeedback3),
-            mapping.addFloat(0.1, "SEC_3", &EffectDelay::setSec3) },
+            { this, 0.0, "AMPLITUDE_3", &EffectDelay::setAmplitude3 },
+            { this, 0.0, "FEEDBACK_3", &EffectDelay::setFeedback3 },
+            { this, 0.1, "SEC_3", &EffectDelay::setSec3 } },
         { 4,
-            mapping.addFloat(0.0, "AMPLITUDE_4", &EffectDelay::setAmplitude4),
-            mapping.addFloat(0.0, "FEEDBACK_4", &EffectDelay::setFeedback4),
-            mapping.addFloat(0.1, "SEC_4", &EffectDelay::setSec4) },
+            { this, 0.0, "AMPLITUDE_4", &EffectDelay::setAmplitude4 },
+            { this, 0.0, "FEEDBACK_4", &EffectDelay::setFeedback4 },
+            { this, 0.1, "SEC_4", &EffectDelay::setSec4 } },
         { 5,
-            mapping.addFloat(0.0, "AMPLITUDE_5", &EffectDelay::setAmplitude5),
-            mapping.addFloat(0.0, "FEEDBACK_5", &EffectDelay::setFeedback5),
-            mapping.addFloat(0.1, "SEC_5", &EffectDelay::setSec5) },
+            { this, 0.0, "AMPLITUDE_5", &EffectDelay::setAmplitude5 },
+            { this, 0.0, "FEEDBACK_5", &EffectDelay::setFeedback5 },
+            { this, 0.1, "SEC_5", &EffectDelay::setSec5 } },
         { 6,
-            mapping.addFloat(0.0, "AMPLITUDE_6", &EffectDelay::setAmplitude6),
-            mapping.addFloat(0.0, "FEEDBACK_6", &EffectDelay::setFeedback6),
-            mapping.addFloat(0.1, "SEC_6", &EffectDelay::setSec6) },
+            { this, 0.0, "AMPLITUDE_6", &EffectDelay::setAmplitude6 },
+            { this, 0.0, "FEEDBACK_6", &EffectDelay::setFeedback6 },
+            { this, 0.1, "SEC_6", &EffectDelay::setSec6 } },
         { 7,
-            mapping.addFloat(0.0, "AMPLITUDE_7", &EffectDelay::setAmplitude7),
-            mapping.addFloat(0.0, "FEEDBACK_7", &EffectDelay::setFeedback7),
-            mapping.addFloat(0.1, "SEC_7", &EffectDelay::setSec7) },
+            { this, 0.0, "AMPLITUDE_7", &EffectDelay::setAmplitude7 },
+            { this, 0.0, "FEEDBACK_7", &EffectDelay::setFeedback7 },
+            { this, 0.1, "SEC_7", &EffectDelay::setSec7 } },
     };
 
-    Mapping<EffectDelay> mapping;
-
 public:
-    MAPPING_HANDLER
-
     // From 0.0 to 1.0 to apply time ratio to voice in seconds
-    float& timeRatio = mapping.addFloat(1.0f, "TIME_RATIO", &EffectDelay::setTimeRatio);
-    float& masterAmplitude = mapping.addFloat(1.0f, "MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude);
+    Val<EffectDelay> timeRatio = { this, 1.0f, "TIME_RATIO", &EffectDelay::setTimeRatio };
+    Val<EffectDelay> masterAmplitude = { this, 1.0f, "MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude };
+    // FIXME
+    // FIXME what about filter values???
+    // FIXME
 
     EffectFilter filter;
 
     EffectDelay(AudioPluginProps& props)
-        : AudioPlugin(props)
+        : Mapping(props, { &timeRatio, &masterAmplitude, &voices[0].amplitude, &voices[0].feedback, &voices[0].sec, &voices[1].amplitude, &voices[1].feedback, &voices[1].sec, &voices[2].amplitude, &voices[2].feedback, &voices[2].sec, &voices[3].amplitude, &voices[3].feedback, &voices[3].sec, &voices[4].amplitude, &voices[4].feedback, &voices[4].sec, &voices[5].amplitude, &voices[5].feedback, &voices[5].sec, &voices[6].amplitude, &voices[6].feedback, &voices[6].sec, &voices[7].amplitude, &voices[7].feedback, &voices[7].sec })
         , filter(props)
-        , mapping(this)
     {
-        // TODO instead to do this, we could say to mapping to go through filter as well ??
-        filter.cutoff = mapping.addFloat(0.0f, "FILTER_CUTOFF", &EffectDelay::setCutoff);
-        filter.resonance = mapping.addFloat(0.0f, "FILTER_RESONANCE", &EffectDelay::setResonance);
-        filter.f_mode = mapping.addFloat(0.0f, "FILTER_MODE", &EffectDelay::setMode);
-
         // setVoice(0, 0.1f, 0.6f, 0.0f);
-        // setVoice(1, 0.2f, 0.5f, 0.0f);
+         // setVoice(1, 0.2f, 0.5f, 0.0f);
         // setVoice(2, 0.3f, 0.4f, 0.0f);
         // setVoice(3, 0.4f, 0.3f, 0.0f);
         // setVoice(4, 0.5f, 0.2f, 0.0f);
@@ -106,8 +99,8 @@ public:
 
     EffectDelay& setSec(uint8_t voiceIndex, float sec)
     {
-        voices[voiceIndex].sec = sec;
-        voices[voiceIndex].index = (buffer.index + buffer.size - (uint32_t)(SAMPLE_RATE * sec * timeRatio)) % buffer.size;
+        voices[voiceIndex].sec.set(sec);
+        voices[voiceIndex].index = (buffer.index + buffer.size - (uint32_t)(SAMPLE_RATE * voices[voiceIndex].sec.get() * timeRatio.get())) % buffer.size;
         return *this;
     }
 
@@ -122,7 +115,7 @@ public:
 
     EffectDelay& setAmplitude(uint8_t voiceIndex, float amplitude)
     {
-        voices[voiceIndex].amplitude = range(amplitude, 0.0f, 1.0f);
+        voices[voiceIndex].amplitude.set(amplitude);
         return *this;
     }
 
@@ -137,7 +130,7 @@ public:
 
     EffectDelay& setFeedback(uint8_t voiceIndex, float feedback)
     {
-        voices[voiceIndex].feedback = range(feedback, 0.0f, 1.0f);
+        voices[voiceIndex].feedback.set(feedback);
         return *this;
     }
 
@@ -159,15 +152,15 @@ public:
 
     EffectDelay& setMasterAmplitude(float amplitude)
     {
-        masterAmplitude = range(amplitude, 0.0f, 1.0f);
+        masterAmplitude.set(amplitude);
         return *this;
     }
 
     EffectDelay& setTimeRatio(float ratio)
     {
-        timeRatio = range(ratio, 0.0f, 1.0f);
+        timeRatio.set(ratio);
         for (uint8_t i = 0; i < MAX_DELAY_VOICES; i++) {
-            setSec(i, voices[i].sec);
+            setSec(i, voices[i].sec.get());
         }
         return *this;
     }
@@ -200,10 +193,10 @@ public:
             if (voice.index++ >= buffer.size) {
                 voice.index = 0;
             }
-            if (masterAmplitude && voice.amplitude > 0.0f) {
-                delay += buffer.samples[voice.index] * voice.amplitude * masterAmplitude;
-                if (voice.feedback > 0.0f) {
-                    buffer.samples[buffer.index] += delay * voice.feedback;
+            if (masterAmplitude.get() && voice.amplitude.get() > 0.0f) {
+                delay += buffer.samples[voice.index] * voice.amplitude.get() * masterAmplitude.get();
+                if (voice.feedback.get() > 0.0f) {
+                    buffer.samples[buffer.index] += delay * voice.feedback.get();
                 }
             }
         }

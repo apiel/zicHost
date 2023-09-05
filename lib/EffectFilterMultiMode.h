@@ -30,14 +30,14 @@ public:
         hpf.setSampleData(inputValue);
         lpf.setSampleData(inputValue);
 
-        return lpf.buf1 * (1.0 - mix.value_f) + hpf.hp * mix.value_f;
+        return lpf.buf1 * (1.0 - mix.get()) + hpf.hp * mix.get();
     }
 
     EffectFilterMultiMode& setCutoff(float value)
     {
         mix.set(value);
-        hpf.setCutoff((0.20 * value) + 0.00707);
-        lpf.setCutoff(0.85 * value + 0.1);
+        hpf.setCutoff((0.20 * mix.get()) + 0.00707);
+        lpf.setCutoff(0.85 * mix.get() + 0.1);
 
         return *this;
     }
@@ -45,10 +45,10 @@ public:
     EffectFilterMultiMode& setResonance(float value)
     {
         resonance.set(value);
-        lpf.setResonance(resonance.value_f);
-        hpf.setResonance(resonance.value_f);
+        lpf.setResonance(resonance.get());
+        hpf.setResonance(resonance.get());
 
-        debug("Filter: resonance=%f\n", resonance.value_f);
+        debug("Filter: resonance=%f\n", resonance.get());
 
         return *this;
     };

@@ -4,20 +4,14 @@
 #include "audioPlugin.h"
 #include "mapping.h"
 
-class EffectGainVolume : public AudioPlugin {
-protected:
-    Mapping<EffectGainVolume> mapping;
-
+class EffectGainVolume : public Mapping<EffectGainVolume> {
 public:
-    MAPPING_HANDLER
-
-    float& volume = mapping.addFloat(1.0f, "VOLUME", &EffectGainVolume::setVolume);
-    float& gain = mapping.addFloat(1.0f, "GAIN", &EffectGainVolume::setGain);
-    float volumeWithGain = gain * volume;
+    Val<EffectGainVolume> volume = { this, 1.0f, "VOLUME", &EffectGainVolume::setVolume };
+    Val<EffectGainVolume> gain = { this, 1.0f, "GAIN", &EffectGainVolume::setGain };
+    float volumeWithGain = gain.get() * volume.get();
 
     EffectGainVolume(AudioPluginProps& props)
-        : AudioPlugin(props)
-        , mapping(this)
+        : Mapping(props, { &volume, &gain })
     {
     }
 
@@ -29,14 +23,14 @@ public:
     EffectGainVolume& setVolume(float vol)
     {
         debug("setMaster: volume %f\n", vol);
-        return setVolumeWithGain(vol, gain);
+        return setVolumeWithGain(vol, gain.get());
     }
 
     EffectGainVolume& setVolumeWithGain(float vol, float _gain)
     {
-        gain = _gain;
-        volume = vol;
-        volumeWithGain = gain * vol;
+        gain.set(_gain);
+        volume.set(vol);
+        volumeWithGain = gain.get() * volume.get();
 
         return *this;
     }
@@ -44,7 +38,7 @@ public:
     EffectGainVolume& setGain(float _gain)
     {
         debug("setGain: gain %f\n", _gain);
-        return setVolumeWithGain(volume, _gain);
+        return setVolumeWithGain(volume.get(), _gain);
     }
 
     const char* name()

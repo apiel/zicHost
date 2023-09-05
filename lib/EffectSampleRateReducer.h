@@ -6,10 +6,11 @@
 
 #include <math.h>
 
-class EffectSampleRateReducer : public AudioPlugin {
+class EffectSampleRateReducer : public Mapping<EffectSampleRateReducer> {
 protected:
     float sampleSqueeze;
     int samplePosition = 0;
+    int sampleStepInt = 0;
 
     float (EffectSampleRateReducer::*samplePtr)(float) = &EffectSampleRateReducer::skipSample;
 
@@ -24,7 +25,7 @@ protected:
             sampleSqueeze = buf;
         }
 
-        if (samplePosition < sampleStep) {
+        if (samplePosition < sampleStepInt) {
             samplePosition++;
         } else {
             samplePosition = 0;
@@ -33,24 +34,24 @@ protected:
         return sampleSqueeze;
     }
 
-    Mapping<EffectSampleRateReducer> mapping;
-
 public:
-    MAPPING_HANDLER
-
-    uint8_t& sampleStep = mapping.addInt(0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep);; // the number of samples to double up.
+    Val<EffectSampleRateReducer> sampleStep = { this, 0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep }; // the number of samples to double up.
 
     EffectSampleRateReducer(AudioPluginProps& props)
-        : AudioPlugin(props)
-        , mapping(this)
+        : Mapping(props, { &sampleStep })
     {
         setSampleStep(0);
     };
 
     EffectSampleRateReducer& setSampleStep(float value)
     {
-        sampleStep = value * 128.0;
-        if (sampleStep == 0) {
+        sampleStep.set(value);
+        // FIXME is this right?
+        // or should we just convert float to int
+        // and make min = 0.0 and max = 256.0
+        // then we could also bring this max value to the frontend
+        sampleStepInt = sampleStep.get() * 100;
+        if (sampleStep.get() == 0.0) {
             samplePtr = &EffectSampleRateReducer::skipSample;
             debug("SampleRateReducer: disabled\n");
         } else {

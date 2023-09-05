@@ -17,14 +17,15 @@ protected:
     float min;
     float max;
 
+    float value_f;
+    uint8_t value_i;
+
     float getValue_f() { return value_f; }
     float getValue_i() { return value_i * 0.01; }
     float (Val::*getValuePtr)() = &Val::getValue_f;
 
 public:
     const char* key;
-    float value_f;
-    uint8_t value_i;
     T& (T::*callback)(float value);
     MidiMappingItem<T> midi;
 
@@ -49,9 +50,14 @@ public:
     //     getValuePtr = &Val::getValue_i;
     // }
 
-    float get()
+    // inline float get()
+    // {
+    //     return (*this.*getValuePtr)();
+    // }
+
+   inline float get()
     {
-        return (*this.*getValuePtr)();
+        return value_f;
     }
 
     void set(float value)

@@ -9,25 +9,18 @@
 
 // another version of the same filter but with a small clicking at 0.5
 
-class EffectFilterMultiMode2 : public EffectFilterInterface {
+class EffectFilterMultiMode2 : public Mapping<EffectFilterMultiMode2> {
 protected:
     EffectFilterData hpf;
     EffectFilterData lpf;
 
-    Mapping<EffectFilterMultiMode2> mapping;
-
 public:
-    MAPPING_HANDLER
-
-    // float resonance = 0.0;
-    float& resonance = mapping.addFloat(0.0, "RESONANCE", &EffectFilterMultiMode2::setResonance);
-
     // Cutoff mix
-    float& mix = mapping.addFloat(0.5, "CUTOFF", &EffectFilterMultiMode2::setCutoff);
+    Val<EffectFilterMultiMode2> mix = { this, 0.5, "CUTOFF", &EffectFilterMultiMode2::setCutoff };
+    Val<EffectFilterMultiMode2> resonance = { this, 0.0, "RESONANCE", &EffectFilterMultiMode2::setResonance, 0.00, 0.99 };
 
     EffectFilterMultiMode2(AudioPluginProps& props)
-        : EffectFilterInterface(props)
-        , mapping(this)
+        : Mapping(props, { &mix, &resonance })
     {
         setCutoff(0.5);
     };
@@ -41,37 +34,37 @@ public:
         hpf.setSampleData(inputValue);
         lpf.setSampleData(inputValue);
 
-        return lpf.buf1 * (1.0 - mix) + hpf.hp * mix;
+        return lpf.buf1 * (1.0 - mix.get()) + hpf.hp * mix.get();
     }
 
     EffectFilterMultiMode2& setCutoff(float value)
     {
-        mix = range(value, 0.00, 1.00);
+        mix.set(value);
 
         if (value > 0.5) {
             // 0 to 0.10
-            float cutoff = (0.10 * ((value - 0.5) * 2)) + 0.00707;
+            float cutoff = (0.10 * ((mix.get() - 0.5) * 2)) + 0.00707;
             hpf.setCutoff(cutoff);
             lpf.setCutoff(0.99);
         } else {
             // From 0.95 to 0.1
-            float cutoff = 0.85 * (value * 2) + 0.1;
+            float cutoff = 0.85 * (mix.get() * 2) + 0.1;
             hpf.setCutoff(0.00707);
             lpf.setCutoff(cutoff);
         }
 
-        debug("Filter: cutoff=%f\n", value);
+        debug("Filter: cutoff=%f\n", mix.get());
 
         return *this;
     }
 
-    EffectFilterMultiMode2& setResonance(float _res)
+    EffectFilterMultiMode2& setResonance(float value)
     {
-        resonance = range(_res, 0.00, 0.99);
-        lpf.setResonance(resonance);
-        hpf.setResonance(resonance);
+        resonance.set(value);
+        lpf.setResonance(resonance.get());
+        hpf.setResonance(resonance.get());
 
-        debug("Filter: resonance=%f\n", resonance);
+        debug("Filter: resonance=%f\n", resonance.get());
 
         return *this;
     };
