@@ -59,9 +59,9 @@ public:
     // From 0.0 to 1.0 to apply time ratio to voice in seconds
     Val<EffectDelay> timeRatio = { this, 1.0f, "TIME_RATIO", &EffectDelay::setTimeRatio };
     Val<EffectDelay> masterAmplitude = { this, 1.0f, "MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude };
-    // FIXME
-    // FIXME what about filter values???
-    // FIXME
+    Val<EffectDelay> cutoff = { this, 0.0f, "CUTOFF", &EffectDelay::setCutoff };
+    Val<EffectDelay> resonance = { this, 0.0f, "RESONANCE", &EffectDelay::setResonance };
+    Val<EffectDelay> mode = { this, 0.0f, "MODE", &EffectDelay::setMode };
 
     EffectFilter filter;
 
@@ -70,7 +70,7 @@ public:
         , filter(props)
     {
         // setVoice(0, 0.1f, 0.6f, 0.0f);
-         // setVoice(1, 0.2f, 0.5f, 0.0f);
+        // setVoice(1, 0.2f, 0.5f, 0.0f);
         // setVoice(2, 0.3f, 0.4f, 0.0f);
         // setVoice(3, 0.4f, 0.3f, 0.0f);
         // setVoice(4, 0.5f, 0.2f, 0.0f);
@@ -165,15 +165,17 @@ public:
         return *this;
     }
 
-    EffectDelay& setCutoff(float cutoff)
+    EffectDelay& setCutoff(float value)
     {
-        filter.setCutoff(cutoff);
+        cutoff.set(value);
+        filter.setCutoff(cutoff.get());
         return *this;
     }
 
-    EffectDelay& setResonance(float resonance)
+    EffectDelay& setResonance(float value)
     {
-        filter.setResonance(resonance);
+        resonance.set(value);
+        filter.setResonance(resonance.get());
         return *this;
     }
 
