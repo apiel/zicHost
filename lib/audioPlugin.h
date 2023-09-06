@@ -39,6 +39,7 @@ public:
     virtual const char* getValueKey(int valueIndex) = 0;
     virtual int getValueIndex(const char* key) = 0;
     virtual const char* getValueUnit(int valueIndex) = 0;
+    virtual void setValueWatcher(int valueIndex, void (*callback)(float, void * data), void * data) = 0;
 
     int (*debug)(const char* format, ...);
 };

@@ -35,7 +35,7 @@ protected:
     }
 
 public:
-    Val<EffectSampleRateReducer> sampleStep = { this, 0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep, { "Sample Reducer", 256 } };
+    Val<EffectSampleRateReducer> sampleStep = { this, 0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep, { .label = "Sample Reducer", .stepCount = 256, .unit = "steps" } };
 
     EffectSampleRateReducer(AudioPluginProps& props)
         : Mapping(props, { &sampleStep })

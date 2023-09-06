@@ -19,10 +19,11 @@ template <typename T>
 class Val {
 protected:
     T* instance;
-
     ValOptions options;
-
     float value_f;
+
+    void (*onUpdate)(float, void* data) = [](float, void* data) {};
+    void* onUpdateData = NULL;
 
 public:
     const char* key;
@@ -70,6 +71,13 @@ public:
     void call(float value)
     {
         (instance->*(callback))(value);
+        (*onUpdate)(value, onUpdateData);
+    }
+
+    void setOnUpdate(void (*callback)(float, void* data), void* data)
+    {
+        onUpdate = callback;
+        onUpdateData = data;
     }
 };
 
@@ -130,6 +138,11 @@ public:
     const char* getValueUnit(int valueIndex)
     {
         return mapping[valueIndex]->getUnit();
+    }
+
+    void setValueWatcher(int valueIndex, void (*callback)(float, void* data), void* data)
+    {
+        mapping[valueIndex]->setOnUpdate(callback, data);
     }
 };
 
