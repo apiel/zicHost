@@ -8,6 +8,21 @@
 
 #include "audioPlugin.h"
 
+enum ValType
+{
+    VALUE_BASIC,
+    VALUE_CENTERED,
+    VALUE_PERCENTAGE,
+};
+
+struct ValOptions {
+    char * label = NULL;
+    int stepCount = 100;
+    ValType type = VALUE_BASIC;
+};
+
+// counter_t counter = {.hour = 10, .min = 30, .sec = 47};
+
 template <typename T>
 class Val {
 protected:
