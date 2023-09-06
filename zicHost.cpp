@@ -34,7 +34,7 @@ std::vector<Plugin>* init()
     if (!loadConfig()) {
         return NULL;
     }
-    return &audioHandler.plugins;
+    return &AudioHandler::get().plugins;
 }
 
 int mainLoop()

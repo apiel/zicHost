@@ -7,12 +7,10 @@
 #include "audioHandler.h"
 #include "def.h"
 
-AudioHandler& audioHandler = AudioHandler::get();
-
 int audioCallback(void* outputBuffer, void* inputBuffer, unsigned int nBufferFrames,
     double /*streamTime*/, RtAudioStreamStatus status, void* data)
 {
-    audioHandler.samples((float*)inputBuffer, (float*)outputBuffer, nBufferFrames * APP_CHANNELS);
+    AudioHandler::get().samples((float*)inputBuffer, (float*)outputBuffer, nBufferFrames * APP_CHANNELS);
     return 0;
 }
 
