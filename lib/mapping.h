@@ -12,6 +12,7 @@ struct ValOptions {
     const char* label = NULL;
     int stepCount = 100;
     ValueType type = VALUE_BASIC;
+    const char* unit = NULL;
 };
 
 template <typename T>
@@ -19,9 +20,7 @@ class Val {
 protected:
     T* instance;
 
-    int stepCount;
-    ValueType type;
-    const char* label;
+    ValOptions options;
 
     float value_f;
 
@@ -31,28 +30,31 @@ public:
 
     Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), ValOptions options = {})
         : instance(instance)
-        , stepCount(options.stepCount)
-        , type(options.type)
-        , label(options.label)
+        , options(options)
         , value_f(initValue)
         , key(_key)
         , callback(_callback)
     {
     }
 
+    const char* getUnit()
+    {
+        return options.unit;
+    }
+
     const char* getLabel()
     {
-        return label ? label : key;
+        return options.label ? options.label : key;
     }
 
     ValueType getType()
     {
-        return type;
+        return options.type;
     }
 
     float getStepCount()
     {
-        return stepCount;
+        return options.stepCount;
     }
 
     inline float get()
@@ -123,6 +125,11 @@ public:
     const char* getValueLabel(int valueIndex)
     {
         return mapping[valueIndex]->getLabel();
+    }
+
+    const char* getValueUnit(int valueIndex)
+    {
+        return mapping[valueIndex]->getUnit();
     }
 };
 

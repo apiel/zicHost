@@ -8,7 +8,6 @@
 enum ValueType {
     VALUE_BASIC,
     VALUE_CENTERED,
-    VALUE_PERCENTAGE,
 };
 
 class AudioPluginProps {
@@ -39,6 +38,7 @@ public:
     virtual int getValueCount() = 0;
     virtual const char* getValueKey(int valueIndex) = 0;
     virtual int getValueIndex(const char* key) = 0;
+    virtual const char* getValueUnit(int valueIndex) = 0;
 
     int (*debug)(const char* format, ...);
 };
