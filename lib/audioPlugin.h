@@ -5,6 +5,12 @@
 #include <string.h>
 #include <vector>
 
+enum ValueType {
+    VALUE_BASIC,
+    VALUE_CENTERED,
+    VALUE_PERCENTAGE,
+};
+
 class AudioPluginProps {
 public:
     int (*debug)(const char* format, ...);
@@ -26,6 +32,8 @@ public:
     virtual const char* name() = 0;
 
     virtual int getStepCount(int valueIndex) = 0;
+    virtual const char* getLabel(int valueIndex) = 0;
+    virtual ValueType getType(int valueIndex) = 0;
     virtual float getValue(int valueIndex) = 0;
     virtual void setValue(int valueIndex, float value) = 0;
     virtual int getValueCount() = 0;

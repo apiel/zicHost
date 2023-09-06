@@ -29,9 +29,8 @@ protected:
 
 public:
     // Cutoff mix
-    Val<EffectFilterMultiModeMoog> mix = { this, 0.5, "CUTOFF", &EffectFilterMultiModeMoog::setCutoff };
-    Val<EffectFilterMultiModeMoog> resonance = { this, 0.0, "RESONANCE", &EffectFilterMultiModeMoog::setResonance };
-
+    Val<EffectFilterMultiModeMoog> mix = { this, 0.5, "CUTOFF", &EffectFilterMultiModeMoog::setCutoff, { .label = "LPF | HPF", .type = VALUE_CENTERED } };
+    Val<EffectFilterMultiModeMoog> resonance = { this, 0.0, "RESONANCE", &EffectFilterMultiModeMoog::setResonance, { "Resonance" } };
 
     EffectFilterMultiModeMoog(AudioPluginProps& props)
         : Mapping(props, { &mix, &resonance })

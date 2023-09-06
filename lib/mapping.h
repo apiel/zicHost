@@ -8,20 +8,11 @@
 
 #include "audioPlugin.h"
 
-enum ValType
-{
-    VALUE_BASIC,
-    VALUE_CENTERED,
-    VALUE_PERCENTAGE,
-};
-
 struct ValOptions {
-    char * label = NULL;
+    const char* label = NULL;
     int stepCount = 100;
-    ValType type = VALUE_BASIC;
+    ValueType type = VALUE_BASIC;
 };
-
-// counter_t counter = {.hour = 10, .min = 30, .sec = 47};
 
 template <typename T>
 class Val {
@@ -29,6 +20,8 @@ protected:
     T* instance;
 
     int stepCount;
+    ValueType type;
+    const char* label;
 
     float value_f;
 
@@ -36,13 +29,25 @@ public:
     const char* key;
     T& (T::*callback)(float value);
 
-    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), int stepCount = 100)
+    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), ValOptions options = {})
         : instance(instance)
-        , stepCount(stepCount)
+        , stepCount(options.stepCount)
+        , type(options.type)
+        , label(options.label)
         , value_f(initValue)
         , key(_key)
         , callback(_callback)
     {
+    }
+
+    const char* getLabel()
+    {
+        return label ? label : key;
+    }
+
+    ValueType getType()
+    {
+        return type;
     }
 
     float getStepCount()
@@ -108,6 +113,16 @@ public:
     int getStepCount(int valueIndex)
     {
         return mapping[valueIndex]->getStepCount();
+    }
+
+    ValueType getType(int valueIndex)
+    {
+        return mapping[valueIndex]->getType();
+    }
+
+    const char* getLabel(int valueIndex)
+    {
+        return mapping[valueIndex]->getLabel();
     }
 };
 
