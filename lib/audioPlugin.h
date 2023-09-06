@@ -31,13 +31,13 @@ public:
     virtual float sample(float in) = 0;
     virtual const char* name() = 0;
 
-    virtual int getStepCount(int valueIndex) = 0;
-    virtual const char* getLabel(int valueIndex) = 0;
-    virtual ValueType getType(int valueIndex) = 0;
+    virtual int getValueStepCount(int valueIndex) = 0;
+    virtual const char* getValueLabel(int valueIndex) = 0;
+    virtual ValueType getValueType(int valueIndex) = 0;
     virtual float getValue(int valueIndex) = 0;
     virtual void setValue(int valueIndex, float value) = 0;
     virtual int getValueCount() = 0;
-    virtual const char* getValueName(int valueIndex) = 0;
+    virtual const char* getValueKey(int valueIndex) = 0;
     virtual int getValueIndex(const char* key) = 0;
 
     int (*debug)(const char* format, ...);

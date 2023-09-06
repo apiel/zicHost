@@ -105,22 +105,22 @@ public:
         mapping[valueIndex]->call(value);
     }
 
-    const char* getValueName(int valueIndex)
+    const char* getValueKey(int valueIndex)
     {
         return mapping[valueIndex]->key;
     }
 
-    int getStepCount(int valueIndex)
+    int getValueStepCount(int valueIndex)
     {
         return mapping[valueIndex]->getStepCount();
     }
 
-    ValueType getType(int valueIndex)
+    ValueType getValueType(int valueIndex)
     {
         return mapping[valueIndex]->getType();
     }
 
-    const char* getLabel(int valueIndex)
+    const char* getValueLabel(int valueIndex)
     {
         return mapping[valueIndex]->getLabel();
     }
