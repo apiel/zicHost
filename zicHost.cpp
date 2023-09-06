@@ -18,6 +18,7 @@ AudioApi& audioApi = AudioApiAlsa::get();
 AudioApi& audioApi = AudioApiRT::get();
 #endif
 
+#include "audioHandler.h"
 #include "config.h"
 #include "def.h"
 
