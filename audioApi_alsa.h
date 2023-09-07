@@ -60,14 +60,16 @@ public:
         //     snd_pcm_writei(handleOut, outputBuffer, APP_AUDIO_CHUNK);
         // }
 
-        if ((err = snd_pcm_set_params(handleOut, SND_PCM_FORMAT_S32, SND_PCM_ACCESS_RW_INTERLEAVED,
+        // snd_pcm_format_t format = SND_PCM_FORMAT_S32;
+        snd_pcm_format_t format = SND_PCM_FORMAT_S16;
+        if ((err = snd_pcm_set_params(handleOut, format, SND_PCM_ACCESS_RW_INTERLEAVED,
                  APP_CHANNELS, SAMPLE_RATE, 1, 500000))
             < 0) {
             APP_INFO("Audio card params error: %s\n", snd_strerror(err));
             return 1;
         }
 
-        if ((err = snd_pcm_set_params(handleIn, SND_PCM_FORMAT_S32, SND_PCM_ACCESS_RW_INTERLEAVED,
+        if ((err = snd_pcm_set_params(handleIn, format, SND_PCM_ACCESS_RW_INTERLEAVED,
                  APP_CHANNELS, SAMPLE_RATE, 1, 500000))
             < 0) {
             APP_INFO("Audio card params error: %s\n", snd_strerror(err));
