@@ -87,7 +87,6 @@ public:
         setVoice(4, 0.5f, 0.2f, 0.0f);
 
         filter.setResonance(0.95f).setMode(EffectFilter::Mode::HPF);
-        // filter.setCutoff(0.5f).setResonance(0.95f).setMode(EffectFilter::Mode::HPF);
 
         // // make reverb
         // setVoice(0, 0.05f, 0.9f, 0.0f);
