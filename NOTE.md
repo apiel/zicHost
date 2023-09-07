@@ -1,5 +1,8 @@
 # TODO
 
+- TODO delay save last state of the delay config... load the last state on start
+       base on this state, we can create config files...
+
 - TODO dont make delay dependent of sample rate...
 - TODO handle rotatry encoder from midi... (keyboard and osc)
 
