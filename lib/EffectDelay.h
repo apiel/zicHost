@@ -58,7 +58,7 @@ protected:
 public:
     // From 0.0 to 1.0 to apply time ratio to voice in seconds
     Val<EffectDelay> timeRatio = { this, 1.0f, "TIME_RATIO", &EffectDelay::setTimeRatio };
-    Val<EffectDelay> masterAmplitude = { this, 1.0f, "MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude };
+    Val<EffectDelay> masterAmplitude = { this, 0.0f, "MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude };
     Val<EffectDelay> cutoff = { this, 0.0f, "CUTOFF", &EffectDelay::setCutoff };
     Val<EffectDelay> resonance = { this, 0.0f, "RESONANCE", &EffectDelay::setResonance };
     Val<EffectDelay> mode = { this, 0.0f, "MODE", &EffectDelay::setMode };
@@ -66,15 +66,27 @@ public:
     EffectFilter filter;
 
     EffectDelay(AudioPluginProps& props)
-        : Mapping(props, { &timeRatio, &masterAmplitude, &voices[0].amplitude, &voices[0].feedback, &voices[0].sec, &voices[1].amplitude, &voices[1].feedback, &voices[1].sec, &voices[2].amplitude, &voices[2].feedback, &voices[2].sec, &voices[3].amplitude, &voices[3].feedback, &voices[3].sec, &voices[4].amplitude, &voices[4].feedback, &voices[4].sec, &voices[5].amplitude, &voices[5].feedback, &voices[5].sec, &voices[6].amplitude, &voices[6].feedback, &voices[6].sec, &voices[7].amplitude, &voices[7].feedback, &voices[7].sec })
+        : Mapping(props, { // clang-format off
+            &timeRatio, &masterAmplitude, 
+            &voices[0].amplitude, &voices[0].feedback, &voices[0].sec, 
+            &voices[1].amplitude, &voices[1].feedback, &voices[1].sec, 
+            &voices[2].amplitude, &voices[2].feedback, &voices[2].sec, 
+            &voices[3].amplitude, &voices[3].feedback, &voices[3].sec, 
+            &voices[4].amplitude, &voices[4].feedback, &voices[4].sec, 
+            &voices[5].amplitude, &voices[5].feedback, &voices[5].sec, 
+            &voices[6].amplitude, &voices[6].feedback, &voices[6].sec, 
+            &voices[7].amplitude, &voices[7].feedback, &voices[7].sec,
+            &cutoff, &resonance, &mode})
+        // clang-format on
         , filter(props)
     {
-        // setVoice(0, 0.1f, 0.6f, 0.0f);
-        // setVoice(1, 0.2f, 0.5f, 0.0f);
-        // setVoice(2, 0.3f, 0.4f, 0.0f);
-        // setVoice(3, 0.4f, 0.3f, 0.0f);
-        // setVoice(4, 0.5f, 0.2f, 0.0f);
+        setVoice(0, 0.1f, 0.6f, 0.0f);
+        setVoice(1, 0.2f, 0.5f, 0.0f);
+        setVoice(2, 0.3f, 0.4f, 0.0f);
+        setVoice(3, 0.4f, 0.3f, 0.0f);
+        setVoice(4, 0.5f, 0.2f, 0.0f);
 
+        filter.setResonance(0.95f).setMode(EffectFilter::Mode::HPF);
         // filter.setCutoff(0.5f).setResonance(0.95f).setMode(EffectFilter::Mode::HPF);
 
         // // make reverb
