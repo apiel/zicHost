@@ -59,6 +59,8 @@ public:
     // From 0.0 to 1.0 to apply time ratio to voice in seconds
     Val<EffectDelay> timeRatio = { this, 1.0f, "TIME_RATIO", &EffectDelay::setTimeRatio, { .label = "Time Ratio", .unit = "%" } };
     Val<EffectDelay> masterAmplitude = { this, 0.0f, "MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude, { .label = "Master Amplitude", .unit = "%" } };
+
+    // should we inhirate filter so there is no need to defined this...
     Val<EffectDelay> cutoff = { this, 0.0f, "CUTOFF", &EffectDelay::setCutoff, { "Cutoff" } };
     Val<EffectDelay> resonance = { this, 0.0f, "RESONANCE", &EffectDelay::setResonance, { .label = "Resonance", .unit = "%" } };
     Val<EffectDelay> mode = { this, 0.0f, "MODE", &EffectDelay::setMode };
