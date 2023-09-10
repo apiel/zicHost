@@ -315,7 +315,7 @@ public:
         voice.note = note;
         voice.envelop = &EffectGranular::envelopAttack;
         float sampleStep = getSampleStep(note);
-        for (uint8_t g = 0; g < density; g++) {
+        for (uint8_t g = 0; g < densityUint8; g++) {
             initGrain(voice.grains[g], sampleStep);
         }
         debug("noteOn: %d %d %f\n", note, velocity, sampleStep);
@@ -336,6 +336,11 @@ public:
 
         debug("noteOff: note not found %d %d\n", note, velocity);
         return *this;
+    }
+
+    const char* name()
+    {
+        return "Granular";
     }
 };
 

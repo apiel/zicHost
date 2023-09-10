@@ -40,3 +40,6 @@ EffectFilterMultiMode2:
 
 EffectFilterMultiModeMoog:
 	make compile LIBNAME=EffectFilterMultiModeMoog
+
+EffectGranular:
+	make compile LIBNAME=EffectGranular

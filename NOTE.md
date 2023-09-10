@@ -1,5 +1,7 @@
 # TODO
 
+- TODO implement pusle audio api
+
 - TODO delay save last state of the delay config... load the last state on start
        base on this state, we can create config files...
 
