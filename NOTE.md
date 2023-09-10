@@ -36,3 +36,50 @@
 # IDEA
 
 - multiple input and output stream, instead to have only one input and one output, we could pass array of input and array of output
+
+# method function pointer
+
+See if I can use
+
+```cpp
+#include <functional>
+#include <vector>
+
+class MyClass1{
+public:
+    void hello(float value)
+    {
+        printf("hello %f\n", value);
+    }
+};
+
+class MyClass2 {
+public:
+    void world(float value)
+    {
+        printf("world %f\n", value);
+    }
+};
+
+using Callback_t = std::function<void()>;
+
+template <typename T>
+Callback_t MakeCallback(void (T::*f)(float), float val)
+{
+    T* p = new T;
+    return [=]() { (p->*f)(val); };
+}
+
+int main()
+{
+    std::vector<Callback_t> vetcor = {
+        MakeCallback(&MyClass1::hello, 0.123),
+        MakeCallback(&MyClass2::world, 0.456)
+    };
+
+    for (std::size_t i = 0; i < vetcor.size(); i++) {
+        vetcor[i]();
+    }
+    return 0;
+}
+```
