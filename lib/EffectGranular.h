@@ -304,7 +304,7 @@ public:
         return s * mix.get() + in * (1 - mix.get());
     }
 
-    EffectGranular& noteOn(uint8_t note, uint8_t velocity)
+    void noteOn(uint8_t note, uint8_t velocity)
     {
         if (velocity == 0) {
             return noteOff(note, velocity);
@@ -319,23 +319,20 @@ public:
             initGrain(voice.grains[g], sampleStep);
         }
         debug("noteOn: %d %d %f\n", note, velocity, sampleStep);
-
-        return *this;
     }
 
-    EffectGranular& noteOff(uint8_t note, uint8_t velocity)
+    void noteOff(uint8_t note, uint8_t velocity)
     {
         for (uint8_t v = 0; v < MAX_GRAIN_VOICES; v++) {
             Voice& voice = voices[v];
             if (voice.note == note) {
                 voice.envelop = &EffectGranular::envelopRelease;
                 debug("noteOff set on to false: %d %d\n", note, velocity);
-                return *this;
+                return;
             }
         }
 
         debug("noteOff: note not found %d %d\n", note, velocity);
-        return *this;
     }
 
     const char* name()
