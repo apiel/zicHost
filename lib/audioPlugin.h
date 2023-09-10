@@ -41,11 +41,11 @@ public:
     virtual const char* getValueUnit(int valueIndex) = 0;
     virtual void setValueWatcher(int valueIndex, void (*callback)(float, void* data), void* data) = 0;
 
-    void noteOn(uint8_t note, uint8_t velocity)
+    virtual void noteOn(uint8_t note, uint8_t velocity)
     {
     }
 
-    void noteOff(uint8_t note, uint8_t velocity)
+    virtual void noteOff(uint8_t note, uint8_t velocity)
     {
     }
 

@@ -19,13 +19,14 @@ template <typename T>
 class Val {
 protected:
     T* instance;
-    ValOptions options;
     float value_f;
 
     void (*onUpdate)(float, void* data) = [](float, void* data) {};
     void* onUpdateData = NULL;
 
 public:
+    ValOptions options;
+
     const char* key;
     T& (T::*callback)(float value);
 

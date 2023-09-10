@@ -1,11 +1,13 @@
-#ifndef _EFFECT_GRANULAR_H_
-#define _EFFECT_GRANULAR_H_
+#ifndef _SYNTH_GRANULAR_H_
+#define _SYNTH_GRANULAR_H_
 
 #include <ctime>
 #include <math.h>
+#include <sndfile.h>
 
 #include "audioBuffer.h"
 #include "audioPlugin.h"
+#include "fileBrowser.h"
 #include "mapping.h"
 
 #define GRANULER_BUFFER_SECONDS 30
@@ -15,9 +17,10 @@
 
 const uint16_t minGrainSampleCount = MIN_GRAIN_SIZE_MS * SAMPLE_RATE * 0.001f;
 
-class EffectGranular : public Mapping<EffectGranular> {
+class SynthGranular : public Mapping<SynthGranular> {
 protected:
     AudioBuffer<GRANULER_BUFFER_SECONDS> buffer;
+    FileBrowser fileBrowser = FileBrowser("./samples");
 
     uint64_t voicePosition = 0;
     float attackStep = 0.0f;
@@ -36,7 +39,7 @@ protected:
     struct Voice {
         int8_t note = -1;
         Grain grains[MAX_GRAINS_PER_VOICE];
-        float (EffectGranular::*envelop)(Voice& voice) = &EffectGranular::envelopSustain;
+        float (SynthGranular::*envelop)(Voice& voice) = &SynthGranular::envelopSustain;
         float env = 0.0f;
         uint64_t position = 0;
     } voices[MAX_GRAIN_VOICES];
@@ -92,7 +95,7 @@ protected:
         voice.env += attackStep;
         if (voice.env >= 1.0f) {
             voice.env = 1.0f;
-            voice.envelop = &EffectGranular::envelopSustain;
+            voice.envelop = &SynthGranular::envelopSustain;
             // debug("envelopAttack finished, set env to %f\n", voice.env);
         }
         return voice.env;
@@ -168,23 +171,71 @@ protected:
     }
 
 public:
-    Val<EffectGranular> mix = { this, 1.0f, "MIX", &EffectGranular::setMix, { "Mix" } };
-    Val<EffectGranular> start = { this, 0.0f, "START", &EffectGranular::setStart, { "Start" } };
-    Val<EffectGranular> spray = { this, 0.0f, "SPRAY", &EffectGranular::setSpray, { "Spray" } };
-    Val<EffectGranular> grainSize = { this, 0.5f, "GRAIN_SIZE", &EffectGranular::setGrainSize, { "Grain Size" } };
-    Val<EffectGranular> density = { this, 1 / MAX_GRAINS_PER_VOICE * 4, "DENSITY", &EffectGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE } };
-    Val<EffectGranular> attack = { this, 1 / 5000 * 20, "ATTACK", &EffectGranular::setAttack, { "Attack", 5000 } };
-    Val<EffectGranular> release = { this, 1 / 10000 * 50, "RELEASE", &EffectGranular::setRelease, { "Release", 10000 } };
-    Val<EffectGranular> delay = { this, 0, "DELAY", &EffectGranular::setDelay, { "Delay", 1000 } };
+    SF_INFO sfinfo;
+    SNDFILE* file = NULL;
 
-    EffectGranular(AudioPluginProps& props)
+    Val<SynthGranular> mix = { this, 1.0f, "MIX", &SynthGranular::setMix, { "Mix" } };
+    Val<SynthGranular> start = { this, 0.0f, "START", &SynthGranular::setStart, { "Start" } };
+    Val<SynthGranular> spray = { this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" } };
+    Val<SynthGranular> grainSize = { this, 0.5f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Grain Size" } };
+    Val<SynthGranular> density = { this, 1 / MAX_GRAINS_PER_VOICE * 4, "DENSITY", &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE } };
+    Val<SynthGranular> attack = { this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 } };
+    Val<SynthGranular> release = { this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 } };
+    Val<SynthGranular> delay = { this, 0, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 } };
+    Val<SynthGranular> browser = { this, 0, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count } };
+
+    SynthGranular(AudioPluginProps& props)
         : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release })
     {
+        memset(&sfinfo, 0, sizeof(sfinfo));
+        open(0.0);
+        // browser.options.stepCount = fileBrowser.count;
+
         setAttack(attack.get());
         setRelease(release.get());
     }
 
-    EffectGranular& setMix(float value)
+    ~SynthGranular()
+    {
+        close();
+    }
+
+    SynthGranular& close()
+    {
+        if (file) {
+            sf_close(file);
+        }
+        return *this;
+    }
+
+    SynthGranular& open(const char* filename, int seek = SEEK_END)
+    {
+        close();
+
+        if (!(file = sf_open(filename, SFM_READ, &sfinfo))) {
+            debug("Error: could not open file %s\n", filename);
+            return *this;
+        }
+        debug("Audio file %s sampleCount %ld sampleRate %d\n", filename, (long)sfinfo.frames, sfinfo.samplerate);
+
+        sf_read_float(file, buffer.samples, buffer.size);
+
+        return *this;
+    }
+
+    SynthGranular& open(float value)
+    {
+        browser.set(value);
+        int position = browser.get() * fileBrowser.count;
+        if (position != fileBrowser.position) {
+            char* file = fileBrowser.getFile(position);
+            debug("GRANULAR_SAMPLE_SELECTOR: %f %s\n", value, file);
+            open(file);
+        }
+        return *this;
+    }
+
+    SynthGranular& setMix(float value)
     {
         mix.set(value);
         return *this;
@@ -194,9 +245,9 @@ public:
      * @brief Set the Grain Size meaning the length duration of the grain.
      *
      * @param grainSize
-     * @return EffectGranular&
+     * @return SynthGranular&
      */
-    EffectGranular& setGrainSize(float value)
+    SynthGranular& setGrainSize(float value)
     {
         grainSize.set(value);
         debug("grainSize %f\n", grainSize.get());
@@ -208,9 +259,9 @@ public:
      * the grain start position.
      *
      * @param spray
-     * @return EffectGranular&
+     * @return SynthGranular&
      */
-    EffectGranular& setSpray(float value)
+    SynthGranular& setSpray(float value)
     {
         spray.set(value);
         debug("spray %f\n", spray.get());
@@ -221,9 +272,9 @@ public:
      * @brief Set the Density meaning the number of grains that are played at the same time.
      *
      * @param density
-     * @return EffectGranular&
+     * @return SynthGranular&
      */
-    EffectGranular& setDensity(float value)
+    SynthGranular& setDensity(float value)
     {
         density.set(value);
         densityUint8 = value * (MAX_GRAINS_PER_VOICE - 1) + 1; // 1 to MAX_GRAINS_PER_VOICE
@@ -236,9 +287,9 @@ public:
      *
      * @param _start position from 0.0 to 1.0, where 0.0 is the start of the sample
      * and 1.0 the end of the sample
-     * @return EffectGranular&
+     * @return SynthGranular&
      */
-    EffectGranular& setStart(float value)
+    SynthGranular& setStart(float value)
     {
         start.set(value);
         debug("setStart %f\n", start.get());
@@ -249,9 +300,9 @@ public:
      * @brief Set the Delay before grain start to play
      *
      * @param delay where 0 is no delay and 1 is 1000ms
-     * @return EffectGranular&
+     * @return SynthGranular&
      */
-    EffectGranular& setDelay(float value)
+    SynthGranular& setDelay(float value)
     {
         delay.set(value);
         debug("delay %f\n", delay.get());
@@ -262,9 +313,9 @@ public:
      * @brief Set the Attack time of the voice
      *
      * @param attack where 0 is no attack and 1 is 5000ms
-     * @return EffectGranular&
+     * @return SynthGranular&
      */
-    EffectGranular& setAttack(float value)
+    SynthGranular& setAttack(float value)
     {
         attack.set(value);
         // uint64_t attackSamples = attack.get() * SAMPLE_RATE * 0.001f * 5000;
@@ -279,9 +330,9 @@ public:
      * @brief Set the Release time of the voice
      *
      * @param release where 0 is no release and 1 is 10000ms
-     * @return EffectGranular&
+     * @return SynthGranular&
      */
-    EffectGranular& setRelease(float value)
+    SynthGranular& setRelease(float value)
     {
         release.set(value);
         // uint64_t releaseSamples = release.get() * SAMPLE_RATE * 0.001f * 10000;
@@ -304,7 +355,7 @@ public:
         return s * mix.get() + in * (1 - mix.get());
     }
 
-    void noteOn(uint8_t note, uint8_t velocity)
+    void noteOn(uint8_t note, uint8_t velocity) override
     {
         if (velocity == 0) {
             return noteOff(note, velocity);
@@ -313,7 +364,7 @@ public:
         Voice& voice = getNextVoice(note);
         voice.position = voicePosition++;
         voice.note = note;
-        voice.envelop = &EffectGranular::envelopAttack;
+        voice.envelop = &SynthGranular::envelopAttack;
         float sampleStep = getSampleStep(note);
         for (uint8_t g = 0; g < densityUint8; g++) {
             initGrain(voice.grains[g], sampleStep);
@@ -321,12 +372,12 @@ public:
         debug("noteOn: %d %d %f\n", note, velocity, sampleStep);
     }
 
-    void noteOff(uint8_t note, uint8_t velocity)
+    void noteOff(uint8_t note, uint8_t velocity) override
     {
         for (uint8_t v = 0; v < MAX_GRAIN_VOICES; v++) {
             Voice& voice = voices[v];
             if (voice.note == note) {
-                voice.envelop = &EffectGranular::envelopRelease;
+                voice.envelop = &SynthGranular::envelopRelease;
                 debug("noteOff set on to false: %d %d\n", note, velocity);
                 return;
             }

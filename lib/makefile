@@ -2,7 +2,8 @@
 LIBSND=`pkg-config --cflags --libs sndfile`
 
 all:
-	make clean_so EffectGainVolume EffectSampleRateReducer EffectFilter EffectDistortion EffectDelay EffectFilter EffectFilterMultiMode EffectFilterMultiMode2 EffectFilterMultiModeMoog clean_o
+	make clean_so EffectGainVolume EffectSampleRateReducer EffectFilter EffectDistortion EffectDelay\
+		EffectFilter EffectFilterMultiMode EffectFilterMultiMode2 EffectFilterMultiModeMoog clean_o
 
 clean:
 	make clean_so clean_o
@@ -41,5 +42,5 @@ EffectFilterMultiMode2:
 EffectFilterMultiModeMoog:
 	make compile LIBNAME=EffectFilterMultiModeMoog
 
-EffectGranular:
-	make compile LIBNAME=EffectGranular
+SynthGranular:
+	make compile LIBNAME=SynthGranular
