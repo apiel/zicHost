@@ -20,7 +20,8 @@ const uint16_t minGrainSampleCount = MIN_GRAIN_SIZE_MS * SAMPLE_RATE * 0.001f;
 class SynthGranular : public Mapping<SynthGranular> {
 protected:
     AudioBuffer<GRANULER_BUFFER_SECONDS> buffer;
-    FileBrowser fileBrowser = FileBrowser("./samples");
+    // FIXME make this configurable
+    FileBrowser fileBrowser = FileBrowser("../zicHost/samples");
 
     uint64_t voicePosition = 0;
     float attackStep = 0.0f;
@@ -174,7 +175,7 @@ public:
     SF_INFO sfinfo;
     SNDFILE* file = NULL;
 
-    Val<SynthGranular> mix = { this, 1.0f, "MIX", &SynthGranular::setMix, { "Mix" } };
+    Val<SynthGranular> mix = { this, 0.5f, "MIX", &SynthGranular::setMix, { "Mix" } };
     Val<SynthGranular> start = { this, 0.0f, "START", &SynthGranular::setStart, { "Start" } };
     Val<SynthGranular> spray = { this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" } };
     Val<SynthGranular> grainSize = { this, 0.5f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Grain Size" } };
@@ -190,7 +191,7 @@ public:
         : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release })
     {
         memset(&sfinfo, 0, sizeof(sfinfo));
-        open(0.0);
+        open(0.0, true);
         // browser.options.stepCount = fileBrowser.count;
 
         setAttack(attack.get());
@@ -225,15 +226,21 @@ public:
         return *this;
     }
 
-    SynthGranular& open(float value)
+    SynthGranular& open(float value, bool force)
     {
         browser.set(value);
         int position = browser.get() * fileBrowser.count;
-        if (position != fileBrowser.position) {
+        if (force || position != fileBrowser.position) {
             char* file = fileBrowser.getFile(position);
             debug("GRANULAR_SAMPLE_SELECTOR: %f %s\n", value, file);
             open(file);
         }
+        return *this;
+    }
+
+    SynthGranular& open(float value)
+    {
+        open(value, false);
         return *this;
     }
 
