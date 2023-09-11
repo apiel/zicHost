@@ -183,7 +183,8 @@ public:
     Val<SynthGranular> release = { this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 } };
     Val<SynthGranular> delay = { this, 0, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 } };
     Val<SynthGranular> browser = { this, 0, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count } };
-    // add pitch randomization per grain
+    // add pitch randomization per grain, we could say that if density is negative then pitch randomization?
+    // or should the scale definable? From 0 to 12 semitones?
 
     SynthGranular(AudioPluginProps& props)
         : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release })
