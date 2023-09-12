@@ -8,6 +8,7 @@
 enum ValueType {
     VALUE_BASIC,
     VALUE_CENTERED,
+    VALUE_STRING,
 };
 
 class AudioPluginProps {
@@ -40,6 +41,10 @@ public:
     virtual int getValueIndex(const char* key) = 0;
     virtual const char* getValueUnit(int valueIndex) = 0;
     virtual void setValueWatcher(int valueIndex, void (*callback)(float, void* data), void* data) = 0;
+    virtual char* getValueString(int valueIndex)
+    {
+        return NULL;
+    }
 
     virtual void noteOn(uint8_t note, uint8_t velocity)
     {

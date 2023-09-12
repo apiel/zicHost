@@ -20,6 +20,7 @@ class Val {
 protected:
     T* instance;
     float value_f;
+    char* value_s = NULL;
 
     void (*onUpdate)(float, void* data) = [](float, void* data) {};
     void* onUpdateData = NULL;
@@ -62,6 +63,16 @@ public:
     inline float get()
     {
         return value_f;
+    }
+
+    char* getString()
+    {
+        return value_s;
+    }
+
+    void set(char* value)
+    {
+        value_s = value;
     }
 
     void set(float value)
@@ -111,6 +122,12 @@ public:
     {
         return mapping[valueIndex]->get();
     }
+
+    char* getValueString(int valueIndex)
+    {
+        return mapping[valueIndex]->getString();
+    }
+
     void setValue(int valueIndex, float value)
     {
         mapping[valueIndex]->call(value);

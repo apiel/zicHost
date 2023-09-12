@@ -242,6 +242,7 @@ public:
         int position = browser.get() * fileBrowser.count;
         if (force || position != fileBrowser.position) {
             char* file = fileBrowser.getFile(position);
+            browser.set(file);
             debug("GRANULAR_SAMPLE_SELECTOR: %f %s\n", value, file);
             open(file);
         }
