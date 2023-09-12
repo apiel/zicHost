@@ -1,8 +1,8 @@
 #ifndef FILE_BROWSER_H
 #define FILE_BROWSER_H
 
-#include <dirent.h>
 #include "../helpers/range.h"
+#include <dirent.h>
 
 #define FILE_BROWSER_FILES_MAX 127
 #define FILE_BROWSER_FILEPATH_LEN 258
@@ -16,18 +16,7 @@ protected:
 
     void init()
     {
-        DIR* dir = opendir(folder);
-        if (dir != NULL) {
-            struct dirent* directory;
-            count = 0;
-            while ((directory = readdir(dir)) != NULL && count < FILE_BROWSER_FILES_MAX) {
-                if (strcmp(directory->d_name, ".") != 0 && strcmp(directory->d_name, "..") != 0) {
-                    strncpy(files[count], directory->d_name, FILE_BROWSER_FILENAME_LEN);
-                    count++;
-                }
-            }
-            closedir(dir);
-        }
+
         // debug("Found %d files in %s\n", count, folder);
     }
 
@@ -51,9 +40,30 @@ public:
     uint8_t count = 0;
 
     FileBrowser(const char* _folder)
-        : folder(_folder)
     {
-        init();
+        openFolder(folder);
+    }
+
+    FileBrowser()
+    {
+    }
+
+    void openFolder(const char* _folder)
+    {
+        folder = _folder;
+        DIR* dir = opendir(folder);
+        if (dir != NULL) {
+            struct dirent* directory;
+            count = 0;
+            while ((directory = readdir(dir)) != NULL && count < FILE_BROWSER_FILES_MAX) {
+                if (strcmp(directory->d_name, ".") != 0 && strcmp(directory->d_name, "..") != 0) {
+                    strncpy(files[count], directory->d_name, FILE_BROWSER_FILENAME_LEN);
+                    count++;
+                }
+            }
+            closedir(dir);
+        }
+
         sort();
 
         getFile(position);

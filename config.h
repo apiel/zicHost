@@ -45,7 +45,7 @@ void assignKeyValue(char* key, char* value)
             enableDebug();
         }
     } else {
-        AudioHandler::get().assignMidiMapping(key, value);
+        AudioHandler::get().config(key, value);
     }
 }
 

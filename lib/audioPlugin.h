@@ -49,6 +49,11 @@ public:
     {
     }
 
+    virtual bool config(char* key, char* value)
+    {
+        return false;
+    }
+
     int (*debug)(const char* format, ...);
 };
 

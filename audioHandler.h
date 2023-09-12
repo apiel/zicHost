@@ -22,6 +22,33 @@ protected:
         return s;
     }
 
+    bool assignMidiMapping(char* key, char* value)
+    {
+        // split value by space
+        char* msg0 = strtok(value, " ");
+        char* msg1 = strtok(NULL, " ");
+        char* msg2 = strtok(NULL, " ");
+
+        if (msg0 == NULL || msg1 == NULL) {
+            APP_INFO("Invalid midi mapping\n");
+            return false;
+        }
+
+        uint8_t size = msg2 == NULL ? 2 : 3;
+        uint8_t valuePosition = msg1[0] == 'x' && msg1[1] == 'x' ? 2 : 3;
+        uint8_t msg0Int = strtol(msg0, NULL, 16);
+        uint8_t msg1Int = strtol(msg1, NULL, 16);
+
+        // try to assign value to last plugin
+        int valueIndex = plugins.back().instance->getValueIndex(key);
+        if (valueIndex != -1) {
+            midiMapping.push_back({ plugins.back().instance, valueIndex, size, valuePosition, msg0Int, msg1Int });
+            APP_INFO("[%s] Midi mapping assigned: %s\n", plugins.back().instance->name(), key);
+            return true;
+        }
+        return false;
+    }
+
 public:
     std::vector<Plugin> plugins;
 
@@ -79,30 +106,13 @@ public:
         plugins.push_back(plugin);
     }
 
-    bool assignMidiMapping(char* key, char* value)
+    bool config(char* key, char* value)
     {
         if (plugins.size() > 0) {
-            // split value by space
-            char* msg0 = strtok(value, " ");
-            char* msg1 = strtok(NULL, " ");
-            char* msg2 = strtok(NULL, " ");
-
-            if (msg0 == NULL || msg1 == NULL) {
-                APP_INFO("Invalid midi mapping\n");
-                return false;
-            }
-
-            uint8_t size = msg2 == NULL ? 2 : 3;
-            uint8_t valuePosition = msg1[0] == 'x' && msg1[1] == 'x' ? 2 : 3;
-            uint8_t msg0Int = strtol(msg0, NULL, 16);
-            uint8_t msg1Int = strtol(msg1, NULL, 16);
-
-            // try to assign value to last plugin
-            int valueIndex = plugins.back().instance->getValueIndex(key);
-            if (valueIndex != -1) {
-                midiMapping.push_back({ plugins.back().instance, valueIndex, size, valuePosition, msg0Int, msg1Int });
-                APP_INFO("[%s] Midi mapping assigned: %s\n", plugins.back().instance->name(), key);
+            if (plugins.back().instance->config(key, value)) {
                 return true;
+            } else {
+                return assignMidiMapping(key, value);
             }
         }
         return false;
