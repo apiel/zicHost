@@ -181,16 +181,15 @@ public:
     Val<SynthGranular> density = { this, 1 / MAX_GRAINS_PER_VOICE * 4, "DENSITY", &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE } };
     Val<SynthGranular> attack = { this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 } };
     Val<SynthGranular> release = { this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 } };
-    Val<SynthGranular> delay = { this, 0, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 } };
-    Val<SynthGranular> browser = { this, 0, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count } };
+    Val<SynthGranular> delay = { this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 } };
+    Val<SynthGranular> browser = { this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count, VALUE_STRING } };
     // TODO add pitch randomization per grain, we could say that if density is negative then pitch randomization?
     // or should the scale definable? From 0 to 12 semitones?
 
     SynthGranular(AudioPluginProps& props)
-        : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release })
+        : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release, &delay, &browser })
     {
         memset(&sfinfo, 0, sizeof(sfinfo));
-        // browser.options.stepCount = fileBrowser.count;
 
         setAttack(attack.get());
         setRelease(release.get());
@@ -206,6 +205,7 @@ public:
         if (strcmp(key, "SAMPLES_FOLDER") == 0) {
             debug("GRANULAR_FOLDER: %s\n", value);
             fileBrowser.openFolder(value);
+            browser.options.stepCount = fileBrowser.count;
             open(0.0, true);
 
             return true;
