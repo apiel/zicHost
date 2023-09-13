@@ -188,7 +188,7 @@ public:
     Val<SynthGranular> start = { this, 0.0f, "START", &SynthGranular::setStart, { "Start" } };
     Val<SynthGranular> spray = { this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" } };
     Val<SynthGranular> grainSize = { this, 0.5f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Grain Size" } };
-    Val<SynthGranular> density = { this, 1 / MAX_GRAINS_PER_VOICE * 4, "DENSITY", &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE } };
+    Val<SynthGranular> density = { this, (float)(1.0 / (float)MAX_GRAINS_PER_VOICE * (float)densityUint8), "DENSITY", &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE } };
     Val<SynthGranular> attack = { this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 } };
     Val<SynthGranular> release = { this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 } };
     Val<SynthGranular> delay = { this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 } };
@@ -253,10 +253,10 @@ public:
         browser.set(value);
         int position = browser.get() * fileBrowser.count;
         if (force || position != fileBrowser.position) {
-            char* file = fileBrowser.getFile(position);
-            browser.set(file);
-            debug("GRANULAR_SAMPLE_SELECTOR: %f %s\n", value, file);
-            open(file);
+            char* filepath = fileBrowser.getFilePath(position);
+            browser.set(fileBrowser.getFile(position));
+            debug("GRANULAR_SAMPLE_SELECTOR: %f %s\n", value, filepath);
+            open(filepath);
         }
         return *this;
     }
@@ -309,7 +309,7 @@ public:
     SynthGranular& setDensity(float value)
     {
         density.set(value);
-        densityUint8 = value * (MAX_GRAINS_PER_VOICE - 1) + 1; // 1 to MAX_GRAINS_PER_VOICE
+        densityUint8 = density.get() * (MAX_GRAINS_PER_VOICE - 1) + 1; // 1 to MAX_GRAINS_PER_VOICE
         debug("density %d\n", densityUint8);
         return *this;
     }

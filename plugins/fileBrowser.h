@@ -14,7 +14,7 @@
 class FileBrowser {
 protected:
     const char* folder;
-    char file[FILE_BROWSER_FILEPATH_LEN];
+    char filepath[FILE_BROWSER_FILEPATH_LEN];
     char files[FILE_BROWSER_FILES_MAX][FILE_BROWSER_FILENAME_LEN];
 
     void sort()
@@ -63,14 +63,20 @@ public:
 
         sort();
 
-        getFile(position);
+        // getFilePath(position);
+    }
+
+    char* getFilePath(uint8_t pos)
+    {
+        position = range(pos, 0, count - 1);
+        snprintf(filepath, FILE_BROWSER_FILEPATH_LEN, "%s/%s", folder, files[position]);
+        return filepath;
     }
 
     char* getFile(uint8_t pos)
     {
         position = range(pos, 0, count - 1);
-        snprintf(file, FILE_BROWSER_FILEPATH_LEN, "%s/%s", folder, files[position]);
-        return file;
+        return files[position];
     }
 };
 
