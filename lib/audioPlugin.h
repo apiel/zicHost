@@ -11,14 +11,10 @@ enum ValueType {
     VALUE_STRING,
 };
 
-class AudioPluginProps {
-public:
+struct AudioPluginProps {
     int (*debug)(const char* format, ...);
-
-    AudioPluginProps(int (*debug)(const char* format, ...))
-        : debug(debug)
-    {
-    }
+    uint64_t sampleRate;
+    uint8_t channel;
 };
 
 class AudioPlugin {
@@ -57,6 +53,11 @@ public:
     virtual bool config(char* key, char* value)
     {
         return false;
+    }
+
+    virtual void* data(int id)
+    {
+        return NULL;
     }
 
     int (*debug)(const char* format, ...);

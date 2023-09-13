@@ -5,21 +5,24 @@
 #include <math.h>
 #include <sndfile.h>
 
-#include "audioBuffer.h"
 #include "audioPlugin.h"
 #include "fileBrowser.h"
 #include "mapping.h"
 
-#define GRANULER_BUFFER_SECONDS 30
+#define GRANULAR_BUFFER_SECONDS 30
 #define MAX_GRAINS_PER_VOICE 24
 #define MAX_GRAIN_VOICES 4
 #define MIN_GRAIN_SIZE_MS 20
 
-const uint16_t minGrainSampleCount = MIN_GRAIN_SIZE_MS * SAMPLE_RATE * 0.001f;
-
 class SynthGranular : public Mapping<SynthGranular> {
 protected:
-    AudioBuffer<GRANULER_BUFFER_SECONDS> buffer;
+    uint64_t sampleRate;
+    uint16_t minGrainSampleCount;
+    // We hardcode it to 48000, no matter the sample rate
+    static const uint64_t bufferSize = 48000 * GRANULAR_BUFFER_SECONDS; // 30sec at 48000Hz, 32sec at 44100Hz...
+    uint64_t bufferSampleCount = 0;
+    float bufferSamples[bufferSize];
+
     FileBrowser fileBrowser = FileBrowser("../zicHost/samples");
     // FileBrowser fileBrowser;
 
@@ -56,6 +59,12 @@ protected:
         return pow(2, ((note - baseNote) / 12.0));
     }
 
+    void setSampleRate(uint64_t _sampleRate)
+    {
+        sampleRate = _sampleRate;
+        minGrainSampleCount = MIN_GRAIN_SIZE_MS * sampleRate * 0.001f;
+    }
+
     void initGrain(Grain& grain)
     {
         initGrain(grain, grain.sampleStep);
@@ -80,15 +89,15 @@ protected:
 
         // sprayToAdd is a random value between 0 and spray from starting point till end of file
         float sprayToAdd = spray.get() ? (getRandPct() * spray.get() * (1 - start.get())) : 0.0;
-        grain.start = (start.get() + sprayToAdd) * buffer.size;
+        grain.start = (start.get() + sprayToAdd) * bufferSampleCount;
 
         // we deduct minGrainSampleCount to avoid grainSize to be too small
-        grain.sampleCount = (buffer.size - (grain.start + minGrainSampleCount)) * grainSize.get() + minGrainSampleCount;
+        grain.sampleCount = (bufferSampleCount - (grain.start + minGrainSampleCount)) * grainSize.get() + minGrainSampleCount;
 
         // delayInt = delay.get() * SAMPLE_RATE * 0.001f * 1000;
         // can be simplified to:
         // delayInt = delay.get() * SAMPLE_RATE;
-        grain.delay = delay.get() > 0 ? (getRand() % (int)(delay.get() * SAMPLE_RATE)) : 0;
+        grain.delay = delay.get() > 0 ? (getRand() % (int)(delay.get() * sampleRate)) : 0;
     }
 
     float envelopAttack(Voice& voice)
@@ -135,7 +144,7 @@ protected:
                 // if (samplePos < buffer->size && (int64_t)grain.pos < grainSampleCount) { // is samplePos < buffer->size even necessary if start calculated properly
                 if ((int64_t)grain.pos < grain.sampleCount) {
                     grain.pos += grain.sampleStep;
-                    sample += buffer.samples[samplePos] * env;
+                    sample += bufferSamples[samplePos] * env;
                 } else {
                     initGrain(grain);
                 }
@@ -190,7 +199,9 @@ public:
     SynthGranular(AudioPluginProps& props)
         : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release, &delay, &browser })
     {
+        setSampleRate(props.sampleRate);
         memset(&sfinfo, 0, sizeof(sfinfo));
+        open(0.0, true);
 
         setAttack(attack.get());
         setRelease(release.get());
@@ -222,7 +233,7 @@ public:
         return *this;
     }
 
-    SynthGranular& open(const char* filename, int seek = SEEK_END)
+    SynthGranular& open(const char* filename)
     {
         close();
 
@@ -232,7 +243,7 @@ public:
         }
         debug("Audio file %s sampleCount %ld sampleRate %d\n", filename, (long)sfinfo.frames, sfinfo.samplerate);
 
-        sf_read_float(file, buffer.samples, buffer.size);
+        bufferSampleCount = sf_read_float(file, bufferSamples, bufferSize);
 
         return *this;
     }
@@ -341,7 +352,7 @@ public:
         attack.set(value);
         // uint64_t attackSamples = attack.get() * SAMPLE_RATE * 0.001f * 5000;
         // can be simplified to:
-        uint64_t attackSamples = attack.get() * SAMPLE_RATE * 5;
+        uint64_t attackSamples = attack.get() * sampleRate * 5;
         attackStep = 1.0f / attackSamples;
         debug("attack %ld samples %f step\n", attackSamples, attackStep);
         return *this;
@@ -358,7 +369,7 @@ public:
         release.set(value);
         // uint64_t releaseSamples = release.get() * SAMPLE_RATE * 0.001f * 10000;
         // can be simplified to:
-        uint64_t releaseSamples = release.get() * SAMPLE_RATE * 10;
+        uint64_t releaseSamples = release.get() * sampleRate * 10;
         releaseStep = 1.0f / releaseSamples;
         debug("release %ld samples %f step\n", releaseSamples, releaseStep);
         return *this;
@@ -410,6 +421,18 @@ public:
     const char* name()
     {
         return "Granular";
+    }
+
+    void* data(int id)
+    {
+        switch (id) {
+        case 0:
+            return (void*)&bufferSampleCount;
+
+        case 1:
+            return &bufferSamples;
+        }
+        return NULL;
     }
 };
 

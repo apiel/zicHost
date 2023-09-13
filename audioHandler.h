@@ -76,7 +76,7 @@ public:
 
     void loadPlugin(const char* path)
     {
-        AudioPluginProps pluginProps = AudioPluginProps(debug);
+        AudioPluginProps pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS };
 
         Plugin plugin;
 
