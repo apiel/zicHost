@@ -1,7 +1,7 @@
 #ifndef _SYNTH_GRANULAR_H_
 #define _SYNTH_GRANULAR_H_
 
-#include <ctime>
+#include <time.h>
 #include <math.h>
 #include <sndfile.h>
 
@@ -70,10 +70,11 @@ protected:
         initGrain(grain, grain.sampleStep);
     }
 
+int randCounter = 0;
     int getRand()
     {
         // could create a lookup table ?
-        srand(time(0));
+        srand(time(NULL) + randCounter++);
         return rand();
     }
 
@@ -98,6 +99,8 @@ protected:
         // can be simplified to:
         // delayInt = delay.get() * SAMPLE_RATE;
         grain.delay = delay.get() > 0 ? (getRand() % (int)(delay.get() * sampleRate)) : 0;
+
+        debug("initGrain: grain.start %d grain.sampleCount %d grain.delay %d\n", grain.start, grain.sampleCount, grain.delay);
     }
 
     float envelopAttack(Voice& voice)
