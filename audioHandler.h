@@ -76,7 +76,7 @@ public:
 
     void loadPlugin(const char* path)
     {
-        AudioPluginProps pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS };
+        AudioPlugin::Props pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS };
 
         Plugin plugin;
 
@@ -96,7 +96,7 @@ public:
             return;
         }
 
-        plugin.instance = ((AudioPlugin * (*)(AudioPluginProps & props)) allocator)(pluginProps);
+        plugin.instance = ((AudioPlugin * (*)(AudioPlugin::Props & props)) allocator)(pluginProps);
         APP_PRINT("audio plugin loaded\n");
         APP_PRINT("plugin: %s\n", plugin.instance->name());
 

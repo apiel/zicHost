@@ -10,7 +10,7 @@
 
 extern "C"
 {
-	PLUGIN_NAME *allocator(AudioPluginProps& props)
+	PLUGIN_NAME *allocator(AudioPlugin::Props& props)
 	{
 		return new PLUGIN_NAME(props);
 	}

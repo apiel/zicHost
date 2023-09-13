@@ -11,15 +11,15 @@ enum ValueType {
     VALUE_STRING,
 };
 
-struct AudioPluginProps {
-    int (*debug)(const char* format, ...);
-    uint64_t sampleRate;
-    uint8_t channel;
-};
-
 class AudioPlugin {
 public:
-    AudioPlugin(AudioPluginProps& props)
+    struct Props {
+        int (*debug)(const char* format, ...);
+        uint64_t sampleRate;
+        uint8_t channel;
+    };
+
+    AudioPlugin(Props& props)
         : debug(props.debug)
     {
     }

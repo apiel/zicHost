@@ -67,7 +67,7 @@ public:
 
     EffectFilter filter;
 
-    EffectDelay(AudioPluginProps& props)
+    EffectDelay(AudioPlugin::Props& props)
         : Mapping(props, { // clang-format off
             &timeRatio, &masterAmplitude, 
             &voices[0].amplitude, &voices[0].feedback, &voices[0].sec, 

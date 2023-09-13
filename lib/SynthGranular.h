@@ -196,7 +196,7 @@ public:
     // TODO add pitch randomization per grain, we could say that if density is negative then pitch randomization?
     // or should the scale definable? From 0 to 12 semitones?
 
-    SynthGranular(AudioPluginProps& props)
+    SynthGranular(AudioPlugin::Props& props)
         : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release, &delay, &browser })
     {
         setSampleRate(props.sampleRate);

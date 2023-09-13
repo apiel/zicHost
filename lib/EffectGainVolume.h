@@ -10,7 +10,7 @@ public:
     Val<EffectGainVolume> gain = { this, 0.0f, "GAIN", &EffectGainVolume::setGain, { "Gain" } };
     float volumeWithGain = volume.get();
 
-    EffectGainVolume(AudioPluginProps& props)
+    EffectGainVolume(AudioPlugin::Props& props)
         : Mapping(props, { &volume, &gain })
     {
         setVolumeWithGain(volume.get(), gain.get());

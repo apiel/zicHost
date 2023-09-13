@@ -98,7 +98,7 @@ class Mapping : public AudioPlugin {
 public:
     std::vector<Val<T>*> mapping;
 
-    Mapping(AudioPluginProps& props, std::vector<Val<T>*> mapping)
+    Mapping(AudioPlugin::Props& props, std::vector<Val<T>*> mapping)
         : AudioPlugin(props)
         , mapping(mapping)
     {

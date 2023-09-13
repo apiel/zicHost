@@ -27,7 +27,7 @@ public:
     // TODO how to handle mode in a better way?
     Val<EffectFilter> mode_value = { this, 0.0, "MODE", &EffectFilter::setMode, { "Mode" } };
 
-    EffectFilter(AudioPluginProps& props)
+    EffectFilter(AudioPlugin::Props& props)
         : Mapping(props, { &cutoff, &resonance, &mode_value })
     {
     }
