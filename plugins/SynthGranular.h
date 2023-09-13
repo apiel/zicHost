@@ -1,9 +1,9 @@
 #ifndef _SYNTH_GRANULAR_H_
 #define _SYNTH_GRANULAR_H_
 
-#include <time.h>
 #include <math.h>
 #include <sndfile.h>
+#include <time.h>
 
 #include "audioPlugin.h"
 #include "fileBrowser.h"
@@ -70,7 +70,7 @@ protected:
         initGrain(grain, grain.sampleStep);
     }
 
-int randCounter = 0;
+    int randCounter = 0;
     int getRand()
     {
         // could create a lookup table ?
