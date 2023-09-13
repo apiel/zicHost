@@ -9,16 +9,16 @@ RTAUDIO=`pkg-config --cflags --libs rtaudio`
 BUILD=-Wno-narrowing -ldl $(RTAUDIO) $(LIBSND) $(RTMIDI) $(PULSEAUDIO) $(ALSA) $(LIBLO)
 
 host: build run
-all: libs build so run
+all: plugins build so run
 
 ui:
 	make -C interface lib_ui
 	make build run
 
-libs:
-	@echo "\n------------------ lib ------------------\n"
-	make -C lib
-	@echo "\nbuild lib done."
+plugins:
+	@echo "\n------------------ plugins ------------------\n"
+	make -C plugins
+	@echo "\nbuild plugins done."
 
 so:
 	@echo "\n------------------ build_so ------------------\n"

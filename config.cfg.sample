@@ -11,11 +11,11 @@ MIDIIN=Elektron Digitone MIDI 1
 MIDI_NOTE_CHANNEL=0
 
 # AUDIO PLUGINS
-AUDIO_PLUGIN=./lib/build/libzic_EffectSampleRateReducer.so
-AUDIO_PLUGIN=./lib/build/libzic_EffectDistortion.so
-AUDIO_PLUGIN=./lib/build/libzic_EffectFilterMultiMode.so
-AUDIO_PLUGIN=./lib/build/libzic_EffectDelay.so
-AUDIO_PLUGIN=./lib/build/libzic_EffectGainVolume.so
+AUDIO_PLUGIN=./plugins/build/libzic_EffectSampleRateReducer.so
+AUDIO_PLUGIN=./plugins/build/libzic_EffectDistortion.so
+AUDIO_PLUGIN=./plugins/build/libzic_EffectFilterMultiMode.so
+AUDIO_PLUGIN=./plugins/build/libzic_EffectDelay.so
+AUDIO_PLUGIN=./plugins/build/libzic_EffectGainVolume.so
 
 # Set sample rate reducer steps
 SAMPLE_RATE_REDUCER=b0 4a xx
