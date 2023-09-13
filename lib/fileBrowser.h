@@ -3,6 +3,9 @@
 
 #include "../helpers/range.h"
 #include <dirent.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 
 #define FILE_BROWSER_FILES_MAX 127
 #define FILE_BROWSER_FILEPATH_LEN 258
@@ -13,12 +16,6 @@ protected:
     const char* folder;
     char file[FILE_BROWSER_FILEPATH_LEN];
     char files[FILE_BROWSER_FILES_MAX][FILE_BROWSER_FILENAME_LEN];
-
-    void init()
-    {
-
-        // debug("Found %d files in %s\n", count, folder);
-    }
 
     void sort()
     {
@@ -41,7 +38,7 @@ public:
 
     FileBrowser(const char* _folder)
     {
-        openFolder(folder);
+        openFolder(_folder);
     }
 
     FileBrowser()

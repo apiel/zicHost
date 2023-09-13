@@ -20,7 +20,8 @@ const uint16_t minGrainSampleCount = MIN_GRAIN_SIZE_MS * SAMPLE_RATE * 0.001f;
 class SynthGranular : public Mapping<SynthGranular> {
 protected:
     AudioBuffer<GRANULER_BUFFER_SECONDS> buffer;
-    FileBrowser fileBrowser;
+    FileBrowser fileBrowser = FileBrowser("../zicHost/samples");
+    // FileBrowser fileBrowser;
 
     uint64_t voicePosition = 0;
     float attackStep = 0.0f;
