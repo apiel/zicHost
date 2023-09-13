@@ -3,20 +3,18 @@
 
 #include <stdint.h>
 
-#include "audioDef.h"
-
-#ifndef AUDIO_BUFFER_SECONDS
-#define AUDIO_BUFFER_SECONDS 5
+#ifndef AUDIO_BUFFER_SIZE
+#define AUDIO_BUFFER_SIZE 5 * 48000
 #endif
 
-template <uint8_t SECONDS = AUDIO_BUFFER_SECONDS>
+template <uint64_t SIZE = AUDIO_BUFFER_SIZE>
 class AudioBuffer {
 public:
-    const uint64_t size = SAMPLE_RATE * SECONDS;
+    const uint64_t size = SIZE;
 
     // keep in memory 5 seconds of samples
-    float samples[SAMPLE_RATE * SECONDS];
-    uint32_t index = 0;
+    float samples[SIZE];
+    uint64_t index = 0;
 
     AudioBuffer()
     {

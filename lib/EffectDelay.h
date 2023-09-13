@@ -13,10 +13,11 @@
 
 class EffectDelay : public Mapping<EffectDelay> {
 protected:
+    uint64_t sampleRate;
     AudioBuffer<> buffer;
 
     struct DelayVoice {
-        uint32_t index;
+        uint64_t index;
         Val<EffectDelay> amplitude;
         Val<EffectDelay> feedback;
         Val<EffectDelay> sec;
@@ -80,6 +81,7 @@ public:
             &voices[7].amplitude, &voices[7].feedback, &voices[7].sec,
             &cutoff, &resonance, &mode})
         // clang-format on
+        , sampleRate(props.sampleRate)
         , filter(props)
     {
         setVoice(0, 0.1f, 0.6f, 0.0f);
@@ -113,7 +115,7 @@ public:
     EffectDelay& setSec(uint8_t voiceIndex, float sec)
     {
         voices[voiceIndex].sec.set(sec);
-        voices[voiceIndex].index = (buffer.index + buffer.size - (uint32_t)(SAMPLE_RATE * voices[voiceIndex].sec.get() * timeRatio.get())) % buffer.size;
+        voices[voiceIndex].index = (buffer.index + buffer.size - (uint64_t)(sampleRate * voices[voiceIndex].sec.get() * timeRatio.get())) % buffer.size;
         return *this;
     }
 
