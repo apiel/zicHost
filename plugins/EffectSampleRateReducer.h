@@ -46,7 +46,7 @@ public:
     EffectSampleRateReducer& setSampleStep(float value)
     {
         sampleStep.set(value);
-        sampleStepInt = sampleStep.get() * sampleStep.getStepCount();
+        sampleStepInt = sampleStep.get() * sampleStep.props.stepCount;
         if (sampleStepInt == 0) {
             samplePtr = &EffectSampleRateReducer::skipSample;
             debug("SampleRateReducer: disabled\n");

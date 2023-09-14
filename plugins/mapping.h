@@ -8,13 +8,6 @@
 
 #include "audioPlugin.h"
 
-struct ValOptions {
-    const char* label = NULL;
-    int stepCount = 100;
-    ValueType type = VALUE_BASIC;
-    const char* unit = NULL;
-};
-
 template <typename T>
 class Val {
 protected:
@@ -26,38 +19,28 @@ protected:
     void* onUpdateData = NULL;
 
 public:
-    ValOptions options;
+    AudioPlugin::ValueProps props;
 
     const char* key;
     T& (T::*callback)(float value);
 
-    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), ValOptions options = {})
+    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), AudioPlugin::ValueProps props = {})
         : instance(instance)
-        , options(options)
+        , props(props)
         , value_f(initValue)
         , key(_key)
         , callback(_callback)
     {
     }
 
-    const char* getUnit()
+    AudioPlugin::ValueProps* getProps()
     {
-        return options.unit;
+        return &props;
     }
 
     const char* getLabel()
     {
-        return options.label ? options.label : key;
-    }
-
-    ValueType getType()
-    {
-        return options.type;
-    }
-
-    float getStepCount()
-    {
-        return options.stepCount;
+        return props.label ? props.label : key;
     }
 
     inline float get()
@@ -138,24 +121,14 @@ public:
         return mapping[valueIndex]->key;
     }
 
-    int getValueStepCount(int valueIndex)
+    AudioPlugin::ValueProps* getValueProps(int valueIndex)
     {
-        return mapping[valueIndex]->getStepCount();
-    }
-
-    ValueType getValueType(int valueIndex)
-    {
-        return mapping[valueIndex]->getType();
+        return mapping[valueIndex]->getProps();
     }
 
     const char* getValueLabel(int valueIndex)
     {
         return mapping[valueIndex]->getLabel();
-    }
-
-    const char* getValueUnit(int valueIndex)
-    {
-        return mapping[valueIndex]->getUnit();
     }
 
     void setValueWatcher(int valueIndex, void (*callback)(float, void* data), void* data)

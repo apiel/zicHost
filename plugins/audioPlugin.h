@@ -13,6 +13,13 @@ enum ValueType {
 
 class AudioPlugin {
 public:
+    struct ValueProps {
+        const char* label = NULL;
+        int stepCount = 100;
+        ValueType type = VALUE_BASIC;
+        const char* unit = NULL;
+        int stepStart = 0;
+    };
     struct Props {
         int (*debug)(const char* format, ...);
         uint64_t sampleRate;
@@ -27,15 +34,13 @@ public:
     virtual float sample(float in) = 0;
     virtual const char* name() = 0;
 
-    virtual int getValueStepCount(int valueIndex) = 0;
+    virtual ValueProps* getValueProps(int valueIndex) = 0;
     virtual const char* getValueLabel(int valueIndex) = 0;
-    virtual ValueType getValueType(int valueIndex) = 0;
     virtual float getValue(int valueIndex) = 0;
     virtual void setValue(int valueIndex, float value) = 0;
     virtual int getValueCount() = 0;
     virtual const char* getValueKey(int valueIndex) = 0;
     virtual int getValueIndex(const char* key) = 0;
-    virtual const char* getValueUnit(int valueIndex) = 0;
     virtual void setValueWatcher(int valueIndex, void (*callback)(float, void* data), void* data) = 0;
     virtual char* getValueString(int valueIndex)
     {

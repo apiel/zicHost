@@ -191,7 +191,8 @@ public:
     Val<SynthGranular> start = { this, 0.0f, "START", &SynthGranular::setStart, { "Start" } };
     Val<SynthGranular> spray = { this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" } };
     Val<SynthGranular> grainSize = { this, 0.5f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Grain Size" } };
-    Val<SynthGranular> density = { this, (float)(1.0 / (float)MAX_GRAINS_PER_VOICE * (float)densityUint8), "DENSITY", &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE } };
+    Val<SynthGranular> density = { this, (float)(1.0 / (float)MAX_GRAINS_PER_VOICE * (float)densityUint8), "DENSITY",
+        &SynthGranular::setDensity, { .label = "Density", .stepCount = MAX_GRAINS_PER_VOICE - 1, .stepStart = 1 } };
     Val<SynthGranular> attack = { this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 } };
     Val<SynthGranular> release = { this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 } };
     Val<SynthGranular> delay = { this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 } };
@@ -220,7 +221,7 @@ public:
         if (strcmp(key, "SAMPLES_FOLDER") == 0) {
             debug("GRANULAR_FOLDER: %s\n", value);
             fileBrowser.openFolder(value);
-            browser.options.stepCount = fileBrowser.count;
+            browser.props.stepCount = fileBrowser.count;
             open(0.0, true);
 
             return true;
