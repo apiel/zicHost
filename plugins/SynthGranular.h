@@ -145,9 +145,8 @@ protected:
                 grain.delay--;
             } else {
                 int64_t samplePos = (uint64_t)grain.pos + grain.start;
-                // if (samplePos < buffer->size && (int64_t)grain.pos < grainSampleCount) { // is samplePos < buffer->size even necessary if start calculated properly
                 if ((int64_t)grain.pos < grain.sampleCount) {
-                    grain.pos += grain.sampleStep;
+                    grain.pos += grain.sampleStep; // randomize? + (getRandPct() * grain.sampleStep - (grain.sampleStep * 0.5f));
                     sample += bufferSamples[samplePos] * env;
                 } else {
                     initGrain(grain);
@@ -199,8 +198,7 @@ public:
     Val<SynthGranular> delay = { this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 } };
     Val<SynthGranular> browser = { this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count, VALUE_STRING } };
     Val<SynthGranular> pitch = { this, 0.5f, "PITCH", &SynthGranular::setPitch, { "Pitch", 24, VALUE_CENTERED_ONE_SIDED, .stepStart = -12 } };
-    // TODO add pitch randomization per grain, we could say that if density is negative then pitch randomization?
-    // or should the scale definable? From 0 to 12 semitones?
+    // TODO add pitch randomization per grain
 
     SynthGranular(AudioPlugin::Props& props)
         : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release, &delay, &browser, &pitch })
@@ -278,6 +276,11 @@ public:
         pitch.set(value);
         pitchSemitone = pitch.get() * 24 - 12;
         debug("pitch %d\n", pitchSemitone);
+        for (uint8_t v = 0; v < MAX_GRAIN_VOICES; v++) {
+            for (uint8_t g = 0; g < MAX_GRAINS_PER_VOICE; g++) {
+                voices[v].grains[g].sampleStep = getSampleStep(voices[v].note + pitchSemitone);
+            }
+        }
         return *this;
     }
 
