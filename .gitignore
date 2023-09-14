@@ -4,7 +4,6 @@
 .freesound.oauth.key
 demo.json
 zicHost
-config.cfg
 list_pulse
 *.so
 *.o
