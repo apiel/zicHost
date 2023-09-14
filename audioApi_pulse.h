@@ -4,11 +4,24 @@
 #include <pulse/pulseaudio.h>
 #include <pulse/simple.h>
 
-#include "audioHandler.h"
 #include "audioApi.h"
+#include "audioHandler.h"
 #include "def.h"
 
 static void pa_set_sink_info(pa_context* c, const pa_sink_info* i,
+    int eol, void* userdata)
+{
+    if (eol) {
+        // pa_mainloop_api* mlApi = (pa_mainloop_api*)userdata;
+        // mlApi->quit(mlApi, 0);
+        return;
+    }
+
+    // printf("name: %s (outputChannels %d preferredSampleRate %d)\n", pa_proplist_gets(i->proplist, "device.description"), i->sample_spec.channels, i->sample_spec.rate);
+    APP_PRINT("- %s [AUDIO_OUTPUT=%s]\n", pa_proplist_gets(i->proplist, "device.description"), i->name);
+}
+
+static void pa_set_source_info(pa_context* c, const pa_source_info* i,
     int eol, void* userdata)
 {
     if (eol) {
@@ -17,8 +30,8 @@ static void pa_set_sink_info(pa_context* c, const pa_sink_info* i,
         return;
     }
 
-    // printf("name: %s (outputChannels %d preferredSampleRate %d)\n", pa_proplist_gets(i->proplist, "device.description"), i->sample_spec.channels, i->sample_spec.rate);
-    APP_PRINT("- %s [AUDIO_OUTPUT=%s]\n", pa_proplist_gets(i->proplist, "device.description"), i->name);
+    // printf("name: %s (inputChannels %d preferredSampleRate %d)\n", pa_proplist_gets(i->proplist, "device.description"), i->sample_spec.channels, i->sample_spec.rate);
+    APP_PRINT("- %s [AUDIO_INPUT=%s]\n", pa_proplist_gets(i->proplist, "device.description"), i->name);
 }
 
 static void pa_context_state_callback(pa_context* context, void* userdata)
@@ -34,7 +47,7 @@ static void pa_context_state_callback(pa_context* context, void* userdata)
     case PA_CONTEXT_READY:
         debug("PA_CONTEXT_READY\n");
         pa_context_get_sink_info_list(context, pa_set_sink_info, userdata); // output info ... needs to be before input
-        // pa_context_get_source_info_list(context, pa_set_source_info_and_quit, userdata); // input info
+        pa_context_get_source_info_list(context, pa_set_source_info, userdata); // input info
         break;
 
     case PA_CONTEXT_TERMINATED:
@@ -116,18 +129,22 @@ public:
             .channels = APP_CHANNELS,
         };
 
-        pa_simple* device = pa_simple_new(NULL, NULL, PA_STREAM_PLAYBACK, audioOutputName, "zicGranular", &streamFormat, NULL, NULL, NULL);
+        pa_simple* deviceOut = pa_simple_new(NULL, NULL, PA_STREAM_PLAYBACK, audioOutputName, "zicGranular", &streamFormat, NULL, NULL, NULL);
+        pa_simple* deviceIn = pa_simple_new(NULL, NULL, PA_STREAM_RECORD, audioInputName, "zicGranular", &streamFormat, NULL, NULL, NULL);
 
         uint8_t bufferMultiplier = sizeof(float) / sizeof(uint8_t);
 
         while (isRunning) {
-            float outputBuffer[APP_AUDIO_CHUNK];
-            audioHandler.samples((float*)outputBuffer, APP_AUDIO_CHUNK);
+            float inputBuffer[APP_AUDIO_CHUNK];
+            pa_simple_read(deviceIn, inputBuffer, APP_AUDIO_CHUNK * bufferMultiplier, NULL);
 
-            pa_simple_write(device, outputBuffer, APP_AUDIO_CHUNK * bufferMultiplier, NULL);
+            float outputBuffer[APP_AUDIO_CHUNK];
+            audioHandler.samples((float*)inputBuffer, (float*)outputBuffer, APP_AUDIO_CHUNK);
+
+            pa_simple_write(deviceOut, outputBuffer, APP_AUDIO_CHUNK * bufferMultiplier, NULL);
         }
 
-        pa_simple_drain(device, NULL);
+        pa_simple_drain(deviceOut, NULL);
 
         return 0;
     }
