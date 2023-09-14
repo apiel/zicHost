@@ -5,7 +5,6 @@
 - TODO delay save last state of the delay config... load the last state on start
        base on this state, we can create config files...
 
-- TODO dont make delay dependent of sample rate...
 - TODO handle rotatry encoder from midi... (keyboard and osc)
 
 - TODO input/output should have multiple possible values, when in[0] and out[0] are default ones, and all the others are pointer to empty audio buffer or just simple sample float...
@@ -16,13 +15,11 @@
        custom: AUDIO_PLUGIN=./plugins/build/libzic_EffectSampleRateReducer.so SampleReducer
        > it will only make sense when there is multiples voices/tracks...
 
-- TODO give a way to retrieve all midi mapping keys
 - TODO save state
        - per plugin
        - global
 - TODO generate config file sample
 
-- TODO implement input for alsa and pulse audio api
 - TODO reverb, delay
      - load/save different kind of delay and reverb from a config file
      - add lfo on time ratio

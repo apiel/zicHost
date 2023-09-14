@@ -31,6 +31,7 @@ protected:
     float releaseStep = 0.0f;
 
     uint8_t densityUint8 = 4;
+    int8_t pitchSemitone = 0;
 
     struct Grain {
         float pos;
@@ -192,16 +193,17 @@ public:
     Val<SynthGranular> spray = { this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" } };
     Val<SynthGranular> grainSize = { this, 0.5f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Grain Size" } };
     Val<SynthGranular> density = { this, (float)(1.0 / (float)MAX_GRAINS_PER_VOICE * (float)densityUint8), "DENSITY",
-        &SynthGranular::setDensity, { .label = "Density", .stepCount = MAX_GRAINS_PER_VOICE - 1, .stepStart = 1 } };
+        &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE - 1, .stepStart = 1 } };
     Val<SynthGranular> attack = { this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 } };
     Val<SynthGranular> release = { this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 } };
     Val<SynthGranular> delay = { this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 } };
     Val<SynthGranular> browser = { this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count, VALUE_STRING } };
+    Val<SynthGranular> pitch = { this, 0.5f, "PITCH", &SynthGranular::setPitch, { "Pitch", 24, VALUE_CENTERED_ONE_SIDED, .stepStart = -12 } };
     // TODO add pitch randomization per grain, we could say that if density is negative then pitch randomization?
     // or should the scale definable? From 0 to 12 semitones?
 
     SynthGranular(AudioPlugin::Props& props)
-        : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release, &delay, &browser })
+        : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release, &delay, &browser, &pitch })
     {
         setSampleRate(props.sampleRate);
         memset(&sfinfo, 0, sizeof(sfinfo));
@@ -268,6 +270,14 @@ public:
     SynthGranular& open(float value)
     {
         open(value, false);
+        return *this;
+    }
+
+    SynthGranular& setPitch(float value)
+    {
+        pitch.set(value);
+        pitchSemitone = pitch.get() * 24 - 12;
+        debug("pitch %d\n", pitchSemitone);
         return *this;
     }
 
@@ -401,7 +411,7 @@ public:
         voice.position = voicePosition++;
         voice.note = note;
         voice.envelop = &SynthGranular::envelopAttack;
-        float sampleStep = getSampleStep(note);
+        float sampleStep = getSampleStep(note + pitchSemitone);
         for (uint8_t g = 0; g < densityUint8; g++) {
             initGrain(voice.grains[g], sampleStep);
         }
