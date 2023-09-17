@@ -1,5 +1,5 @@
-#ifndef _AUDIO_INPUT_PULSE_H_
-#define _AUDIO_INPUT_PULSE_H_
+#ifndef _AUDIO_OUTPUT_PULSE_H_
+#define _AUDIO_OUTPUT_PULSE_H_
 
 #include <pulse/pulseaudio.h>
 #include <pulse/simple.h>
@@ -8,9 +8,9 @@
 
 static void pa_context_state_callback(pa_context* context, void* userdata);
 
-class AudioInputPulse : public AudioPlugin {
+class AudioOutputPulse : public AudioPlugin {
 protected:
-    static const uint32_t audioChunk = 32;
+    static const uint32_t audioChunk = 128;
     const uint32_t bufferReadSize = (sizeof(float) / sizeof(uint8_t)) * audioChunk;
 
     float buffer[audioChunk];
@@ -22,7 +22,7 @@ protected:
 
     void open()
     {
-        debug("AudioInputPulse::open\n");
+        debug("AudioOutputPulse::open\n");
 
         if (device) {
             pa_simple_free(device);
@@ -35,11 +35,7 @@ protected:
             .channels = props.channels,
         };
 
-        pa_buffer_attr bufferAttr;
-        bufferAttr.fragsize = audioChunk * sizeof(float);
-        bufferAttr.maxlength = -1;
-
-        device = pa_simple_new(NULL, NULL, PA_STREAM_RECORD, deviceName, "zicAudioInputPulse", &streamFormat, NULL, &bufferAttr, NULL);
+        device = pa_simple_new(NULL, NULL, PA_STREAM_PLAYBACK, deviceName, "zicAudioOutputPulse", &streamFormat, NULL, NULL, NULL);
 
         if (!device) {
             debug("ERROR: pa_simple_new() failed.\n");
@@ -96,7 +92,7 @@ public:
     const char* deviceName = NULL;
     pa_mainloop_api* paMainLoopApi;
 
-    AudioInputPulse(AudioPlugin::Props& props)
+    AudioOutputPulse(AudioPlugin::Props& props)
         : AudioPlugin(props)
         , props(props)
     {
@@ -109,7 +105,7 @@ public:
     bool config(char* key, char* value) override
     {
         if (strcmp(key, "DEVICE") == 0) {
-            debug("Load input device: %s\n", value);
+            debug("Load output device: %s\n", value);
             deviceName = value;
             search();
             open();
@@ -123,21 +119,22 @@ public:
         if (bufferIndex >= audioChunk) {
             bufferIndex = 0;
             if (device) {
-                pa_simple_read(device, buffer, bufferReadSize, NULL);
+                pa_simple_write(device, buffer, bufferReadSize, NULL);
             }
         }
-        return buffer[bufferIndex++];
+        buffer[bufferIndex++] = in;
+        return in;
     }
 
     const char* name()
     {
-        return "AudioInputPulse";
+        return "AudioOutputPulse";
     }
 };
 
 static void pa_set_source_info(pa_context* c, const pa_source_info* i, int eol, void* userdata)
 {
-    AudioInputPulse* api = (AudioInputPulse*)userdata;
+    AudioOutputPulse* api = (AudioOutputPulse*)userdata;
 
     if (eol) {
         api->paMainLoopApi->quit(api->paMainLoopApi, 0);
@@ -148,14 +145,32 @@ static void pa_set_source_info(pa_context* c, const pa_source_info* i, int eol, 
     api->debug("- %s [DEVICE=%s] or [DEVICE=%s]\n", description, description, i->name);
 
     if (strcmp(description, api->deviceName) == 0) {
-        AudioInputPulse* api = (AudioInputPulse*)userdata;
+        AudioOutputPulse* api = (AudioOutputPulse*)userdata;
+        api->deviceName = i->name;
+    }
+}
+
+static void pa_set_sink_info(pa_context* c, const pa_sink_info* i, int eol, void* userdata)
+{
+    AudioOutputPulse* api = (AudioOutputPulse*)userdata;
+
+    if (eol) {
+        api->paMainLoopApi->quit(api->paMainLoopApi, 0);
+        return;
+    }
+
+    const char* description = pa_proplist_gets(i->proplist, "device.description");
+    api->debug("- %s [DEVICE=%s] or [DEVICE=%s]\n", description, description, i->name);
+
+    if (strcmp(description, api->deviceName) == 0) {
+        AudioOutputPulse* api = (AudioOutputPulse*)userdata;
         api->deviceName = i->name;
     }
 }
 
 static void pa_context_state_callback(pa_context* context, void* userdata)
 {
-    AudioInputPulse* api = (AudioInputPulse*)userdata;
+    AudioOutputPulse* api = (AudioOutputPulse*)userdata;
 
     switch (pa_context_get_state(context)) {
     case PA_CONTEXT_CONNECTING:
@@ -164,7 +179,7 @@ static void pa_context_state_callback(pa_context* context, void* userdata)
         break;
 
     case PA_CONTEXT_READY:
-        pa_context_get_source_info_list(context, pa_set_source_info, userdata);
+        pa_context_get_sink_info_list(context, pa_set_sink_info, userdata);
         break;
 
     case PA_CONTEXT_TERMINATED:

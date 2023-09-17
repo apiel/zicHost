@@ -97,7 +97,7 @@ public:
             float outputBuffer[APP_AUDIO_CHUNK];
             audioHandler.samples((float*)inputBuffer, (float*)outputBuffer, APP_AUDIO_CHUNK);
 
-            pa_simple_write(deviceOut, outputBuffer, APP_AUDIO_CHUNK * bufferMultiplier, NULL);
+            // pa_simple_write(deviceOut, outputBuffer, APP_AUDIO_CHUNK * bufferMultiplier, NULL);
         }
 
         pa_simple_drain(deviceOut, NULL);
