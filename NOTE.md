@@ -1,5 +1,7 @@
 # TODO
 
+- audio api in / out should be plugins
+
 - TODO method function pointer
 
 - TODO delay save last state of the delay config... load the last state on start
