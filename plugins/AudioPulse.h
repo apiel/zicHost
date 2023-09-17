@@ -123,7 +123,7 @@ public:
     }
 };
 
-static void pa_set_info(int eol, void* userdata, const char* description, const char* name)
+static void pa_set_info(int eol, void* userdata, const pa_proplist* proplist, const char* name)
 {
     AudioPulse* api = (AudioPulse*)userdata;
 
@@ -132,6 +132,7 @@ static void pa_set_info(int eol, void* userdata, const char* description, const 
         return;
     }
 
+    const char* description = pa_proplist_gets(proplist, "device.description");
     api->debug("- %s [DEVICE=%s] or [DEVICE=%s]\n", description, description, name);
 
     if (strcmp(description, api->deviceName) == 0) {
@@ -142,24 +143,20 @@ static void pa_set_info(int eol, void* userdata, const char* description, const 
 
 static void pa_set_source_info(pa_context* c, const pa_source_info* i, int eol, void* userdata)
 {
-    const char* description = NULL;
-    const char* name = NULL;
-    if (!eol) {
-        name = i->name;
-        description = pa_proplist_gets(i->proplist, "device.description");
+    if (eol) {
+        pa_set_info(eol, userdata, NULL, NULL);
+    } else {
+        pa_set_info(eol, userdata, i->proplist, i->name);
     }
-    pa_set_info(eol, userdata, description, name);
 }
 
 static void pa_set_sink_info(pa_context* c, const pa_sink_info* i, int eol, void* userdata)
 {
-    const char* description = NULL;
-    const char* name = NULL;
-    if (!eol) {
-        name = i->name;
-        description = pa_proplist_gets(i->proplist, "device.description");
+    if (eol) {
+        pa_set_info(eol, userdata, NULL, NULL);
+    } else {
+        pa_set_info(eol, userdata, i->proplist, i->name);
     }
-    pa_set_info(eol, userdata, description, name);
 }
 
 static void pa_context_state_callback(pa_context* context, void* userdata)
