@@ -14,14 +14,6 @@ protected:
     static AudioHandler* instance;
     AudioHandler() { }
 
-    float sample(float s)
-    {
-        for (Plugin& plugin : plugins) {
-            s = plugin.instance->sample(s);
-        }
-        return s;
-    }
-
     bool assignMidiMapping(char* key, char* value)
     {
         // split value by space
@@ -60,18 +52,13 @@ public:
         return *instance;
     }
 
-    void samples(int32_t* in32, int32_t* out32, int len)
+    void loop()
     {
-        for (int i = 0; i < len; i++) {
-            out32[i] = sample(in32[i] / 2147483647.0f) * 2147483647.0f;
-        }
-    }
-
-    void samples(float* in, float* out, int len)
-    {
-        for (int i = 0; i < len; i++) {
-            // out[i] = sample(in[i]);
-            out[i] = sample(0);
+        while (isRunning) {
+            float s = 0.0f;
+            for (Plugin& plugin : plugins) {
+                s = plugin.instance->sample(s);
+            }
         }
     }
 
