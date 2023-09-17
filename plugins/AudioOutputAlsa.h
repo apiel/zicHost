@@ -19,6 +19,7 @@ public:
 
     float sample(float in)
     {
+        // if (bufferIndex >= audioChunk * props.channels) { // ??
         if (bufferIndex >= audioChunk) {
             bufferIndex = 0;
             if (handle) {
