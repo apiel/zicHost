@@ -1,7 +1,7 @@
 all:
 	make clean_so EffectGainVolume EffectSampleRateReducer EffectFilter EffectDistortion EffectDelay\
 		EffectFilter EffectFilterMultiMode EffectFilterMultiMode2 EffectFilterMultiModeMoog SynthGranular\
-		AudioInputPulse AudioOutputPulse\
+		AudioInputPulse AudioOutputPulse AudioInputAlsa AudioOutputAlsa\
 		clean_o
 
 clean:
@@ -49,3 +49,9 @@ AudioInputPulse:
 
 AudioOutputPulse:
 	make compile LIBNAME=AudioOutputPulse EXTRA="$(shell pkg-config --cflags --libs libpulse-simple)"
+
+AudioInputAlsa:
+	make compile LIBNAME=AudioInputAlsa EXTRA="$(shell pkg-config --cflags --libs alsa)"
+
+AudioOutputAlsa:
+	make compile LIBNAME=AudioOutputAlsa EXTRA="$(shell pkg-config --cflags --libs alsa)"

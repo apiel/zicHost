@@ -9,6 +9,8 @@
 
 class AudioHandler {
 protected:
+    AudioPlugin::Props pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS };
+
     std::vector<MidiMapping> midiMapping;
 
     static AudioHandler* instance;
@@ -64,8 +66,6 @@ public:
 
     void loadPlugin(const char* path)
     {
-        AudioPlugin::Props pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS };
-
         Plugin plugin;
 
         plugin.handle = dlopen(path, RTLD_LAZY);

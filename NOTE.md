@@ -1,7 +1,5 @@
 # TODO
 
-- audio api in / out should be plugins
-
 - TODO method function pointer
 
 - TODO delay save last state of the delay config... load the last state on start
@@ -18,6 +16,11 @@
 - TODO reverb, delay
      - load/save different kind of delay and reverb from a config file
      - add lfo on time ratio
+
+- FIXME audio plugin ALSA, output not working
+    - make audio plugin following the same format so they might be compatible...
+
+- TODO jack audio plugin
 
 - TODO random sample file selector?
 

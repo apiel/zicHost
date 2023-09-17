@@ -37,9 +37,7 @@ protected:
             .channels = props.channels,
         };
 
-        debug("will call pure methode\n");
         device = newDevice(streamFormat);
-        debug("will called pure methode\n");
 
         if (!device) {
             debug("ERROR: pa_simple_new() failed.\n");

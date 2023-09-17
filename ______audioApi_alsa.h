@@ -1,6 +1,8 @@
 #ifndef _AUDIO_API_INTERFACE_H_
 #define _AUDIO_API_INTERFACE_H_
 
+// old audio api...
+
 #include <alsa/asoundlib.h>
 
 #include "audioApi.h"
