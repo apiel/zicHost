@@ -4,6 +4,7 @@ LIBSND=`pkg-config --cflags --libs sndfile`
 all:
 	make clean_so EffectGainVolume EffectSampleRateReducer EffectFilter EffectDistortion EffectDelay\
 		EffectFilter EffectFilterMultiMode EffectFilterMultiMode2 EffectFilterMultiModeMoog SynthGranular\
+		AudioInputPulse\
 		clean_o
 
 clean:
@@ -45,3 +46,6 @@ EffectFilterMultiModeMoog:
 
 SynthGranular:
 	make compile LIBNAME=SynthGranular
+
+AudioInputPulse:
+	make compile LIBNAME=AudioInputPulse EXTRA="$(shell pkg-config --cflags --libs libpulse-simple)"

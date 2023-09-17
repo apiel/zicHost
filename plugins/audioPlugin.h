@@ -24,7 +24,7 @@ public:
     struct Props {
         int (*debug)(const char* format, ...);
         uint64_t sampleRate;
-        uint8_t channel;
+        uint8_t channels;
     };
 
     AudioPlugin(Props& props)
@@ -35,14 +35,40 @@ public:
     virtual float sample(float in) = 0;
     virtual const char* name() = 0;
 
-    virtual ValueProps* getValueProps(int valueIndex) = 0;
-    virtual const char* getValueLabel(int valueIndex) = 0;
-    virtual float getValue(int valueIndex) = 0;
-    virtual void setValue(int valueIndex, float value) = 0;
-    virtual int getValueCount() = 0;
-    virtual const char* getValueKey(int valueIndex) = 0;
-    virtual int getValueIndex(const char* key) = 0;
-    virtual void setValueWatcher(int valueIndex, void (*callback)(float, void* data), void* data) = 0;
+    virtual ValueProps* getValueProps(int valueIndex)
+    {
+        return NULL;
+    }
+
+    virtual const char* getValueLabel(int valueIndex)
+    {
+        return NULL;
+    }
+
+    virtual float getValue(int valueIndex)
+    {
+        return 0.0f;
+    }
+
+    virtual void setValue(int valueIndex, float value) { }
+
+    virtual int getValueCount()
+    {
+        return 0;
+    }
+
+    virtual const char* getValueKey(int valueIndex)
+    {
+        return NULL;
+    }
+
+    virtual int getValueIndex(const char* key)
+    {
+        return -1;
+    }
+
+    virtual void setValueWatcher(int valueIndex, void (*callback)(float, void* data), void* data) { }
+    
     virtual char* getValueString(int valueIndex)
     {
         return NULL;

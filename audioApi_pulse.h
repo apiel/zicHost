@@ -85,13 +85,14 @@ public:
         };
 
         pa_simple* deviceOut = pa_simple_new(NULL, NULL, PA_STREAM_PLAYBACK, foundOutputName == NULL ? audioOutputName : foundOutputName, "zicGranular", &streamFormat, NULL, NULL, NULL);
-        pa_simple* deviceIn = pa_simple_new(NULL, NULL, PA_STREAM_RECORD, foundInputName == NULL ? audioInputName : foundInputName, "zicGranular", &streamFormat, NULL, NULL, NULL);
+        
+        // pa_simple* deviceIn = pa_simple_new(NULL, NULL, PA_STREAM_RECORD, foundInputName == NULL ? audioInputName : foundInputName, "zicGranular", &streamFormat, NULL, NULL, NULL);
 
         uint8_t bufferMultiplier = sizeof(float) / sizeof(uint8_t);
 
         while (isRunning) {
             float inputBuffer[APP_AUDIO_CHUNK];
-            pa_simple_read(deviceIn, inputBuffer, APP_AUDIO_CHUNK * bufferMultiplier, NULL);
+            // pa_simple_read(deviceIn, inputBuffer, APP_AUDIO_CHUNK * bufferMultiplier, NULL);
 
             float outputBuffer[APP_AUDIO_CHUNK];
             audioHandler.samples((float*)inputBuffer, (float*)outputBuffer, APP_AUDIO_CHUNK);
