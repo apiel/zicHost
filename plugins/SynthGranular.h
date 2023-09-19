@@ -190,7 +190,7 @@ public:
     Val<SynthGranular> mix = { this, 0.5f, "MIX", &SynthGranular::setMix, { "Mix" } };
     Val<SynthGranular> start = { this, 0.0f, "START", &SynthGranular::setStart, { "Start" } };
     Val<SynthGranular> spray = { this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" } };
-    Val<SynthGranular> grainSize = { this, 0.5f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Grain Size" } };
+    Val<SynthGranular> grainSize = { this, 0.5f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Size" } };
     Val<SynthGranular> density = { this, (float)(1.0 / (float)MAX_GRAINS_PER_VOICE * (float)densityUint8), "DENSITY",
         &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE - 1, .stepStart = 1 } };
     Val<SynthGranular> attack = { this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 } };

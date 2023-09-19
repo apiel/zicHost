@@ -28,7 +28,7 @@
 
 - TODO handle note on/off from midi keyboard
 
-- TODO handle rotatry encoder from midi... (keyboard and osc)
+- TODO handle rotary encoder from midi... (keyboard and osc)
 
 - TODO ? use lv2 plugin
        https://github.com/lv2/lilv/blob/master/tools/lv2apply.c
