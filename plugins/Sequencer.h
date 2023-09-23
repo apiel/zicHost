@@ -74,6 +74,18 @@ public:
 };
 
 class Sequencer : public Mapping<Sequencer> {
+protected:
+    const static uint8_t MAX_STEPS = 32;
+
+    Step steps[MAX_STEPS];
+    Step* activeStep = &steps[0];
+
+    uint8_t stepCounter = 0;
+    uint8_t loopCounter = 0;
+
+    bool active = false;
+    bool nextState = false;
+
 public:
     Val<Sequencer> detune = { this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = -24 } };
 
@@ -84,6 +96,21 @@ public:
 
     float sample(float in)
     {
+        stepCounter = (stepCounter + 1) % MAX_STEPS;
+        if (stepCounter == 0) {
+            if (active != nextState) {
+                active = nextState;
+            }
+            loopCounter++;
+        }
+        if (active) {
+            Step* step = &steps[stepCounter];
+            if (step->enabled && step->conditionMet(loopCounter)) {
+                // note on
+                activeStep = step;
+            }
+        }
+
         return in;
     }
 
