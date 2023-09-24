@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <time.h>
+#include <stdio.h>
 
 #include "audioPlugin.h"
 #include "mapping.h"
@@ -135,6 +136,8 @@ public:
     {
         steps[0].setVelocity(1.0).setLen(8).enabled = true;
         steps[16].setVelocity(1.0).setNote(52).setLen(16).enabled = true;
+        // save();
+        // load();
     }
 
     void onClockTick()
@@ -175,6 +178,20 @@ public:
     const char* name()
     {
         return "Sequencer";
+    }
+
+    void save()
+    {
+        FILE* file = fopen("../zicHost/pattern.bin", "wb");
+        fwrite(steps, sizeof(Step), MAX_STEPS, file);
+        fclose(file);
+    }
+
+    void load()
+    {
+        FILE* file = fopen("../zicHost/pattern.bin", "rb");
+        fread(steps, sizeof(Step), MAX_STEPS, file);
+        fclose(file);
     }
 };
 
