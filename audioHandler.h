@@ -115,6 +115,27 @@ public:
         }
         return false;
     }
+
+    void clockTick()
+    {
+        for (Plugin& plugin : plugins) {
+            plugin.instance->onClockTick();
+        }
+    }
+
+    void start()
+    {
+        for (Plugin& plugin : plugins) {
+            plugin.instance->onStart();
+        }
+    }
+
+    void stop()
+    {
+        for (Plugin& plugin : plugins) {
+            plugin.instance->onStop();
+        }
+    }
 };
 
 AudioHandler* AudioHandler::instance = NULL;

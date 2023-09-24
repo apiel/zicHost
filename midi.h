@@ -11,7 +11,11 @@ RtMidiOut midiOut;
 void midiHandler(std::vector<unsigned char>* message)
 {
     if (message->at(0) == 0xf8) {
-        // ignore midi clock
+        AudioHandler::get().clockTick();
+    } else if (message->at(0) == 0xfa) {
+        AudioHandler::get().start();
+    } else if (message->at(0) == 0xfc) {
+        AudioHandler::get().stop();
     } else if (message->at(0) == 0xfe) {
         // ignore active sensing
     } else if (message->at(0) >= 0x90 && message->at(0) < 0xa0) {

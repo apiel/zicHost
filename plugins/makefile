@@ -1,6 +1,7 @@
 all:
 	make clean_so EffectGainVolume EffectSampleRateReducer EffectFilter EffectDistortion EffectDelay\
 		EffectFilter EffectFilterMultiMode EffectFilterMultiMode2 EffectFilterMultiModeMoog SynthGranular\
+		Sequencer\
 		AudioInputPulse AudioOutputPulse AudioInputAlsa AudioOutputAlsa\
 		clean_o
 
@@ -43,6 +44,9 @@ EffectFilterMultiModeMoog:
 
 SynthGranular:
 	make compile LIBNAME=SynthGranular EXTRA="$(shell pkg-config --cflags --libs sndfile)"
+
+Sequencer:
+	make compile LIBNAME=Sequencer
 
 AudioInputPulse:
 	make compile LIBNAME=AudioInputPulse EXTRA="$(shell pkg-config --cflags --libs libpulse-simple)"

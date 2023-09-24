@@ -5,10 +5,6 @@ BUILD=-Wno-narrowing -ldl $(RTMIDI)
 host: build run
 all: libs build so run
 
-ui:
-	make -C interface lib_ui
-	make build run
-
 libs:
 	@echo "\n------------------ plugins ------------------\n"
 	make -C plugins

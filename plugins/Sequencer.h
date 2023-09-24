@@ -80,20 +80,13 @@ protected:
     Step steps[MAX_STEPS];
     Step* activeStep = &steps[0];
 
+    uint8_t clockCounter = 0;
     uint8_t stepCounter = 0;
     uint8_t loopCounter = 0;
 
     bool active = false;
 
-public:
-    Val<Sequencer> detune = { this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = -24 } };
-
-    Sequencer(AudioPlugin::Props& props)
-        : Mapping(props, { &detune })
-    {
-    }
-
-    void onMidi()
+    void onStep()
     {
         stepCounter++;
         if (stepCounter >= MAX_STEPS) {
@@ -105,8 +98,49 @@ public:
             if (step->enabled && step->conditionMet(loopCounter)) {
                 // note on
                 activeStep = step;
+                debug("Step %d on\n", stepCounter);
             }
         }
+    }
+
+public:
+    Val<Sequencer> detune = { this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = -24 } };
+
+    Sequencer(AudioPlugin::Props& props)
+        : Mapping(props, { &detune })
+    {
+        steps[0].setVelocity(1.0).enabled = true;
+        steps[4].setVelocity(1.0).enabled = true;
+        steps[8].setVelocity(1.0).enabled = true;
+        steps[12].setVelocity(1.0).enabled = true;
+        steps[16].setVelocity(1.0).enabled = true;
+        steps[20].setVelocity(1.0).enabled = true;
+        steps[24].setVelocity(1.0).enabled = true;
+        steps[28].setVelocity(1.0).enabled = true;
+    }
+
+    void onClockTick()
+    {
+        clockCounter++;
+        // Clock events are sent at a rate of 24 pulses per quarter note
+        // (24/4 = 6)
+        if (clockCounter >= 6) {
+            clockCounter = 0;
+            onStep();
+        }
+    }
+
+    void onStart()
+    {
+        clockCounter = 0;
+        stepCounter = 0;
+        loopCounter = 0;
+        active = true;
+    }
+
+    void onStop()
+    {
+        active = false;
     }
 
     float sample(float in)

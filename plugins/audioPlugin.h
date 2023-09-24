@@ -62,6 +62,18 @@ public:
     {
         return NULL;
     }
+
+    virtual void onClockTick()
+    {
+    }
+
+    virtual void onStart()
+    {
+    }
+
+    virtual void onStop()
+    {
+    }
 };
 
 #endif
