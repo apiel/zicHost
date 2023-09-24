@@ -1,7 +1,7 @@
 #ifndef _MIDI_H_
 #define _MIDI_H_
 
-#include "audioHandler.h"
+#include "audioPluginHandler.h"
 #include "def.h"
 #include "fs.h"
 
@@ -11,25 +11,25 @@ RtMidiOut midiOut;
 void midiHandler(std::vector<unsigned char>* message)
 {
     if (message->at(0) == 0xf8) {
-        AudioHandler::get().clockTick();
+        AudioPluginHandler::get().clockTick();
     } else if (message->at(0) == 0xfa) {
-        AudioHandler::get().start();
+        AudioPluginHandler::get().start();
     } else if (message->at(0) == 0xfc) {
-        AudioHandler::get().stop();
+        AudioPluginHandler::get().stop();
     } else if (message->at(0) == 0xfe) {
         // ignore active sensing
     } else if (message->at(0) >= 0x90 && message->at(0) < 0xa0) {
         uint8_t channel = message->at(0) - 0x90;
         if (channel == midiNoteChannel) {
-            // AudioHandler::get().synthGranular.noteOn(message->at(1), message->at(2));
+            // AudioPluginHandler::get().synthGranular.noteOn(message->at(1), message->at(2));
         }
     } else if (message->at(0) >= 0x80 && message->at(0) < 0x90) {
         uint8_t channel = message->at(0) - 0x80;
         if (channel == midiNoteChannel) {
-            // AudioHandler::get().synthGranular.noteOff(message->at(1), message->at(2));
+            // AudioPluginHandler::get().synthGranular.noteOff(message->at(1), message->at(2));
         }
     } else {
-        if (AudioHandler::get().midi(message)) {
+        if (AudioPluginHandler::get().midi(message)) {
             return;
         }
 

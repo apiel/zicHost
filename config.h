@@ -33,9 +33,9 @@ void assignKeyValue(char* key, char* value)
         strcpy(audioInputName, value);
         APP_INFO("Audio input set: %s\n", audioInputName);
     } else if (strcmp(key, "AUDIO_PLUGIN") == 0) {
-        AudioHandler::get().loadPlugin(value);
+        AudioPluginHandler::get().loadPlugin(value);
     } else if (strcmp(key, "GAIN_OUTPUT") == 0) {
-        // float gain = AudioHandler::get().gainVolume.setGain(atof(value)).gain;
+        // float gain = AudioPluginHandler::get().gainVolume.setGain(atof(value)).gain;
         // APP_INFO("Gain output set: %f\n", gain);
     } else if (strcmp(key, "MIDI_NOTE_CHANNEL") == 0) {
         midiNoteChannel = atoi(value);
@@ -45,7 +45,7 @@ void assignKeyValue(char* key, char* value)
             enableDebug();
         }
     } else {
-        AudioHandler::get().config(key, value);
+        AudioPluginHandler::get().config(key, value);
     }
 }
 

@@ -1,5 +1,5 @@
-#ifndef _AUDIO_HANDLER_H_
-#define _AUDIO_HANDLER_H_
+#ifndef _AUDIO_PLUGIN_HANDLER_H_
+#define _AUDIO_PLUGIN_HANDLER_H_
 
 #include <vector>
 
@@ -7,14 +7,14 @@
 #include "midiMapping.h"
 #include "plugin.h"
 
-class AudioHandler {
+class AudioPluginHandler {
 protected:
     AudioPlugin::Props pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS };
 
     std::vector<MidiMapping> midiMapping;
 
-    static AudioHandler* instance;
-    AudioHandler() { }
+    static AudioPluginHandler* instance;
+    AudioPluginHandler() { }
 
     bool assignMidiMapping(char* key, char* value)
     {
@@ -46,10 +46,10 @@ protected:
 public:
     std::vector<Plugin> plugins;
 
-    static AudioHandler& get()
+    static AudioPluginHandler& get()
     {
         if (!instance) {
-            instance = new AudioHandler();
+            instance = new AudioPluginHandler();
         }
         return *instance;
     }
@@ -138,6 +138,6 @@ public:
     }
 };
 
-AudioHandler* AudioHandler::instance = NULL;
+AudioPluginHandler* AudioPluginHandler::instance = NULL;
 
 #endif

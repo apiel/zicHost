@@ -6,12 +6,12 @@
 #include <alsa/asoundlib.h>
 
 #include "audioApi.h"
-#include "audioHandler.h"
+#include "audioPluginHandler.h"
 #include "def.h"
 
 class AudioApiAlsa : public AudioApi {
 protected:
-    AudioHandler& audioHandler = AudioHandler::get();
+    AudioPluginHandler& audioHandler = AudioPluginHandler::get();
 
     static AudioApiAlsa* instance;
     AudioApiAlsa() { }

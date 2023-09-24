@@ -93,12 +93,15 @@ protected:
             stepCounter = 0;
             loopCounter++;
         }
+        if (activeStep) {
+            // noteOff
+        }
         if (active) {
             Step* step = &steps[stepCounter];
             if (step->enabled && step->conditionMet(loopCounter)) {
                 // note on
                 activeStep = step;
-                debug("Step %d on\n", stepCounter);
+                // debug("Step %d on\n", stepCounter);
             }
         }
     }
@@ -110,13 +113,9 @@ public:
         : Mapping(props, { &detune })
     {
         steps[0].setVelocity(1.0).enabled = true;
-        steps[4].setVelocity(1.0).enabled = true;
         steps[8].setVelocity(1.0).enabled = true;
-        steps[12].setVelocity(1.0).enabled = true;
         steps[16].setVelocity(1.0).enabled = true;
-        steps[20].setVelocity(1.0).enabled = true;
         steps[24].setVelocity(1.0).enabled = true;
-        steps[28].setVelocity(1.0).enabled = true;
     }
 
     void onClockTick()

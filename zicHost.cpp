@@ -1,4 +1,4 @@
-#include "audioHandler.h"
+#include "audioPluginHandler.h"
 #include "config.h"
 #include "def.h"
 
@@ -10,12 +10,12 @@ std::vector<Plugin>* init()
     if (!loadConfig()) {
         return NULL;
     }
-    return &AudioHandler::get().plugins;
+    return &AudioPluginHandler::get().plugins;
 }
 
 int mainLoop()
 {
-    AudioHandler::get().loop();
+    AudioPluginHandler::get().loop();
     return 0;
 }
 
