@@ -78,13 +78,15 @@ protected:
     const static uint8_t MAX_STEPS = 32;
 
     Step steps[MAX_STEPS];
-    Step* activeStep = &steps[0];
+    Step* activeStep = NULL;
 
     uint8_t clockCounter = 0;
     uint8_t stepCounter = 0;
     uint8_t loopCounter = 0;
 
     bool active = false;
+
+    AudioPlugin& targetPlugin;
 
     void onStep()
     {
@@ -94,14 +96,14 @@ protected:
             loopCounter++;
         }
         if (activeStep) {
-            // noteOff
+            activeStep = NULL;
+            targetPlugin.noteOff(60, 0);
         }
         if (active) {
             Step* step = &steps[stepCounter];
             if (step->enabled && step->conditionMet(loopCounter)) {
-                // note on
                 activeStep = step;
-                // debug("Step %d on\n", stepCounter);
+                targetPlugin.noteOn(60, activeStep->velocity);
             }
         }
     }
@@ -111,11 +113,10 @@ public:
 
     Sequencer(AudioPlugin::Props& props)
         : Mapping(props, { &detune })
+        , targetPlugin(props.audioPluginHandler->getPlugin("Granular"))
     {
         steps[0].setVelocity(1.0).enabled = true;
-        steps[8].setVelocity(1.0).enabled = true;
         steps[16].setVelocity(1.0).enabled = true;
-        steps[24].setVelocity(1.0).enabled = true;
     }
 
     void onClockTick()

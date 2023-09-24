@@ -9,7 +9,7 @@
 
 class AudioPluginHandler : public AudioPluginHandlerInterface {
 protected:
-    AudioPlugin::Props pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS };
+    AudioPlugin::Props pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS, this };
 
     std::vector<MidiMapping> midiMapping;
 
