@@ -149,7 +149,7 @@ protected:
 
 public:
     Val<Sequencer> detune = { this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = -24 } };
-    Val<Sequencer> pattern = { this, 1.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" } };
+    Val<Sequencer> pattern = { this, 0.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" } };
 
     Sequencer(AudioPlugin::Props& props)
         : Mapping(props, { &detune, &pattern })
