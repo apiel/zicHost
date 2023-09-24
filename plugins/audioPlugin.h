@@ -7,18 +7,35 @@
 
 #include "valueInterface.h"
 
+class AudioPlugin;
+
+class AudioPluginHandlerInterface {
+public:
+    struct Plugin {
+        void* handle;
+        AudioPlugin* instance;
+    };
+
+    std::vector<Plugin> plugins;
+
+    virtual AudioPlugin& getPlugin(const char* name) = 0;
+};
+
 class AudioPlugin {
 public:
+    AudioPluginHandlerInterface* audioPluginHandler;
+    int (*debug)(const char* format, ...);
+
     struct Props {
         int (*debug)(const char* format, ...);
         uint64_t sampleRate;
         uint8_t channels;
+        AudioPluginHandlerInterface* audioPluginHandler;
     };
 
-    int (*debug)(const char* format, ...);
-
     AudioPlugin(Props& props)
-        : debug(props.debug)
+        : audioPluginHandler(props.audioPluginHandler)
+        , debug(props.debug)
     {
     }
 

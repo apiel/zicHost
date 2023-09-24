@@ -5,7 +5,7 @@
 
 #include "def.h"
 #include "midiMapping.h"
-#include "plugins/audioPluginHandlerInterface.h"
+#include "plugins/audioPlugin.h"
 
 class AudioPluginHandler : public AudioPluginHandlerInterface {
 protected:
