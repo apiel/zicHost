@@ -5,23 +5,11 @@
 #include <string.h>
 #include <vector>
 
-enum ValueType {
-    VALUE_BASIC,
-    VALUE_CENTERED,
-    VALUE_CENTERED_ONE_SIDED,
-    VALUE_STRING,
-};
+#include "valueInterface.h"
 
 class AudioPlugin {
 public:
-    struct ValueProps {
-        const char* label = NULL;
-        int stepCount = 100;
-        ValueType type = VALUE_BASIC;
-        const char* unit = NULL;
-        int stepStart = 0;
-    };
-    struct Props {
+      struct Props {
         int (*debug)(const char* format, ...);
         uint64_t sampleRate;
         uint8_t channels;
@@ -37,43 +25,20 @@ public:
     virtual float sample(float in) = 0;
     virtual const char* name() = 0;
 
-    virtual ValueProps* getValueProps(int valueIndex)
+    virtual ValueInterface * getValue(int valueIndex)
     {
         return NULL;
     }
 
-    virtual const char* getValueLabel(int valueIndex)
-    {
-        return NULL;
-    }
-
-    virtual float getValue(int valueIndex)
-    {
-        return 0.0f;
-    }
-
-    virtual void setValue(int valueIndex, float value) { }
 
     virtual int getValueCount()
     {
         return 0;
     }
 
-    virtual const char* getValueKey(int valueIndex)
-    {
-        return NULL;
-    }
-
     virtual int getValueIndex(const char* key)
     {
         return -1;
-    }
-
-    virtual void setValueWatcher(int valueIndex, void (*callback)(float, void* data), void* data) { }
-    
-    virtual char* getValueString(int valueIndex)
-    {
-        return NULL;
     }
 
     virtual void noteOn(uint8_t note, uint8_t velocity)

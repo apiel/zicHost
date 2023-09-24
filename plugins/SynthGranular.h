@@ -221,7 +221,7 @@ public:
         if (strcmp(key, "SAMPLES_FOLDER") == 0) {
             debug("GRANULAR_FOLDER: %s\n", value);
             fileBrowser.openFolder(value);
-            browser.props.stepCount = fileBrowser.count;
+            browser.props().stepCount = fileBrowser.count;
             open(0.0, true);
 
             return true;
@@ -254,11 +254,11 @@ public:
 
     SynthGranular& open(float value, bool force)
     {
-        browser.set(value);
+        browser.setFloat(value);
         int position = browser.get() * fileBrowser.count;
         if (force || position != fileBrowser.position) {
             char* filepath = fileBrowser.getFilePath(position);
-            browser.set(fileBrowser.getFile(position));
+            browser.setString(fileBrowser.getFile(position));
             debug("GRANULAR_SAMPLE_SELECTOR: %f %s\n", value, filepath);
             open(filepath);
         }
@@ -273,7 +273,7 @@ public:
 
     SynthGranular& setPitch(float value)
     {
-        pitch.set(value);
+        pitch.setFloat(value);
         pitchSemitone = pitch.get() * 24 - 12;
         debug("pitch %d\n", pitchSemitone);
         for (uint8_t v = 0; v < MAX_GRAIN_VOICES; v++) {
@@ -286,7 +286,7 @@ public:
 
     SynthGranular& setMix(float value)
     {
-        mix.set(value);
+        mix.setFloat(value);
         return *this;
     }
 
@@ -298,7 +298,7 @@ public:
      */
     SynthGranular& setGrainSize(float value)
     {
-        grainSize.set(value);
+        grainSize.setFloat(value);
         debug("grainSize %f\n", grainSize.get());
         return *this;
     }
@@ -312,7 +312,7 @@ public:
      */
     SynthGranular& setSpray(float value)
     {
-        spray.set(value);
+        spray.setFloat(value);
         debug("spray %f\n", spray.get());
         return *this;
     }
@@ -325,7 +325,7 @@ public:
      */
     SynthGranular& setDensity(float value)
     {
-        density.set(value);
+        density.setFloat(value);
         densityUint8 = density.get() * (MAX_GRAINS_PER_VOICE - 1) + 1; // 1 to MAX_GRAINS_PER_VOICE
         debug("density %d\n", densityUint8);
         return *this;
@@ -340,7 +340,7 @@ public:
      */
     SynthGranular& setStart(float value)
     {
-        start.set(value);
+        start.setFloat(value);
         debug("setStart %f\n", start.get());
         return *this;
     }
@@ -353,7 +353,7 @@ public:
      */
     SynthGranular& setDelay(float value)
     {
-        delay.set(value);
+        delay.setFloat(value);
         debug("delay %f\n", delay.get());
         return *this;
     }
@@ -366,7 +366,7 @@ public:
      */
     SynthGranular& setAttack(float value)
     {
-        attack.set(value);
+        attack.setFloat(value);
         // uint64_t attackSamples = attack.get() * SAMPLE_RATE * 0.001f * 5000;
         // can be simplified to:
         uint64_t attackSamples = attack.get() * sampleRate * 5;
@@ -383,7 +383,7 @@ public:
      */
     SynthGranular& setRelease(float value)
     {
-        release.set(value);
+        release.setFloat(value);
         // uint64_t releaseSamples = release.get() * SAMPLE_RATE * 0.001f * 10000;
         // can be simplified to:
         uint64_t releaseSamples = release.get() * sampleRate * 10;

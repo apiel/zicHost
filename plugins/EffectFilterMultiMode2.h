@@ -39,7 +39,7 @@ public:
 
     EffectFilterMultiMode2& setCutoff(float value)
     {
-        mix.set(value);
+        mix.setFloat(value);
 
         if (value > 0.5) {
             // 0 to 0.10
@@ -60,7 +60,7 @@ public:
 
     EffectFilterMultiMode2& setResonance(float value)
     {
-        resonance.set(value);
+        resonance.setFloat(value);
         lpf.setResonance(resonance.get());
         hpf.setResonance(resonance.get());
 

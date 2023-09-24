@@ -51,7 +51,7 @@ public:
 
     EffectFilter& setCutoff(float value)
     {
-        cutoff.set(value);
+        cutoff.setFloat(value);
 
         if (mode == LPF) {
             data.setCutoff(0.85 * cutoff.get() + 0.1);
@@ -66,7 +66,7 @@ public:
 
     EffectFilter& setResonance(float value)
     {
-        resonance.set(value);
+        resonance.setFloat(value);
         data.setResonance(resonance.get());
 
         return *this;
@@ -81,7 +81,7 @@ public:
 
     EffectFilter& setMode(float value)
     {
-        mode_value.set(value);
+        mode_value.setFloat(value);
         mode = (Mode)range(mode_value.get() * 100, 0, (uint8_t)MODE_COUNT);
         return setMode(mode);
     }

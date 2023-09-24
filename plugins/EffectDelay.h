@@ -114,7 +114,7 @@ public:
 
     EffectDelay& setSec(uint8_t voiceIndex, float sec)
     {
-        voices[voiceIndex].sec.set(sec);
+        voices[voiceIndex].sec.setFloat(sec);
         voices[voiceIndex].index = (buffer.index + buffer.size - (uint64_t)(sampleRate * voices[voiceIndex].sec.get() * timeRatio.get())) % buffer.size;
         return *this;
     }
@@ -130,7 +130,7 @@ public:
 
     EffectDelay& setAmplitude(uint8_t voiceIndex, float amplitude)
     {
-        voices[voiceIndex].amplitude.set(amplitude);
+        voices[voiceIndex].amplitude.setFloat(amplitude);
         return *this;
     }
 
@@ -145,7 +145,7 @@ public:
 
     EffectDelay& setFeedback(uint8_t voiceIndex, float feedback)
     {
-        voices[voiceIndex].feedback.set(feedback);
+        voices[voiceIndex].feedback.setFloat(feedback);
         return *this;
     }
 
@@ -167,13 +167,13 @@ public:
 
     EffectDelay& setMasterAmplitude(float amplitude)
     {
-        masterAmplitude.set(amplitude);
+        masterAmplitude.setFloat(amplitude);
         return *this;
     }
 
     EffectDelay& setTimeRatio(float ratio)
     {
-        timeRatio.set(ratio);
+        timeRatio.setFloat(ratio);
         for (uint8_t i = 0; i < MAX_DELAY_VOICES; i++) {
             setSec(i, voices[i].sec.get());
         }
@@ -182,14 +182,14 @@ public:
 
     EffectDelay& setCutoff(float value)
     {
-        cutoff.set(value);
+        cutoff.setFloat(value);
         filter.setCutoff(cutoff.get());
         return *this;
     }
 
     EffectDelay& setResonance(float value)
     {
-        resonance.set(value);
+        resonance.setFloat(value);
         filter.setResonance(resonance.get());
         return *this;
     }

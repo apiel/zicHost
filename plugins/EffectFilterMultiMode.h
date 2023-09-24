@@ -35,7 +35,7 @@ public:
 
     EffectFilterMultiMode& setCutoff(float value)
     {
-        mix.set(value);
+        mix.setFloat(value);
         hpf.setCutoff((0.20 * mix.get()) + 0.00707);
         lpf.setCutoff(0.85 * mix.get() + 0.1);
 
@@ -44,7 +44,7 @@ public:
 
     EffectFilterMultiMode& setResonance(float value)
     {
-        resonance.set(value);
+        resonance.setFloat(value);
         lpf.setResonance(resonance.get());
         hpf.setResonance(resonance.get());
 

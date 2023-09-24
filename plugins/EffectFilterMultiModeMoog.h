@@ -60,7 +60,7 @@ public:
 
     EffectFilterMultiModeMoog& setCutoff(float value)
     {
-        mix.set(value);
+        mix.setFloat(value);
         if (mix.get() > 0.5) {
             cutoff = 1 - mix.get() + 0.0707;
         } else {
@@ -72,7 +72,7 @@ public:
 
     EffectFilterMultiModeMoog& setResonance(float value)
     {
-        resonance.set(value);
+        resonance.setFloat(value);
         calculateVar(cutoff, resonance.get());
         return *this;
     };

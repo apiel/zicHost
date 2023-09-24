@@ -43,7 +43,7 @@ public:
 
     EffectDistortion& setDrive(float value)
     {
-        drive.set(value);
+        drive.setFloat(value);
         if (drive.get() == 0.0) {
             samplePtr = &EffectDistortion::skipSample;
             debug("Distortion: disabled\n");

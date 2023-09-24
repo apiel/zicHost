@@ -9,38 +9,43 @@
 #include "audioPlugin.h"
 
 template <typename T>
-class Val {
+class Val: public ValueInterface {
 protected:
     T* instance;
     float value_f;
     char* value_s = NULL;
 
-    void (*onUpdate)(float, void* data) = [](float, void* data) {};
+    void (*onUpdatePtr)(float, void* data) = [](float, void* data) {};
     void* onUpdateData = NULL;
 
-public:
-    AudioPlugin::ValueProps props;
+    ValueInterface::Props _props;
 
-    const char* key;
+public:
+    const char* _key;
     T& (T::*callback)(float value);
 
-    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), AudioPlugin::ValueProps props = {})
+    Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), ValueInterface::Props props = {})
         : instance(instance)
-        , props(props)
+        , _props(props)
         , value_f(initValue)
-        , key(_key)
+        , _key(_key)
         , callback(_callback)
     {
     }
 
-    AudioPlugin::ValueProps* getProps()
+    ValueInterface::Props& props()
     {
-        return &props;
+        return _props;
     }
 
-    const char* getLabel()
+    const char* key()
     {
-        return props.label ? props.label : key;
+        return _key;
+    }
+
+    const char* label()
+    {
+        return _props.label ? _props.label : _key;
     }
 
     inline float get()
@@ -48,30 +53,30 @@ public:
         return value_f;
     }
 
-    char* getString()
+    char* string()
     {
         return value_s;
     }
 
-    void set(char* value)
+    void setString(char* value)
     {
         value_s = value;
     }
 
-    void set(float value)
+    void setFloat(float value)
     {
         value_f = range(value, 0.0, 1.0);
     }
 
-    void call(float value)
+    void set(float value)
     {
         (instance->*(callback))(value);
-        (*onUpdate)(value, onUpdateData);
+        (*onUpdatePtr)(value, onUpdateData);
     }
 
-    void setOnUpdate(void (*callback)(float, void* data), void* data)
+    void onUpdate(void (*callback)(float, void* data), void* data)
     {
-        onUpdate = callback;
+        onUpdatePtr = callback;
         onUpdateData = data;
     }
 };
@@ -90,7 +95,7 @@ public:
     int getValueIndex(const char* key)
     {
         for (int i = 0; i < mapping.size(); i++) {
-            if (strcmp(mapping[i]->key, key) == 0) {
+            if (strcmp(mapping[i]->key(), key) == 0) {
                 return i;
             }
         }
@@ -101,39 +106,12 @@ public:
     {
         return mapping.size();
     }
-    float getValue(int valueIndex)
+    ValueInterface * getValue(int valueIndex)
     {
-        return mapping[valueIndex]->get();
-    }
-
-    char* getValueString(int valueIndex)
-    {
-        return mapping[valueIndex]->getString();
-    }
-
-    void setValue(int valueIndex, float value)
-    {
-        mapping[valueIndex]->call(value);
-    }
-
-    const char* getValueKey(int valueIndex)
-    {
-        return mapping[valueIndex]->key;
-    }
-
-    AudioPlugin::ValueProps* getValueProps(int valueIndex)
-    {
-        return mapping[valueIndex]->getProps();
-    }
-
-    const char* getValueLabel(int valueIndex)
-    {
-        return mapping[valueIndex]->getLabel();
-    }
-
-    void setValueWatcher(int valueIndex, void (*callback)(float, void* data), void* data)
-    {
-        mapping[valueIndex]->setOnUpdate(callback, data);
+        if (valueIndex < 0 || valueIndex >= mapping.size()) {
+            return NULL;
+        }
+        return mapping[valueIndex];
     }
 };
 

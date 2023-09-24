@@ -29,8 +29,8 @@ public:
 
     EffectGainVolume& setVolumeWithGain(float vol, float _gain)
     {
-        gain.set(_gain);
-        volume.set(vol);
+        gain.setFloat(_gain);
+        volume.setFloat(vol);
         volumeWithGain = (1.0 + (gain.get() * 4.0)) * volume.get();
 
         return *this;
