@@ -1,13 +1,13 @@
 #ifndef _AUDIO_PLUGIN_HANDLER_H_
 #define _AUDIO_PLUGIN_HANDLER_H_
 
-#include <vector>
+#include <stdexcept>
 
 #include "def.h"
 #include "midiMapping.h"
 #include "plugins/audioPluginHandlerInterface.h"
 
-class AudioPluginHandler: public AudioPluginHandlerInterface {
+class AudioPluginHandler : public AudioPluginHandlerInterface {
 protected:
     AudioPlugin::Props pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS };
 
@@ -50,6 +50,16 @@ public:
             instance = new AudioPluginHandler();
         }
         return *instance;
+    }
+
+    AudioPlugin& getPlugin(const char* name)
+    {
+        for (Plugin& plugin : plugins) {
+            if (strcmp(plugin.instance->name(), name) == 0) {
+                return *plugin.instance;
+            }
+        }
+        throw std::runtime_error("Could not find plugin");
     }
 
     void loop()
