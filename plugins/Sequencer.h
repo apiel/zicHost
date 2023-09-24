@@ -42,16 +42,32 @@ struct StepCondition {
 };
 
 uint8_t STEP_CONDITIONS_COUNT = sizeof(stepConditions) / sizeof(stepConditions[0]);
+const uint8_t MAX_STEPS = 32;
 
 class Step {
 public:
     bool enabled = false;
     float velocity = 0;
     uint8_t condition = 0;
+    uint8_t len = 1; // len 0 is infinite?
+    uint8_t counter = 0;
+    uint8_t note = 60;
 
     Step& toggle()
     {
         enabled = !enabled;
+        return *this;
+    }
+
+    Step& setNote(float _note)
+    {
+        note = range(_note, 0, 127);
+        return *this;
+    }
+
+    Step& setLen(uint8_t _len)
+    {
+        len = range(_len, 0, MAX_STEPS);
         return *this;
     }
 
@@ -75,10 +91,7 @@ public:
 
 class Sequencer : public Mapping<Sequencer> {
 protected:
-    const static uint8_t MAX_STEPS = 32;
-
     Step steps[MAX_STEPS];
-    Step* activeStep = NULL;
 
     uint8_t clockCounter = 0;
     uint8_t stepCounter = 0;
@@ -95,15 +108,20 @@ protected:
             stepCounter = 0;
             loopCounter++;
         }
-        if (activeStep) {
-            activeStep = NULL;
-            targetPlugin.noteOff(60, 0);
+        for (int i = 0; i < MAX_STEPS; i++) {
+            Step* step = &steps[i];
+            if (step->counter) {
+                step->counter--;
+                if (step->counter == 0) {
+                    targetPlugin.noteOff(step->note, 0);
+                }
+            }
         }
         if (active) {
             Step* step = &steps[stepCounter];
             if (step->enabled && step->conditionMet(loopCounter)) {
-                activeStep = step;
-                targetPlugin.noteOn(60, activeStep->velocity);
+                step->counter = step->len;
+                targetPlugin.noteOn(step->note, step->velocity);
             }
         }
     }
@@ -115,8 +133,8 @@ public:
         : Mapping(props, { &detune })
         , targetPlugin(props.audioPluginHandler->getPlugin("Granular"))
     {
-        steps[0].setVelocity(1.0).enabled = true;
-        steps[16].setVelocity(1.0).enabled = true;
+        steps[0].setVelocity(1.0).setLen(8).enabled = true;
+        steps[16].setVelocity(1.0).setNote(52).setLen(16).enabled = true;
     }
 
     void onClockTick()
