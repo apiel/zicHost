@@ -27,6 +27,8 @@ public:
         uint8_t channels;
     };
 
+    int (*debug)(const char* format, ...);
+
     AudioPlugin(Props& props)
         : debug(props.debug)
     {
@@ -91,8 +93,6 @@ public:
     {
         return NULL;
     }
-
-    int (*debug)(const char* format, ...);
 };
 
 #endif

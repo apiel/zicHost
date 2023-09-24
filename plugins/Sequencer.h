@@ -84,7 +84,6 @@ protected:
     uint8_t loopCounter = 0;
 
     bool active = false;
-    bool nextState = false;
 
 public:
     Val<Sequencer> detune = { this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = -24 } };
@@ -94,13 +93,11 @@ public:
     {
     }
 
-    float sample(float in)
+    void onMidi()
     {
-        stepCounter = (stepCounter + 1) % MAX_STEPS;
-        if (stepCounter == 0) {
-            if (active != nextState) {
-                active = nextState;
-            }
+        stepCounter++;
+        if (stepCounter >= MAX_STEPS) {
+            stepCounter = 0;
             loopCounter++;
         }
         if (active) {
@@ -110,7 +107,10 @@ public:
                 activeStep = step;
             }
         }
+    }
 
+    float sample(float in)
+    {
         return in;
     }
 

@@ -1,6 +1,11 @@
 # TODO
 
+- TODO instead of those useless get/set in audio plugin, would it just be easier to expose value interface...
+
 - TODO sequencer
+    for the clock use midi clock
+
+- TODO tempo plugin, that would shalow midi clock in favour of custom clock
 
 - TODO method function pointer
 
