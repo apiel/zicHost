@@ -9,7 +9,7 @@
 
 class AudioPlugin {
 public:
-      struct Props {
+    struct Props {
         int (*debug)(const char* format, ...);
         uint64_t sampleRate;
         uint8_t channels;
@@ -25,11 +25,15 @@ public:
     virtual float sample(float in) = 0;
     virtual const char* name() = 0;
 
-    virtual ValueInterface * getValue(int valueIndex)
+    virtual ValueInterface* getValue(int valueIndex)
     {
         return NULL;
     }
 
+    virtual ValueInterface* getValue(const char* key)
+    {
+        return NULL;
+    }
 
     virtual int getValueCount()
     {

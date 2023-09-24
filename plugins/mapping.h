@@ -113,6 +113,16 @@ public:
         }
         return mapping[valueIndex];
     }
+
+    ValueInterface* getValue(const char* key)
+    {
+        for (int i = 0; i < mapping.size(); i++) {
+            if (strcmp(mapping[i]->key(), key) == 0) {
+                return mapping[i];
+            }
+        }
+        return NULL;
+    }
 };
 
 #endif
