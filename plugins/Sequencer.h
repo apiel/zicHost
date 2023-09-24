@@ -2,8 +2,9 @@
 #define _SEQUENCER_H_
 
 #include <math.h>
+#include <stdio.h> // file
+#include <sys/stat.h> // file exist
 #include <time.h>
-#include <stdio.h>
 
 #include "audioPlugin.h"
 #include "mapping.h"
@@ -54,6 +55,17 @@ public:
     uint8_t counter = 0;
     uint8_t note = 60;
 
+    Step& reset()
+    {
+        enabled = false;
+        velocity = 0;
+        condition = 0;
+        len = 1;
+        counter = 0;
+        note = 60;
+        return *this;
+    }
+
     Step& toggle()
     {
         enabled = !enabled;
@@ -92,6 +104,8 @@ public:
 
 class Sequencer : public Mapping<Sequencer> {
 protected:
+    const char* folder = "../zicHost/patterns/";
+    char patternFilename[255];
     Step steps[MAX_STEPS];
 
     uint8_t clockCounter = 0;
@@ -127,11 +141,18 @@ protected:
         }
     }
 
+    bool fileExists(const char* filename)
+    {
+        struct stat buffer;
+        return (stat(filename, &buffer) == 0);
+    }
+
 public:
     Val<Sequencer> detune = { this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = -24 } };
+    Val<Sequencer> pattern = { this, 1.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" } };
 
     Sequencer(AudioPlugin::Props& props)
-        : Mapping(props, { &detune })
+        : Mapping(props, { &detune, &pattern })
         , targetPlugin(props.audioPluginHandler->getPlugin("Granular"))
     {
         steps[0].setVelocity(1.0).setLen(8).enabled = true;
@@ -169,6 +190,22 @@ public:
         return in;
     }
 
+    Sequencer& setPattern(float value)
+    {
+        pattern.set(value);
+        sprintf(patternFilename, "%s/%d.bin", folder, (uint)(pattern.get() * pattern.props().stepCount));
+        if (fileExists(patternFilename)) {
+            FILE* file = fopen(patternFilename, "rb");
+            fread(steps, sizeof(Step), MAX_STEPS, file);
+            fclose(file);
+        } else {
+            for (int i = 0; i < MAX_STEPS; i++) {
+                steps[i].reset();
+            }
+        }
+        return *this;
+    }
+
     Sequencer& setDetune(float value)
     {
         detune.set(value);
@@ -182,15 +219,8 @@ public:
 
     void save()
     {
-        FILE* file = fopen("../zicHost/pattern.bin", "wb");
+        FILE* file = fopen(patternFilename, "wb");
         fwrite(steps, sizeof(Step), MAX_STEPS, file);
-        fclose(file);
-    }
-
-    void load()
-    {
-        FILE* file = fopen("../zicHost/pattern.bin", "rb");
-        fread(steps, sizeof(Step), MAX_STEPS, file);
         fclose(file);
     }
 };
