@@ -5,9 +5,9 @@
 
 #include "def.h"
 #include "midiMapping.h"
-#include "plugin.h"
+#include "plugins/audioPluginHandlerInterface.h"
 
-class AudioPluginHandler {
+class AudioPluginHandler: public AudioPluginHandlerInterface {
 protected:
     AudioPlugin::Props pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS };
 
@@ -44,8 +44,6 @@ protected:
     }
 
 public:
-    std::vector<Plugin> plugins;
-
     static AudioPluginHandler& get()
     {
         if (!instance) {

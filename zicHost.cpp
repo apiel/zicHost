@@ -3,14 +3,14 @@
 #include "def.h"
 
 extern "C" {
-std::vector<Plugin>* init()
+AudioPluginHandlerInterface* init()
 {
     // TODO make config.cfg a parameter
     // make default config
     if (!loadConfig()) {
         return NULL;
     }
-    return &AudioPluginHandler::get().plugins;
+    return &AudioPluginHandler::get();
 }
 
 int mainLoop()
