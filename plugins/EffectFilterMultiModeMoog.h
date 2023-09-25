@@ -29,11 +29,11 @@ protected:
 
 public:
     // Cutoff mix
-    Val<EffectFilterMultiModeMoog> mix = { this, 0.5, "CUTOFF", &EffectFilterMultiModeMoog::setCutoff, { "LPF | HPF", .type = VALUE_CENTERED } };
-    Val<EffectFilterMultiModeMoog> resonance = { this, 0.0, "RESONANCE", &EffectFilterMultiModeMoog::setResonance, { "Resonance" } };
+    Val<EffectFilterMultiModeMoog>& mix = val(this, 0.5, "CUTOFF", &EffectFilterMultiModeMoog::setCutoff, { "LPF | HPF", .type = VALUE_CENTERED });
+    Val<EffectFilterMultiModeMoog>& resonance = val(this, 0.0, "RESONANCE", &EffectFilterMultiModeMoog::setResonance, { "Resonance" });
 
     EffectFilterMultiModeMoog(AudioPlugin::Props& props)
-        : Mapping(props, { &mix, &resonance })
+        : Mapping(props)
     {
         setCutoff(0.5);
     };

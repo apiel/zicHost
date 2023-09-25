@@ -6,12 +6,12 @@
 
 class EffectGainVolume : public Mapping<EffectGainVolume> {
 public:
-    Val<EffectGainVolume> volume = { this, 1.0f, "VOLUME", &EffectGainVolume::setVolume, { "Volume" } };
-    Val<EffectGainVolume> gain = { this, 0.0f, "GAIN", &EffectGainVolume::setGain, { "Gain" } };
+    Val<EffectGainVolume>& volume = val(this, 1.0f, "VOLUME", &EffectGainVolume::setVolume, { "Volume" });
+    Val<EffectGainVolume>& gain = val(this, 0.0f, "GAIN", &EffectGainVolume::setGain, { "Gain" });
     float volumeWithGain = volume.get();
 
     EffectGainVolume(AudioPlugin::Props& props)
-        : Mapping(props, { &volume, &gain })
+        : Mapping(props)
     {
         setVolumeWithGain(volume.get(), gain.get());
     }

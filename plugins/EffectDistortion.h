@@ -28,10 +28,10 @@ protected:
     }
 
 public:
-    Val<EffectDistortion> drive = { this, 0.0, "DRIVE", &EffectDistortion::setDrive, { "Distortion" } };
+    Val<EffectDistortion>& drive = val(this, 0.0, "DRIVE", &EffectDistortion::setDrive, { "Distortion" });
 
     EffectDistortion(AudioPlugin::Props& props)
-        : Mapping(props, { &drive })
+        : Mapping(props)
     {
         setDrive(drive.get());
     };

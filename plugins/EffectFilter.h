@@ -13,8 +13,8 @@ protected:
 
 public:
     // Cutoff mix
-    Val<EffectFilter> cutoff = { this, 0.5, "CUTOFF", &EffectFilter::setCutoff, { "Cutoff" } };
-    Val<EffectFilter> resonance = { this, 0.0, "RESONANCE", &EffectFilter::setResonance, { "Resonance" } };
+    Val<EffectFilter>& cutoff = val(this, 0.5, "CUTOFF", &EffectFilter::setCutoff, { "Cutoff" });
+    Val<EffectFilter>& resonance = val(this, 0.0, "RESONANCE", &EffectFilter::setResonance, { "Resonance" });
 
     enum Mode {
         OFF,
@@ -25,10 +25,10 @@ public:
     } mode
         = OFF;
     // TODO how to handle mode in a better way?
-    Val<EffectFilter> mode_value = { this, 0.0, "MODE", &EffectFilter::setMode, { "Mode" } };
+    Val<EffectFilter>& mode_value = val(this, 0.0, "MODE", &EffectFilter::setMode, { "Mode" });
 
     EffectFilter(AudioPlugin::Props& props)
-        : Mapping(props, { &cutoff, &resonance, &mode_value })
+        : Mapping(props)
     {
     }
 
