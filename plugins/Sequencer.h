@@ -150,12 +150,12 @@ protected:
     }
 
 public:
-    Val<Sequencer> detune = { this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = -24 } };
-    Val<Sequencer> pattern = { this, 0.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" } };
-    Val<Sequencer> selectedStep = { this, 0.0f, "SELECTED_STEP", &Sequencer::setSelectedStep, { "Step", MAX_STEPS, .stepStart = 1 } };
+    Val<Sequencer>& detune = val(this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = -24 });
+    Val<Sequencer>& pattern = val(this, 0.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" });
+    Val<Sequencer>& selectedStep = val(this, 0.0f, "SELECTED_STEP", &Sequencer::setSelectedStep, { "Step", MAX_STEPS, .stepStart = 1 });
 
     Sequencer(AudioPlugin::Props& props)
-        : Mapping(props, { &detune, &pattern, &selectedStep })
+        : Mapping(props)
         , targetPlugin(props.audioPluginHandler->getPlugin("Granular"))
     {
         steps[0].setVelocity(1.0).setLen(8).enabled = true;
