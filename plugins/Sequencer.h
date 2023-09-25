@@ -55,6 +55,8 @@ public:
     uint8_t counter = 0;
     uint8_t note = 60;
 
+    // step could also have random pitch
+
     Step& reset()
     {
         enabled = false;
@@ -150,6 +152,7 @@ protected:
 public:
     Val<Sequencer> detune = { this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = -24 } };
     Val<Sequencer> pattern = { this, 0.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" } };
+    Val<Sequencer> selectedStep = { this, 0.0f, "SELECTED_STEP", &Sequencer::setSelectedStep, { "Step", MAX_STEPS - 1, .stepStart = 1 } };
 
     Sequencer(AudioPlugin::Props& props)
         : Mapping(props, { &detune, &pattern })
@@ -158,7 +161,7 @@ public:
         steps[0].setVelocity(1.0).setLen(8).enabled = true;
         steps[16].setVelocity(1.0).setNote(52).setLen(16).enabled = true;
         // save();
-        // load();
+        // load can be done using setPattern
     }
 
     void onClockTick()
@@ -203,6 +206,12 @@ public:
                 steps[i].reset();
             }
         }
+        return *this;
+    }
+
+    Sequencer& setSelectedStep(float value)
+    {
+        selectedStep.set(value);
         return *this;
     }
 
