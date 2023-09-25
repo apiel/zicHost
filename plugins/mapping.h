@@ -9,7 +9,7 @@
 #include "audioPlugin.h"
 
 template <typename T>
-class Val: public ValueInterface {
+class Val : public ValueInterface {
 protected:
     T* instance;
     float value_f;
@@ -83,10 +83,18 @@ public:
 
 template <typename T>
 class Mapping : public AudioPlugin {
-public:
+protected:
     std::vector<Val<T>*> mapping;
 
-    Mapping(AudioPlugin::Props& props, std::vector<Val<T>*> mapping)
+    Val<T>& val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), ValueInterface::Props props = {})
+    {
+        Val<T>* v = new Val<T>(instance, initValue, _key, _callback, props);
+        mapping.push_back(v);
+        return *v;
+    }
+
+public:
+    Mapping(AudioPlugin::Props& props, std::vector<Val<T>*> mapping = {})
         : AudioPlugin(props)
         , mapping(mapping)
     {
@@ -106,7 +114,7 @@ public:
     {
         return mapping.size();
     }
-    ValueInterface * getValue(int valueIndex)
+    ValueInterface* getValue(int valueIndex)
     {
         if (valueIndex < 0 || valueIndex >= mapping.size()) {
             return NULL;
