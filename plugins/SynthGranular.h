@@ -187,21 +187,21 @@ public:
     SF_INFO sfinfo;
     SNDFILE* file = NULL;
 
-    Val<SynthGranular> mix = { this, 0.5f, "MIX", &SynthGranular::setMix, { "Mix" } };
-    Val<SynthGranular> start = { this, 0.0f, "START", &SynthGranular::setStart, { "Start" } };
-    Val<SynthGranular> spray = { this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" } };
-    Val<SynthGranular> grainSize = { this, 0.5f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Size" } };
-    Val<SynthGranular> density = { this, (float)(1.0 / (float)MAX_GRAINS_PER_VOICE * (float)densityUint8), "DENSITY",
-        &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE - 1, .stepStart = 1 } };
-    Val<SynthGranular> attack = { this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 } };
-    Val<SynthGranular> release = { this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 } };
-    Val<SynthGranular> delay = { this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 } };
-    Val<SynthGranular> browser = { this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count, VALUE_STRING } };
-    Val<SynthGranular> pitch = { this, 0.5f, "PITCH", &SynthGranular::setPitch, { "Pitch", 24, VALUE_CENTERED_ONE_SIDED, .stepStart = -12 } };
+    Val<SynthGranular>& mix = val(this, 0.5f, "MIX", &SynthGranular::setMix, { "Mix" });
+    Val<SynthGranular>& start = val(this, 0.0f, "START", &SynthGranular::setStart, { "Start" });
+    Val<SynthGranular>& spray = val(this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" });
+    Val<SynthGranular>& grainSize = val(this, 0.5f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Size" });
+    Val<SynthGranular>& density = val(this, (float)(1.0 / (float)MAX_GRAINS_PER_VOICE * (float)densityUint8), "DENSITY", &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE - 1, .stepStart = 1 });
+    Val<SynthGranular>& attack = val(this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 });
+    Val<SynthGranular>& release = val(this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 });
+    Val<SynthGranular>& delay = val(this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 });
+    Val<SynthGranular>& pitch = val(this, 0.5f, "PITCH", &SynthGranular::setPitch, { "Pitch", 24, VALUE_CENTERED_ONE_SIDED, .stepStart = -12 });
+    Val<SynthGranular>& browser = val( this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count, VALUE_STRING } );
+    
     // TODO add pitch randomization per grain
 
     SynthGranular(AudioPlugin::Props& props)
-        : Mapping(props, { &mix, &start, &spray, &grainSize, &density, &attack, &release, &delay, &browser, &pitch })
+        : Mapping(props)
     {
         setSampleRate(props.sampleRate);
         memset(&sfinfo, 0, sizeof(sfinfo));
@@ -219,7 +219,7 @@ public:
     bool config(char* key, char* value) override
     {
         if (strcmp(key, "SAMPLES_FOLDER") == 0) {
-            debug("GRANULAR_FOLDER: %s\n", value);
+            debug("Granular SAMPLES_FOLDER: %s\n", value);
             fileBrowser.openFolder(value);
             browser.props().stepCount = fileBrowser.count;
             open(0.0, true);

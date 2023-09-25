@@ -90,6 +90,7 @@ protected:
     {
         Val<T>* v = new Val<T>(instance, initValue, _key, _callback, props);
         mapping.push_back(v);
+        // debug("-------- Mapping: %s\n", v->key());
         return *v;
     }
 
