@@ -8,6 +8,7 @@
 
 #include "audioPlugin.h"
 #include "mapping.h"
+#include "stepInterface.h"
 
 int randCounter = 0;
 int getRand()
@@ -43,72 +44,33 @@ struct StepCondition {
     { "99%", [](uint8_t loopCounter) { return (getRand() % 100) < 99; } },
 };
 
+const char* MIDI_NOTES_STR[128] = {
+    // clang-format off
+    "C-1", "C#-1", "D-1", "D#-1", "E-1", "F-1", "F#-1", "G-1", "G#-1", "A-1", "A#-1", "B-1",
+    "C0", "C#0", "D0", "D#0", "E0", "F0", "F#0", "G0", "G#0", "A0", "A#0", "B0",
+    "C1", "C#1", "D1", "D#1", "E1", "F1", "F#1", "G1", "G#1", "A1", "A#1", "B1",
+    "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2",
+    "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3",
+    "C4", "C#4", "D4", "D#4", "E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4",
+    "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5",
+    "C6", "C#6", "D6", "D#6", "E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6",
+    "C7", "C#7", "D7", "D#7", "E7", "F7", "F#7", "G7", "G#7", "A7", "A#7", "B7",
+    "C8", "C#8", "D8", "D#8", "E8", "F8", "F#8", "G8", "G#8", "A8", "A#8", "B8",
+    "C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9",
+    // clang-format on
+};
+
+uint8_t MIDI_NOTE_COUNT = sizeof(MIDI_NOTES_STR) / sizeof(MIDI_NOTES_STR[0]);
+
 uint8_t STEP_CONDITIONS_COUNT = sizeof(stepConditions) / sizeof(stepConditions[0]);
 const uint8_t MAX_STEPS = 32;
-
-class Step {
-public:
-    bool enabled = false;
-    float velocity = 0;
-    uint8_t condition = 0;
-    uint8_t len = 1; // len 0 is infinite?
-    uint8_t counter = 0;
-    uint8_t note = 60;
-
-    // step could also have random pitch
-
-    Step& reset()
-    {
-        enabled = false;
-        velocity = 0;
-        condition = 0;
-        len = 1;
-        counter = 0;
-        note = 60;
-        return *this;
-    }
-
-    Step& toggle()
-    {
-        enabled = !enabled;
-        return *this;
-    }
-
-    Step& setNote(float _note)
-    {
-        note = range(_note, 0, 127);
-        return *this;
-    }
-
-    Step& setLen(uint8_t _len)
-    {
-        len = range(_len, 0, MAX_STEPS);
-        return *this;
-    }
-
-    Step& setVelocity(float _velocity)
-    {
-        velocity = range(_velocity, 0.0f, 1.0f);
-        return *this;
-    }
-
-    Step& setCondition(int8_t _condition)
-    {
-        condition = range(_condition, 0, STEP_CONDITIONS_COUNT - 1);
-        return *this;
-    }
-
-    bool conditionMet(uint8_t loopCounter)
-    {
-        return stepConditions[condition].conditionMet(loopCounter);
-    }
-};
 
 class Sequencer : public Mapping<Sequencer> {
 protected:
     const char* folder = "../zicHost/patterns/";
     char patternFilename[255];
     Step steps[MAX_STEPS];
+    Step& _step = steps[0];
 
     uint8_t clockCounter = 0;
     uint8_t stepCounter = 0;
@@ -118,6 +80,21 @@ protected:
 
     AudioPlugin& targetPlugin;
 
+    void resetStep(Step& step)
+    {
+        step.enabled = false;
+        step.velocity = 0;
+        step.condition = 0;
+        step.len = 1;
+        step.counter = 0;
+        step.note = 60;
+    }
+
+    bool conditionMet(Step& step)
+    {
+        return stepConditions[step.condition].conditionMet(loopCounter);
+    }
+
     void onStep()
     {
         stepCounter++;
@@ -126,19 +103,19 @@ protected:
             loopCounter++;
         }
         for (int i = 0; i < MAX_STEPS; i++) {
-            Step* step = &steps[i];
-            if (step->counter) {
-                step->counter--;
-                if (step->counter == 0) {
-                    targetPlugin.noteOff(step->note, 0);
+            Step& step = steps[i];
+            if (step.counter) {
+                step.counter--;
+                if (step.counter == 0) {
+                    targetPlugin.noteOff(step.note, 0);
                 }
             }
         }
         if (active) {
-            Step* step = &steps[stepCounter];
-            if (step->enabled && step->conditionMet(loopCounter)) {
-                step->counter = step->len;
-                targetPlugin.noteOn(step->note, step->velocity);
+            Step& step = steps[stepCounter];
+            if (step.enabled && conditionMet(step)) {
+                step.counter = step.len;
+                targetPlugin.noteOn(step.note, step.velocity);
             }
         }
     }
@@ -150,16 +127,35 @@ protected:
     }
 
 public:
-    Val<Sequencer>& detune = val(this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = -24 });
+    Val<Sequencer>& detune = val(this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED_ONE_SIDED, .stepStart = 04 });
     Val<Sequencer>& pattern = val(this, 0.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" });
     Val<Sequencer>& selectedStep = val(this, 0.0f, "SELECTED_STEP", &Sequencer::setSelectedStep, { "Step", MAX_STEPS, .stepStart = 1 });
+    Val<Sequencer>& stepVelocity = val(this, 0.0f, "STEP_VELOCITY", &Sequencer::setStepVelocity, { "Velocity" });
+    Val<Sequencer>& stepLength = val(this, 0.0f, "STEP_LENGTH", &Sequencer::setStepLength, { "Len" });
+    Val<Sequencer>& stepCondition = val(this, 0.0f, "STEP_CONDITION", &Sequencer::setStepCondition, { "Condition", STEP_CONDITIONS_COUNT, VALUE_STRING });
+    Val<Sequencer>& stepNote = val(this, 0.0f, "STEP_NOTE", &Sequencer::setStepCondition, { "Note", MIDI_NOTE_COUNT, VALUE_STRING });
+    Val<Sequencer>& stepEnabled = val(this, 0.0f, "STEP_ENABLED", &Sequencer::setStepEnabled, { "Enabled", 2, VALUE_STRING });
 
     Sequencer(AudioPlugin::Props& props)
         : Mapping(props)
         , targetPlugin(props.audioPluginHandler->getPlugin("Granular"))
     {
-        steps[0].setVelocity(1.0).setLen(8).enabled = true;
-        steps[16].setVelocity(1.0).setNote(52).setLen(16).enabled = true;
+        // steps[0].setVelocity(1.0).setLen(8).enabled = true;
+        // steps[16].setVelocity(1.0).setNote(52).setLen(16).enabled = true;
+        steps[0].velocity = 1.0;
+        steps[0].len = 8;
+        steps[0].enabled = true;
+
+        steps[9].velocity = 1.0;
+        steps[9].len = 2;
+        steps[9].note = 70;
+        steps[9].enabled = true;
+
+        steps[16].velocity = 1.0;
+        steps[16].note = 52;
+        steps[16].len = 16;
+        steps[16].enabled = true;
+
         // save();
         // load can be done using setPattern
     }
@@ -203,7 +199,7 @@ public:
             fclose(file);
         } else {
             for (int i = 0; i < MAX_STEPS; i++) {
-                steps[i].reset();
+                resetStep(steps[i]);
             }
         }
         return *this;
@@ -212,6 +208,51 @@ public:
     Sequencer& setSelectedStep(float value)
     {
         selectedStep.set(value);
+        uint8_t index = selectedStep.get() * MAX_STEPS;
+        _step = steps[index];
+        stepVelocity.setFloat(_step.velocity);
+        stepLength.setFloat(_step.len / stepLength.props().stepCount);
+        stepCondition.setFloat(_step.condition / stepLength.props().stepCount);
+        stepNote.setFloat(_step.note / stepLength.props().stepCount);
+        stepEnabled.setFloat(_step.enabled ? 1.0 : 0.0);
+        return *this;
+    }
+
+    Sequencer& setStepNote(float value)
+    {
+        stepNote.setFloat(value);
+        _step.note = stepNote.get() * stepLength.props().stepCount;
+        stepNote.setString((char*)MIDI_NOTES_STR[_step.note]);
+        return *this;
+    }
+
+    Sequencer& setStepLength(float value)
+    {
+        stepLength.setFloat(value);
+        _step.len = stepLength.get() * stepLength.props().stepCount;
+        return *this;
+    }
+
+    Sequencer& setStepVelocity(float value)
+    {
+        stepVelocity.setFloat(value);
+        _step.velocity = stepVelocity.get();
+        return *this;
+    }
+
+    Sequencer& setStepCondition(float value)
+    {
+        stepCondition.setFloat(value);
+        _step.condition = stepCondition.get() * stepCondition.props().stepCount;
+        stepCondition.setString((char*)stepConditions[_step.condition].name);
+        return *this;
+    }
+
+    Sequencer& setStepEnabled(float value)
+    {
+        stepEnabled.setFloat(value);
+        _step.enabled = stepEnabled.get() > 0.5;
+        stepEnabled.setString(_step.enabled ? (char*)"on" : (char*)"off");
         return *this;
     }
 
@@ -219,6 +260,15 @@ public:
     {
         detune.set(value);
         return *this;
+    }
+
+    void* data(int id)
+    {
+        switch (id) {
+        case 0:
+            return &steps;
+        }
+        return NULL;
     }
 
     const char* name()
