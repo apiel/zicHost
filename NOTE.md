@@ -7,6 +7,8 @@
 
 - TODO tempo plugin, that would shalow midi clock in favour of custom clock
 
+- TODO puredata plugin
+
 - TODO method function pointer
 
 - TODO delay save last state of the delay config... load the last state on start

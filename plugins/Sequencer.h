@@ -97,21 +97,21 @@ protected:
 
     void onStep()
     {
-        stepCounter++;
-        if (stepCounter >= MAX_STEPS) {
-            stepCounter = 0;
-            loopCounter++;
-        }
-        for (int i = 0; i < MAX_STEPS; i++) {
-            Step& step = steps[i];
-            if (step.counter) {
-                step.counter--;
-                if (step.counter == 0) {
-                    targetPlugin.noteOff(step.note, 0);
+        if (active) {
+            stepCounter++;
+            if (stepCounter >= MAX_STEPS) {
+                stepCounter = 0;
+                loopCounter++;
+            }
+            for (int i = 0; i < MAX_STEPS; i++) {
+                Step& step = steps[i];
+                if (step.counter) {
+                    step.counter--;
+                    if (step.counter == 0) {
+                        targetPlugin.noteOff(step.note, 0);
+                    }
                 }
             }
-        }
-        if (active) {
             Step& step = steps[stepCounter];
             if (step.enabled && conditionMet(step)) {
                 step.counter = step.len;
@@ -182,6 +182,11 @@ public:
     void onStop()
     {
         active = false;
+        for (int i = 0; i < MAX_STEPS; i++) {
+            if (steps[i].counter) {
+                targetPlugin.noteOff(steps[i].note, 0);
+            }
+        }
     }
 
     float sample(float in)
@@ -267,6 +272,8 @@ public:
         switch (id) {
         case 0:
             return &steps;
+        case 1:
+            return &stepCounter;
         }
         return NULL;
     }
