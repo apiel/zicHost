@@ -212,7 +212,7 @@ public:
 
     Sequencer& setSelectedStep(float value)
     {
-        selectedStep.set(value);
+        selectedStep.setFloat(value);
         uint8_t index = selectedStep.get() * MAX_STEPS;
         _step = steps[index];
         stepVelocity.setFloat(_step.velocity);
