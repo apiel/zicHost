@@ -195,7 +195,7 @@ public:
     Val<SynthGranular>& attack = val(this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 });
     Val<SynthGranular>& release = val(this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 });
     Val<SynthGranular>& delay = val(this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 });
-    Val<SynthGranular>& pitch = val(this, 0.5f, "PITCH", &SynthGranular::setPitch, { "Pitch", 24, VALUE_CENTERED_ONE_SIDED, .stepStart = -12 });
+    Val<SynthGranular>& pitch = val(this, 0.5f, "PITCH", &SynthGranular::setPitch, { "Pitch", 24, VALUE_CENTERED, .stepStart = -12 });
     Val<SynthGranular>& browser = val( this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count, VALUE_STRING } );
     
     // TODO add pitch randomization per grain

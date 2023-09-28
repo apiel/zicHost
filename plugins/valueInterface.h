@@ -6,7 +6,6 @@
 enum ValueType {
     VALUE_BASIC,
     VALUE_CENTERED,
-    VALUE_CENTERED_ONE_SIDED,
     VALUE_STRING,
 };
 
