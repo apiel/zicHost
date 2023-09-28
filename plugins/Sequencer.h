@@ -158,6 +158,11 @@ public:
 
         // save();
         // load can be done using setPattern
+
+        // need to init strings...
+        setStepCondition(stepCondition.get());
+        setStepNote(stepNote.get());
+        setStepEnabled(stepEnabled.get());
     }
 
     void onClockTick()
@@ -215,19 +220,34 @@ public:
         selectedStep.setFloat(value);
         uint8_t index = selectedStep.get() * MAX_STEPS;
         _step = steps[index];
-        stepVelocity.setFloat(_step.velocity);
-        stepLength.setFloat(_step.len / stepLength.props().stepCount);
-        stepCondition.setFloat(_step.condition / stepLength.props().stepCount);
-        stepNote.setFloat(_step.note / stepLength.props().stepCount);
-        stepEnabled.setFloat(_step.enabled ? 1.0 : 0.0);
+        printf("Selected step: %d note: %d = %s\n", index, _step.note, (char*)MIDI_NOTES_STR[_step.note]);
+        // stepVelocity.setFloat(_step.velocity);
+        // stepLength.setFloat(_step.len / stepLength.props().stepCount);
+        // stepCondition.setFloat(_step.condition / stepLength.props().stepCount);
+        // stepNote.setFloat(_step.note / stepLength.props().stepCount);
+        // stepEnabled.setFloat(_step.enabled ? 1.0 : 0.0);
+
+        // stepVelocity.set(_step.velocity);
+        // stepLength.set(_step.len / stepLength.props().stepCount);
+        // stepCondition.set(_step.condition / stepCondition.props().stepCount);
+        // stepNote.set(_step.note / stepNote.props().stepCount);
+        // stepEnabled.set(_step.enabled ? 1.0 : 0.0);
+
+        setStepVelocity(_step.velocity);
+        setStepLength(_step.len / (float)stepLength.props().stepCount);
+        setStepCondition(_step.condition / (float)stepCondition.props().stepCount);
+        setStepNote(_step.note / (float)stepNote.props().stepCount);
+        setStepEnabled(_step.enabled ? 1.0 : 0.0);
+
         return *this;
     }
 
     Sequencer& setStepNote(float value)
     {
         stepNote.setFloat(value);
-        _step.note = stepNote.get() * stepLength.props().stepCount;
+        _step.note = stepNote.get() * stepNote.props().stepCount;
         stepNote.setString((char*)MIDI_NOTES_STR[_step.note]);
+        printf("Note: %d = %s\n", _step.note, (char*)MIDI_NOTES_STR[_step.note]);
         return *this;
     }
 
@@ -257,7 +277,7 @@ public:
     {
         stepEnabled.setFloat(value);
         _step.enabled = stepEnabled.get() > 0.5;
-        stepEnabled.setString(_step.enabled ? (char*)"on" : (char*)"off");
+        stepEnabled.setString(_step.enabled ? (char*)"ON" : (char*)"OFF");
         return *this;
     }
 
