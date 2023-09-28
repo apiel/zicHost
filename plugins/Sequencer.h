@@ -131,7 +131,7 @@ public:
     Val<Sequencer>& pattern = val(this, 0.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" });
     Val<Sequencer>& selectedStep = val(this, 0.0f, "SELECTED_STEP", &Sequencer::setSelectedStep, { "Step", MAX_STEPS, .stepStart = 1 });
     Val<Sequencer>& stepVelocity = val(this, 0.0f, "STEP_VELOCITY", &Sequencer::setStepVelocity, { "Velocity" });
-    Val<Sequencer>& stepLength = val(this, 0.0f, "STEP_LENGTH", &Sequencer::setStepLength, { "Len" });
+    Val<Sequencer>& stepLength = val(this, 0.0f, "STEP_LENGTH", &Sequencer::setStepLength, { "Len", MAX_STEPS });
     Val<Sequencer>& stepCondition = val(this, 0.0f, "STEP_CONDITION", &Sequencer::setStepCondition, { "Condition", STEP_CONDITIONS_COUNT, VALUE_STRING });
     Val<Sequencer>& stepNote = val(this, 0.0f, "STEP_NOTE", &Sequencer::setStepCondition, { "Note", MIDI_NOTE_COUNT, VALUE_STRING });
     Val<Sequencer>& stepEnabled = val(this, 0.0f, "STEP_ENABLED", &Sequencer::setStepEnabled, { "Enabled", 2, VALUE_STRING });
@@ -220,18 +220,7 @@ public:
         selectedStep.setFloat(value);
         uint8_t index = selectedStep.get() * MAX_STEPS;
         _step = steps[index];
-        printf("Selected step: %d note: %d = %s\n", index, _step.note, (char*)MIDI_NOTES_STR[_step.note]);
-        // stepVelocity.setFloat(_step.velocity);
-        // stepLength.setFloat(_step.len / stepLength.props().stepCount);
-        // stepCondition.setFloat(_step.condition / stepLength.props().stepCount);
-        // stepNote.setFloat(_step.note / stepLength.props().stepCount);
-        // stepEnabled.setFloat(_step.enabled ? 1.0 : 0.0);
-
-        // stepVelocity.set(_step.velocity);
-        // stepLength.set(_step.len / stepLength.props().stepCount);
-        // stepCondition.set(_step.condition / stepCondition.props().stepCount);
-        // stepNote.set(_step.note / stepNote.props().stepCount);
-        // stepEnabled.set(_step.enabled ? 1.0 : 0.0);
+        // printf("Selected step: %d note: %d = %s\n", index, _step.note, (char*)MIDI_NOTES_STR[_step.note]);
 
         setStepVelocity(_step.velocity);
         setStepLength(_step.len / (float)stepLength.props().stepCount);
@@ -247,7 +236,7 @@ public:
         stepNote.setFloat(value);
         _step.note = stepNote.get() * stepNote.props().stepCount;
         stepNote.setString((char*)MIDI_NOTES_STR[_step.note]);
-        printf("Note: %d = %s\n", _step.note, (char*)MIDI_NOTES_STR[_step.note]);
+        // printf("Note: %d = %s\n", _step.note, (char*)MIDI_NOTES_STR[_step.note]);
         return *this;
     }
 
