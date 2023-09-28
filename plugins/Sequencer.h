@@ -70,7 +70,7 @@ protected:
     const char* folder = "../zicHost/patterns/";
     char patternFilename[255];
     Step steps[MAX_STEPS];
-    Step& _step = steps[0];
+    Step _step = steps[0];
 
     uint8_t clockCounter = 0;
     uint8_t stepCounter = 0;
