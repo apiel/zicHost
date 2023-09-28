@@ -7,6 +7,8 @@
 
 - TODO tempo plugin, that would shalow midi clock in favour of custom clock
 
+- TODO handle pause f0 f7, as well better way to handle play/stop
+
 - TODO puredata plugin
 
 - TODO method function pointer
