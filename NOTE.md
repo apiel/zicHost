@@ -18,6 +18,9 @@
 
 - TODO Zic_Drum_Kick23
 
+- TODO IPC in order to have a main thread that is running all the time, even if the rest crash...
+       https://en.wikipedia.org/wiki/Inter-process_communication
+
 - TODO bitcrusher Resolution reduction: from float 32 bit to 16 to 8 ...
 
 - TODO input/output should have multiple possible values, when in[0] and out[0] are default ones, and all the others are pointer to empty audio buffer or just simple sample float...
