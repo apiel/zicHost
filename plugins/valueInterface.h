@@ -23,6 +23,7 @@ public:
     virtual Props& props() = 0;
     virtual const char* label() = 0;
     virtual inline float get() = 0;
+    virtual inline int getAsInt() = 0;
     virtual char* string() = 0;
     virtual void set(float value) = 0;
     virtual void onUpdate(void (*callback)(float, void* data), void* data) = 0;

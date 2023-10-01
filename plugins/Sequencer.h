@@ -131,7 +131,7 @@ public:
     Val<Sequencer>& pattern = val(this, 0.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" });
     Val<Sequencer>& selectedStep = val(this, 0.0f, "SELECTED_STEP", &Sequencer::setSelectedStep, { "Step", MAX_STEPS - 1, .stepStart = 1 });
     Val<Sequencer>& stepVelocity = val(this, 0.0f, "STEP_VELOCITY", &Sequencer::setStepVelocity, { "Velocity" });
-    Val<Sequencer>& stepLength = val(this, 0.0f, "STEP_LENGTH", &Sequencer::setStepLength, { "Len", MAX_STEPS - 1 });
+    Val<Sequencer>& stepLength = val(this, 0.0f, "STEP_LENGTH", &Sequencer::setStepLength, { "Len", MAX_STEPS - 1, .stepStart = 1 });
     Val<Sequencer>& stepCondition = val(this, 0.0f, "STEP_CONDITION", &Sequencer::setStepCondition, { "Condition", STEP_CONDITIONS_COUNT, VALUE_STRING });
     Val<Sequencer>& stepNote = val(this, 0.0f, "STEP_NOTE", &Sequencer::setStepNote, { "Note", MIDI_NOTE_COUNT, VALUE_STRING });
     Val<Sequencer>& stepEnabled = val(this, 0.0f, "STEP_ENABLED", &Sequencer::setStepEnabled, { "Enabled", 2, VALUE_STRING });
@@ -234,7 +234,7 @@ public:
         // printf("Selected step: %d note: %d = %s\n", index, _step.note, (char*)MIDI_NOTES_STR[_step.note]);
 
         stepVelocity.set(_step.velocity);
-        stepLength.set(_step.len / (float)stepLength.props().stepCount);
+        stepLength.set((_step.len - 1) / (float)stepLength.props().stepCount);
         stepCondition.set(_step.condition / (float)stepCondition.props().stepCount);
         stepNote.set(_step.note / (float)stepNote.props().stepCount);
         stepEnabled.set(_step.enabled ? 1.0 : 0.0);

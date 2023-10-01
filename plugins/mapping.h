@@ -53,6 +53,11 @@ public:
         return value_f;
     }
 
+    inline int getAsInt()
+    {
+        return value_f * _props.stepCount + _props.stepStart;
+    }
+
     char* string()
     {
         return value_s;
