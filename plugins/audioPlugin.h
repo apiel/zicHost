@@ -23,6 +23,8 @@ public:
 
 class AudioPlugin {
 public:
+    char name[64];
+
     AudioPluginHandlerInterface* audioPluginHandler;
     int (*debug)(const char* format, ...);
 
@@ -33,14 +35,14 @@ public:
         AudioPluginHandlerInterface* audioPluginHandler;
     };
 
-    AudioPlugin(Props& props)
+    AudioPlugin(Props& props, char* _name)
         : audioPluginHandler(props.audioPluginHandler)
         , debug(props.debug)
     {
+        strcpy(name, _name);
     }
 
     virtual float sample(float in) = 0;
-    virtual const char* name() = 0;
 
     virtual ValueInterface* getValue(int valueIndex)
     {

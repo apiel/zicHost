@@ -201,8 +201,8 @@ public:
     
     // TODO add pitch randomization per grain
 
-    SynthGranular(AudioPlugin::Props& props)
-        : Mapping(props)
+    SynthGranular(AudioPlugin::Props& props, char * _name)
+        : Mapping(props, _name)
     {
         setSampleRate(props.sampleRate);
         memset(&sfinfo, 0, sizeof(sfinfo));
@@ -434,11 +434,6 @@ public:
         }
 
         debug("noteOff: note not found %d %d\n", note, velocity);
-    }
-
-    const char* name()
-    {
-        return "Granular";
     }
 
     void* data(int id)

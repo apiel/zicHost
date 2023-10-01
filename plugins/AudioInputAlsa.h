@@ -11,8 +11,8 @@ protected:
     }
 
 public:
-    AudioInputAlsa(AudioPlugin::Props& props)
-        : AudioAlsa(props)
+    AudioInputAlsa(AudioPlugin::Props& props, char * _name)
+        : AudioAlsa(props, _name)
     {
         open();
     }
@@ -29,11 +29,6 @@ public:
             }
         }
         return buffer[bufferIndex++] / 2147483647.0f;
-    }
-
-    const char* name()
-    {
-        return "AudioInputAlsa";
     }
 };
 

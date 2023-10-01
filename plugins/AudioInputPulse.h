@@ -15,8 +15,8 @@ protected:
     }
 
 public:
-    AudioInputPulse(AudioPlugin::Props& props)
-        : AudioPulse(props)
+    AudioInputPulse(AudioPlugin::Props& props, char * _name)
+        : AudioPulse(props, _name)
     {
         open();
     }
@@ -30,11 +30,6 @@ public:
             }
         }
         return buffer[bufferIndex++];
-    }
-
-    const char* name()
-    {
-        return "AudioInputPulse";
     }
 
     bool isSink() override

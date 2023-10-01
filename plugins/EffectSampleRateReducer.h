@@ -37,8 +37,8 @@ protected:
 public:
     Val<EffectSampleRateReducer>& sampleStep = val(this, 0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep, { "Step Reducer", .stepCount = 256, .unit = "steps" });
 
-    EffectSampleRateReducer(AudioPlugin::Props& props)
-        : Mapping(props)
+    EffectSampleRateReducer(AudioPlugin::Props& props, char * _name)
+        : Mapping(props, _name)
     {
         setSampleStep(0);
     };
@@ -60,11 +60,6 @@ public:
     float sample(float buf)
     {
         return (this->*samplePtr)(buf);
-    }
-
-    const char* name()
-    {
-        return "SampleRateReducer";
     }
 };
 

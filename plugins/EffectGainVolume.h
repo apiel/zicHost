@@ -10,8 +10,8 @@ public:
     Val<EffectGainVolume>& gain = val(this, 0.0f, "GAIN", &EffectGainVolume::setGain, { "Gain" });
     float volumeWithGain = volume.get();
 
-    EffectGainVolume(AudioPlugin::Props& props)
-        : Mapping(props)
+    EffectGainVolume(AudioPlugin::Props& props, char * _name)
+        : Mapping(props, _name)
     {
         setVolumeWithGain(volume.get(), gain.get());
     }
@@ -40,11 +40,6 @@ public:
     {
         debug("setGain: gain %f\n", _gain);
         return setVolumeWithGain(volume.get(), _gain);
-    }
-
-    const char* name()
-    {
-        return "GainVolume";
     }
 };
 

@@ -11,8 +11,8 @@ protected:
     }
 
 public:
-    AudioOutputPulse(AudioPlugin::Props& props)
-        : AudioPulse(props)
+    AudioOutputPulse(AudioPlugin::Props& props, char * _name)
+        : AudioPulse(props, _name)
     {
         open();
     }
@@ -27,11 +27,6 @@ public:
         }
         buffer[bufferIndex++] = in;
         return in;
-    }
-
-    const char* name()
-    {
-        return "AudioOutputPulse";
     }
 };
 

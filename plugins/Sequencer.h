@@ -136,8 +136,8 @@ public:
     Val<Sequencer>& stepNote = val(this, 0.0f, "STEP_NOTE", &Sequencer::setStepNote, { "Note", MIDI_NOTE_COUNT, VALUE_STRING });
     Val<Sequencer>& stepEnabled = val(this, 0.0f, "STEP_ENABLED", &Sequencer::setStepEnabled, { "Enabled", 2, VALUE_STRING });
 
-    Sequencer(AudioPlugin::Props& props)
-        : Mapping(props)
+    Sequencer(AudioPlugin::Props& props, char * _name)
+        : Mapping(props, _name)
         , targetPlugin(props.audioPluginHandler->getPlugin("Granular"))
     {
         // steps[0].setVelocity(1.0).setLen(8).enabled = true;
@@ -296,11 +296,6 @@ public:
             return &stepCounter;
         }
         return NULL;
-    }
-
-    const char* name()
-    {
-        return "Sequencer";
     }
 
     void save()

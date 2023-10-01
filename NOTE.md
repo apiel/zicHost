@@ -3,10 +3,6 @@
 - TODO input/output should have multiple possible values, when in[0] and out[0] are default ones, and all the others are pointer to empty audio buffer or just simple sample float...
        Is it even the job of the plugin to decide which sample goes where
        Or should it be on the routing of the plugin that decide whih plugin is apply to what....?
-- TODO make plugin plugins name configurable
-       default: AUDIO_PLUGIN=./plugins/build/libzic_EffectSampleRateReducer.so
-       custom: AUDIO_PLUGIN=./plugins/build/libzic_EffectSampleRateReducer.so SampleReducer
-       > it will only make sense when there is multiples voices/tracks...
 
 - TODO save sequencer state
 

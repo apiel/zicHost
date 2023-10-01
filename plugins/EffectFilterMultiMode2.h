@@ -19,8 +19,8 @@ public:
     Val<EffectFilterMultiMode2>& mix = val(this, 0.5, "CUTOFF", &EffectFilterMultiMode2::setCutoff, { "LPF | HPF", .type = VALUE_CENTERED });
     Val<EffectFilterMultiMode2>& resonance = val(this, 0.0, "RESONANCE", &EffectFilterMultiMode2::setResonance, { "Resonance" });
 
-    EffectFilterMultiMode2(AudioPlugin::Props& props)
-        : Mapping(props)
+    EffectFilterMultiMode2(AudioPlugin::Props& props, char * _name)
+        : Mapping(props, _name)
     {
         setCutoff(0.5);
     };
@@ -68,11 +68,6 @@ public:
 
         return *this;
     };
-
-    const char* name()
-    {
-        return "MultiModeFilter2";
-    }
 };
 
 #endif

@@ -27,8 +27,8 @@ public:
     // TODO how to handle mode in a better way?
     Val<EffectFilter>& mode_value = val(this, 0.0, "MODE", &EffectFilter::setMode, { "Mode" });
 
-    EffectFilter(AudioPlugin::Props& props)
-        : Mapping(props)
+    EffectFilter(AudioPlugin::Props& props, char * _name)
+        : Mapping(props, _name)
     {
     }
 
@@ -84,11 +84,6 @@ public:
         mode_value.setFloat(value);
         mode = (Mode)range(mode_value.get() * 100, 0, (uint8_t)MODE_COUNT);
         return setMode(mode);
-    }
-
-    const char* name()
-    {
-        return "Filter";
     }
 };
 

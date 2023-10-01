@@ -30,8 +30,8 @@ protected:
 public:
     Val<EffectDistortion>& drive = val(this, 0.0, "DRIVE", &EffectDistortion::setDrive, { "Distortion" });
 
-    EffectDistortion(AudioPlugin::Props& props)
-        : Mapping(props)
+    EffectDistortion(AudioPlugin::Props& props, char * _name)
+        : Mapping(props, _name)
     {
         setDrive(drive.get());
     };
@@ -53,11 +53,6 @@ public:
             debug("Distortion: drive=%f shape=%f\n", drive.get(), shape);
         }
         return *this;
-    }
-
-    const char* name()
-    {
-        return "Distortion";
     }
 };
 

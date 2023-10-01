@@ -66,8 +66,8 @@ protected:
 public:
     char* deviceName = (char*)"default";
 
-    AudioAlsa(AudioPlugin::Props& props)
-        : AudioPlugin(props)
+    AudioAlsa(AudioPlugin::Props& props, char * _name)
+        : AudioPlugin(props, _name)
         , props(props)
     {
         for (uint32_t i = 0; i < audioChunk * ALSA_MAX_CHANNELS; i++) {

@@ -100,8 +100,8 @@ protected:
     }
 
 public:
-    Mapping(AudioPlugin::Props& props, std::vector<Val<T>*> mapping = {})
-        : AudioPlugin(props)
+    Mapping(AudioPlugin::Props& props, char * _name, std::vector<Val<T>*> mapping = {})
+        : AudioPlugin(props, _name)
         , mapping(mapping)
     {
     }

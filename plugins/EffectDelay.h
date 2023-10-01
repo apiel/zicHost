@@ -68,8 +68,8 @@ public:
 
     EffectFilter filter;
 
-    EffectDelay(AudioPlugin::Props& props)
-        : Mapping(props, { // clang-format off
+    EffectDelay(AudioPlugin::Props& props, char * _name)
+        : Mapping(props, _name, { // clang-format off
             &timeRatio, &masterAmplitude, 
             &voices[0].amplitude, &voices[0].feedback, &voices[0].sec, 
             &voices[1].amplitude, &voices[1].feedback, &voices[1].sec, 
@@ -82,7 +82,7 @@ public:
             &cutoff, &resonance, &mode})
         // clang-format on
         , sampleRate(props.sampleRate)
-        , filter(props)
+        , filter(props, _name)
     {
         setVoice(0, 0.1f, 0.6f, 0.0f);
         setVoice(1, 0.2f, 0.5f, 0.0f);
@@ -219,11 +219,6 @@ public:
         }
 
         return in + filter.sample(delay);
-    }
-
-    const char* name()
-    {
-        return "Delay";
     }
 };
 

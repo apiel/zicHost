@@ -37,7 +37,7 @@ protected:
         int valueIndex = plugins.back().instance->getValueIndex(key);
         if (valueIndex != -1) {
             midiMapping.push_back({ plugins.back().instance, valueIndex, size, valuePosition, msg0Int, msg1Int });
-            APP_INFO("[%s] Midi mapping assigned: %s\n", plugins.back().instance->name(), key);
+            APP_INFO("[%s] Midi mapping assigned: %s\n", plugins.back().instance->name, key);
             return true;
         }
         return false;
@@ -55,11 +55,11 @@ public:
     AudioPlugin& getPlugin(const char* name)
     {
         for (Plugin& plugin : plugins) {
-            if (strcmp(plugin.instance->name(), name) == 0) {
+            if (strcmp(plugin.instance->name, name) == 0) {
                 return *plugin.instance;
             }
         }
-        throw std::runtime_error("Could not find plugin");
+        throw std::runtime_error("Could not find plugin " + std::string(name));
     }
 
     void loop()
@@ -72,9 +72,12 @@ public:
         }
     }
 
-    void loadPlugin(const char* path)
+    void loadPlugin(char* value)
     {
         Plugin plugin;
+
+        char* name = strtok(value, " ");
+        char* path = strtok(NULL, " ");
 
         plugin.handle = dlopen(path, RTLD_LAZY);
 
@@ -92,9 +95,9 @@ public:
             return;
         }
 
-        plugin.instance = ((AudioPlugin * (*)(AudioPlugin::Props & props)) allocator)(pluginProps);
+        plugin.instance = ((AudioPlugin * (*)(AudioPlugin::Props & props, char* name)) allocator)(pluginProps, name);
         APP_PRINT("audio plugin loaded\n");
-        APP_PRINT("plugin: %s\n", plugin.instance->name());
+        APP_PRINT("plugin: %s\n", plugin.instance->name);
 
         // plugin.instance->set(0, 0.1f);
         // printf("---> getParamKey: %d\n", plugin.instance->getParamKey("volume"));
