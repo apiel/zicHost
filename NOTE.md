@@ -1,9 +1,6 @@
 # TODO
 
-- TODO instead of those useless get/set in audio plugin, would it just be easier to expose value interface...
-
-- TODO sequencer
-    for the clock use midi clock
+- TODO use wavetable in granular synth
 
 - TODO tempo plugin, that would shalow midi clock in favour of custom clock
 
@@ -17,6 +14,8 @@
        base on this state, we can create config files...
 
 - TODO Zic_Drum_Kick23
+
+- TODO Fm plugin
 
 - TODO IPC in order to have a main thread that is running all the time, even if the rest crash...
        https://en.wikipedia.org/wiki/Inter-process_communication
