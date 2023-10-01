@@ -44,7 +44,7 @@ struct StepCondition {
     { "99%", [](uint8_t loopCounter) { return (getRand() % 100) < 99; } },
 };
 
-const char* MIDI_NOTES_STR[128] = {
+const char* MIDI_NOTES_STR[132] = {
     // clang-format off
     "C-1", "C#-1", "D-1", "D#-1", "E-1", "F-1", "F#-1", "G-1", "G#-1", "A-1", "A#-1", "B-1",
     "C0", "C#0", "D0", "D#0", "E0", "F0", "F#0", "G0", "G#0", "A0", "A#0", "B0",
@@ -56,7 +56,7 @@ const char* MIDI_NOTES_STR[128] = {
     "C6", "C#6", "D6", "D#6", "E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6",
     "C7", "C#7", "D7", "D#7", "E7", "F7", "F#7", "G7", "G#7", "A7", "A#7", "B7",
     "C8", "C#8", "D8", "D#8", "E8", "F8", "F#8", "G8", "G#8", "A8", "A#8", "B8",
-    "C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9",
+    "C9", "C#9", "D9", "D#9", "E9", "F9", "F#9", "G9", "G#9", "A9", "A#9", "B9",
     // clang-format on
 };
 
@@ -268,7 +268,7 @@ public:
     Sequencer& setStepCondition(float value)
     {
         stepCondition.setFloat(value);
-        _step.condition = stepCondition.get() * stepCondition.props().stepCount;
+        _step.condition = stepCondition.get() * (stepCondition.props().stepCount - 1);
         stepCondition.setString((char*)stepConditions[_step.condition].name);
         return *this;
     }
