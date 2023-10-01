@@ -24,6 +24,7 @@ protected:
     float bufferSamples[bufferSize];
 
     FileBrowser fileBrowser = FileBrowser("../zicHost/samples");
+    // FileBrowser fileBrowser = FileBrowser("../zicHost/wavetables");
     // FileBrowser fileBrowser;
 
     uint64_t voicePosition = 0;

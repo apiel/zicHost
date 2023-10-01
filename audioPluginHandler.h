@@ -134,14 +134,21 @@ public:
     void start()
     {
         for (Plugin& plugin : plugins) {
-            plugin.instance->onStart();
+            plugin.instance->onStatus(AudioPlugin::Status::START);
         }
     }
 
     void stop()
     {
         for (Plugin& plugin : plugins) {
-            plugin.instance->onStop();
+            plugin.instance->onStatus(AudioPlugin::Status::STOP);
+        }
+    }
+
+    void pause()
+    {
+        for (Plugin& plugin : plugins) {
+            plugin.instance->onStatus(AudioPlugin::Status::PAUSE);
         }
     }
 };

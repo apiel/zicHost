@@ -14,6 +14,8 @@ void midiHandler(std::vector<unsigned char>* message)
         AudioPluginHandler::get().clockTick();
     } else if (message->at(0) == 0xfa) {
         AudioPluginHandler::get().start();
+    } else if (message->at(0) == 0xfb) {
+        AudioPluginHandler::get().pause();
     } else if (message->at(0) == 0xfc) {
         AudioPluginHandler::get().stop();
     } else if (message->at(0) == 0xfe) {

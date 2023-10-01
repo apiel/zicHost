@@ -88,7 +88,12 @@ public:
     {
     }
 
-    virtual void onStop()
+    enum Status {
+        STOP,
+        START,
+        PAUSE
+    };
+    virtual void onStatus(Status status)
     {
     }
 };

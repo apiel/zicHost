@@ -179,21 +179,29 @@ public:
         }
     }
 
-    void onStart()
+    void onStatus(Status status)
     {
-        clockCounter = 0;
-        stepCounter = 0;
-        loopCounter = 0;
-        active = true;
-    }
-
-    void onStop()
-    {
-        active = false;
-        for (int i = 0; i < MAX_STEPS; i++) {
-            if (steps[i].counter) {
-                targetPlugin.noteOff(steps[i].note, 0);
+        switch (status) {
+        case AudioPlugin::Status::STOP: {
+            active = false;
+            for (int i = 0; i < MAX_STEPS; i++) {
+                if (steps[i].counter) {
+                    targetPlugin.noteOff(steps[i].note, 0);
+                    steps[i].counter = 0;
+                }
             }
+            break;
+        }
+        case AudioPlugin::Status::START:
+            clockCounter = 0;
+            stepCounter = 0;
+            loopCounter = 0;
+            active = true;
+            break;
+
+        case AudioPlugin::Status::PAUSE:
+            active = !active;
+            break;
         }
     }
 

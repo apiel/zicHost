@@ -1,27 +1,5 @@
 # TODO
 
-- TODO use wavetable in granular synth
-
-- TODO tempo plugin, that would shalow midi clock in favour of custom clock
-
-- TODO handle pause f0 f7, as well better way to handle play/stop
-
-- TODO puredata plugin
-
-- TODO method function pointer
-
-- TODO delay save last state of the delay config... load the last state on start
-       base on this state, we can create config files...
-
-- TODO Zic_Drum_Kick23
-
-- TODO Fm plugin
-
-- TODO IPC in order to have a main thread that is running all the time, even if the rest crash...
-       https://en.wikipedia.org/wiki/Inter-process_communication
-
-- TODO bitcrusher Resolution reduction: from float 32 bit to 16 to 8 ...
-
 - TODO input/output should have multiple possible values, when in[0] and out[0] are default ones, and all the others are pointer to empty audio buffer or just simple sample float...
        Is it even the job of the plugin to decide which sample goes where
        Or should it be on the routing of the plugin that decide whih plugin is apply to what....?
@@ -30,16 +8,35 @@
        custom: AUDIO_PLUGIN=./plugins/build/libzic_EffectSampleRateReducer.so SampleReducer
        > it will only make sense when there is multiples voices/tracks...
 
+- TODO save sequencer state
+
+- TODO try to make granular synth more versatile
+            - play sample (already do it but maybe there would be a way to lock spray or other thing like this)
+            - play wavetable (give the possibility to give sample coutn instead of len, lock spray, and maybe morphing by bank)
+
+- TODO tempo plugin, that would shalow midi clock in favour of custom clock
+
+- TODO Zic_Drum_Kick23
+
+- TODO puredata plugin
+
+- TODO Fm plugin
+
 - TODO reverb, delay
      - load/save different kind of delay and reverb from a config file
+                save last state of the delay config... load the last state on start
+                base on this state, we can create config files...
      - add lfo on time ratio
+
+- TODO IPC in order to have a main thread that is running all the time, even if the rest crash...
+       https://en.wikipedia.org/wiki/Inter-process_communication
+
+- TODO bitcrusher Resolution reduction: from float 32 bit to 16 to 8 ...
 
 - FIXME audio plugin ALSA, output not working
     - make audio plugin following the same format so they might be compatible...
 
 - TODO jack audio plugin
-
-- TODO random sample file selector?
 
 - TODO generate config file example
 
