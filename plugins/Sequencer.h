@@ -165,10 +165,7 @@ public:
         // save();
         // load can be done using setPattern
 
-        // need to init strings...
-        setStepCondition(stepCondition.get());
-        setStepNote(stepNote.get());
-        setStepEnabled(stepEnabled.get());
+        setSelectedStep(selectedStep.get());
     }
 
     void onClockTick()
