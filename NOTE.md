@@ -1,7 +1,5 @@
 # TODO
 
-- FIXME handle better string value
-
 - TODO use wavetable in granular synth
 
 - TODO tempo plugin, that would shalow midi clock in favour of custom clock
