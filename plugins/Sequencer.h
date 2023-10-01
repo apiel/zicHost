@@ -70,7 +70,7 @@ protected:
     const char* folder = "../zicHost/patterns/";
     char patternFilename[255];
     Step steps[MAX_STEPS];
-    Step _step = steps[0];
+    Step* selectedStepPtr = &steps[0];
 
     uint8_t clockCounter = 0;
     uint8_t stepCounter = 0;
@@ -230,14 +230,14 @@ public:
     {
         selectedStep.setFloat(value);
         uint8_t index = selectedStep.get() * MAX_STEPS;
-        _step = steps[index];
-        // printf("Selected step: %d note: %d = %s\n", index, _step.note, (char*)MIDI_NOTES_STR[_step.note]);
+        selectedStepPtr = &steps[index];
+        // printf("Selected step: %d note: %d = %s\n", index, selectedStepPtr->note, (char*)MIDI_NOTES_STR[selectedStepPtr->note]);
 
-        stepVelocity.set(_step.velocity);
-        stepLength.set((_step.len - 1) / (float)stepLength.props().stepCount);
-        stepCondition.set(_step.condition / (float)stepCondition.props().stepCount);
-        stepNote.set(_step.note / (float)stepNote.props().stepCount);
-        stepEnabled.set(_step.enabled ? 1.0 : 0.0);
+        stepVelocity.set(selectedStepPtr->velocity);
+        stepLength.set((selectedStepPtr->len - 1) / (float)stepLength.props().stepCount);
+        stepCondition.set(selectedStepPtr->condition / (float)stepCondition.props().stepCount);
+        stepNote.set(selectedStepPtr->note / (float)stepNote.props().stepCount);
+        stepEnabled.set(selectedStepPtr->enabled ? 1.0 : 0.0);
 
         return *this;
     }
@@ -245,39 +245,39 @@ public:
     Sequencer& setStepNote(float value)
     {
         stepNote.setFloat(value);
-        _step.note = stepNote.get() * stepNote.props().stepCount;
-        stepNote.setString((char*)MIDI_NOTES_STR[_step.note]);
-        // printf("Note: %d = %s\n", _step.note, (char*)MIDI_NOTES_STR[_step.note]);
+        selectedStepPtr->note = stepNote.get() * stepNote.props().stepCount;
+        stepNote.setString((char*)MIDI_NOTES_STR[selectedStepPtr->note]);
+        // printf("Note: %d = %s\n", selectedStepPtr->note, (char*)MIDI_NOTES_STR[selectedStepPtr->note]);
         return *this;
     }
 
     Sequencer& setStepLength(float value)
     {
         stepLength.setFloat(value);
-        _step.len = stepLength.get() * stepLength.props().stepCount;
+        selectedStepPtr->len = stepLength.get() * stepLength.props().stepCount;
         return *this;
     }
 
     Sequencer& setStepVelocity(float value)
     {
         stepVelocity.setFloat(value);
-        _step.velocity = stepVelocity.get();
+        selectedStepPtr->velocity = stepVelocity.get();
         return *this;
     }
 
     Sequencer& setStepCondition(float value)
     {
         stepCondition.setFloat(value);
-        _step.condition = stepCondition.get() * (stepCondition.props().stepCount - 1);
-        stepCondition.setString((char*)stepConditions[_step.condition].name);
+        selectedStepPtr->condition = stepCondition.get() * (stepCondition.props().stepCount - 1);
+        stepCondition.setString((char*)stepConditions[selectedStepPtr->condition].name);
         return *this;
     }
 
     Sequencer& setStepEnabled(float value)
     {
         stepEnabled.setFloat(value);
-        _step.enabled = stepEnabled.get() > 0.5;
-        stepEnabled.setString(_step.enabled ? (char*)"ON" : (char*)"OFF");
+        selectedStepPtr->enabled = stepEnabled.get() > 0.5;
+        stepEnabled.setString(selectedStepPtr->enabled ? (char*)"ON" : (char*)"OFF");
         return *this;
     }
 
