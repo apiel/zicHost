@@ -254,7 +254,7 @@ public:
     Sequencer& setStepLength(float value)
     {
         stepLength.setFloat(value);
-        selectedStepPtr->len = stepLength.get() * stepLength.props().stepCount;
+        selectedStepPtr->len = (stepLength.get() * stepLength.props().stepCount) + 1;
         return *this;
     }
 
