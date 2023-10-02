@@ -24,7 +24,6 @@ public:
 
     void sample(float* buf)
     {
-        // should we divide each track per 4
         buf[trackTarget] = mixA.get() * buf[trackA] * divider
             + mixB.get() * buf[trackB] * divider
             + mixC.get() * buf[trackC] * divider
