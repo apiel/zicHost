@@ -1,0 +1,43 @@
+#ifndef _MIXER2_H_
+#define _MIXER2_H_
+
+#include "audioPlugin.h"
+#include "mapping.h"
+
+class Mixer2 : public Mapping<Mixer2> {
+public:
+    Val<Mixer2>& mix = val(this, 0.5f, "MIX", &Mixer2::setMix, { "Mix", .type = VALUE_CENTERED });
+    uint16_t trackA = 0;
+    uint16_t trackB = 1;
+
+    Mixer2(AudioPlugin::Props& props, char* _name)
+        : Mapping(props, _name)
+    {
+    }
+
+    void sample(float* buf)
+    {
+        buf[trackA] = buf[trackA] * (1.0f - mix.get()) + buf[trackB] * mix.get();
+    }
+
+    Mixer2& setMix(float value)
+    {
+        mix.setFloat(value);
+        return *this;
+    }
+
+    bool config(char* key, char* value)
+    {
+        if (strcmp(key, "TRACK_A") == 0) {
+            trackA = atoi(value);
+            return true;
+        }
+        if (strcmp(key, "TRACK_B") == 0) {
+            trackB = atoi(value);
+            return true;
+        }
+        return false;
+    }
+};
+
+#endif
