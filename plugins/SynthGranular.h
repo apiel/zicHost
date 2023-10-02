@@ -188,7 +188,6 @@ public:
     SF_INFO sfinfo;
     SNDFILE* file = NULL;
 
-    Val<SynthGranular>& mix = val(this, 0.5f, "MIX", &SynthGranular::setMix, { "Mix" });
     Val<SynthGranular>& start = val(this, 0.0f, "START", &SynthGranular::setStart, { "Start" });
     Val<SynthGranular>& spray = val(this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" });
     Val<SynthGranular>& grainSize = val(this, 1.0f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Size" });
@@ -282,12 +281,6 @@ public:
                 voices[v].grains[g].sampleStep = getSampleStep(voices[v].note + pitchSemitone);
             }
         }
-        return *this;
-    }
-
-    SynthGranular& setMix(float value)
-    {
-        mix.setFloat(value);
         return *this;
     }
 
@@ -393,7 +386,7 @@ public:
         return *this;
     }
 
-    float sample(float in)
+    void sample(float* buf)
     {
         float s = 0.0f;
         for (uint8_t v = 0; v < MAX_GRAIN_VOICES; v++) {
@@ -402,12 +395,7 @@ public:
                 s += sample(voice);
             }
         }
-        return s * mix.get() + in * (1 - mix.get());
-    }
-
-    void sample(float* buf)
-    {
-        buf[track] = sample(buf[track]);
+        buf[track] = s;
     }
 
     void noteOn(uint8_t note, uint8_t velocity) override
