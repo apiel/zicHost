@@ -17,7 +17,7 @@ public:
         open();
     }
 
-    float sample(float in)
+    void sample(float* buf)
     {
         // if (bufferIndex >= audioChunk * props.channels) { // ??
         if (bufferIndex >= audioChunk) {
@@ -27,13 +27,7 @@ public:
                 // debug("write %ld (%d)(%d)\n", count, buffer[0], audioChunk);
             }
         }
-        buffer[bufferIndex++] = in * 2147483647.0f;
-        return in;
-    }
-
-    void sample(float* buf)
-    {
-        buf[track] = sample(buf[track]);
+        buffer[bufferIndex++] = buf[track] * 2147483647.0f;
     }
 };
 

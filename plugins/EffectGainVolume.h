@@ -16,14 +16,9 @@ public:
         setVolumeWithGain(volume.get(), gain.get());
     }
 
-    float sample(float in)
-    {
-        return in * volumeWithGain;
-    }
-
     void sample(float * buf)
     {
-        buf[track] = sample(buf[track]);
+        buf[track] = buf[track] * volumeWithGain;
     }
 
     EffectGainVolume& setVolume(float vol)

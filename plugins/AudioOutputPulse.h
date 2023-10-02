@@ -17,7 +17,7 @@ public:
         open();
     }
 
-    float sample(float in)
+    void sample(float* buf)
     {
         if (bufferIndex >= audioChunk) {
             bufferIndex = 0;
@@ -25,13 +25,7 @@ public:
                 pa_simple_write(device, buffer, bufferReadSize, NULL);
             }
         }
-        buffer[bufferIndex++] = in;
-        return in;
-    }
-
-    void sample(float* buf)
-    {
-        buf[track] = sample(buf[track]);
+        buffer[bufferIndex++] = buf[track];
     }
 };
 

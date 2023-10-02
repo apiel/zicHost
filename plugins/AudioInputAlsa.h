@@ -17,7 +17,7 @@ public:
         open();
     }
 
-    float sample(float in)
+    void sample(float* buf)
     {
         if (bufferIndex >= audioChunk) {
             bufferIndex = 0;
@@ -25,15 +25,10 @@ public:
                 // int err;
                 // debug("Audio card read error: %s\n", snd_strerror(err));
                 // should throw and exit!!
-                return 0.0f;
+                return;
             }
         }
-        return buffer[bufferIndex++] / 2147483647.0f;
-    }
-
-    void sample(float* buf)
-    {
-        buf[track] = sample(buf[track]);
+        buf[track] = buffer[bufferIndex++] / 2147483647.0f;
     }
 };
 

@@ -205,14 +205,8 @@ public:
         }
     }
 
-    float sample(float in)
-    {
-        return in;
-    }
-
     void sample(float* buf)
     {
-        // buf[track] = sample(buf[track]);
     }
 
     Sequencer& setPattern(float value)

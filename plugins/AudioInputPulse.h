@@ -15,13 +15,13 @@ protected:
     }
 
 public:
-    AudioInputPulse(AudioPlugin::Props& props, char * _name)
+    AudioInputPulse(AudioPlugin::Props& props, char* _name)
         : AudioPulse(props, _name)
     {
         open();
     }
 
-    float sample(float in)
+    void sample(float* buf)
     {
         if (bufferIndex >= audioChunk) {
             bufferIndex = 0;
@@ -29,12 +29,7 @@ public:
                 pa_simple_read(device, buffer, bufferReadSize, NULL);
             }
         }
-        return buffer[bufferIndex++];
-    }
-
-    void sample(float * buf)
-    {
-        buf[track] = sample(buf[track]);
+        buf[track] = buffer[bufferIndex++];
     }
 
     bool isSink() override

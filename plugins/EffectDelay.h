@@ -16,6 +16,27 @@ protected:
     uint64_t sampleRate;
     AudioBuffer<> buffer;
 
+    float sample(float in)
+    {
+        buffer.addSample(in);
+
+        float delay = 0.0f;
+        for (uint8_t i = 0; i < MAX_DELAY_VOICES; i++) {
+            DelayVoice& voice = voices[i];
+            if (voice.index++ >= buffer.size) {
+                voice.index = 0;
+            }
+            if (masterAmplitude.get() && voice.amplitude.get() > 0.0f) {
+                delay += buffer.samples[voice.index] * voice.amplitude.get() * masterAmplitude.get();
+                if (voice.feedback.get() > 0.0f) {
+                    buffer.samples[buffer.index] += delay * voice.feedback.get();
+                }
+            }
+        }
+
+        return in + filter.sample(delay);
+    }
+
     struct DelayVoice {
         uint64_t index;
         Val<EffectDelay> amplitude;
@@ -101,6 +122,11 @@ public:
         // setVoice(5, 0.30f, 0.65f, 0.0f);
         // setVoice(6, 0.35f, 0.6f, 0.0f);
         // setVoice(7, 0.40f, 0.55f, 0.0f);
+    }
+
+    void sample(float* buf)
+    {
+        buf[track] = sample(buf[track]);
     }
 
     EffectDelay& setSec0(float sec) { return setSec(0, sec); }
@@ -198,32 +224,6 @@ public:
     {
         filter.setMode(mode);
         return *this;
-    }
-
-    float sample(float in)
-    {
-        buffer.addSample(in);
-
-        float delay = 0.0f;
-        for (uint8_t i = 0; i < MAX_DELAY_VOICES; i++) {
-            DelayVoice& voice = voices[i];
-            if (voice.index++ >= buffer.size) {
-                voice.index = 0;
-            }
-            if (masterAmplitude.get() && voice.amplitude.get() > 0.0f) {
-                delay += buffer.samples[voice.index] * voice.amplitude.get() * masterAmplitude.get();
-                if (voice.feedback.get() > 0.0f) {
-                    buffer.samples[buffer.index] += delay * voice.feedback.get();
-                }
-            }
-        }
-
-        return in + filter.sample(delay);
-    }
-
-    void sample(float* buf)
-    {
-        buf[track] = sample(buf[track]);
     }
 };
 
