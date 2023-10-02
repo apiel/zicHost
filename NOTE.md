@@ -1,5 +1,11 @@
 # TODO
 
+- TODO sequencer can configure target
+            - use plugin name...
+            - but would there be a way to use track number??
+
+- TODO Zic_Drum_Kick23
+
 - TODO save sequencer state
 
 - TODO try to make granular synth more versatile
@@ -7,8 +13,6 @@
             - play wavetable (give the possibility to give sample coutn instead of len, lock spray, and maybe morphing by bank)
 
 - TODO tempo plugin, that would shalow midi clock in favour of custom clock
-
-- TODO Zic_Drum_Kick23
 
 - TODO puredata plugin
 
