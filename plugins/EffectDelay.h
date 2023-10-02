@@ -68,7 +68,7 @@ public:
 
     EffectFilter filter;
 
-    EffectDelay(AudioPlugin::Props& props, char * _name)
+    EffectDelay(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name, { // clang-format off
             &timeRatio, &masterAmplitude, 
             &voices[0].amplitude, &voices[0].feedback, &voices[0].sec, 
@@ -219,6 +219,11 @@ public:
         }
 
         return in + filter.sample(delay);
+    }
+
+    void sample(float* buf)
+    {
+        buf[track] = sample(buf[track]);
     }
 };
 

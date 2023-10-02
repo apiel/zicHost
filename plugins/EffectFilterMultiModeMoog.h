@@ -32,7 +32,7 @@ public:
     Val<EffectFilterMultiModeMoog>& mix = val(this, 0.5, "CUTOFF", &EffectFilterMultiModeMoog::setCutoff, { "LPF | HPF", .type = VALUE_CENTERED });
     Val<EffectFilterMultiModeMoog>& resonance = val(this, 0.0, "RESONANCE", &EffectFilterMultiModeMoog::setResonance, { "Resonance" });
 
-    EffectFilterMultiModeMoog(AudioPlugin::Props& props, char * _name)
+    EffectFilterMultiModeMoog(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
     {
         setCutoff(0.5);
@@ -56,6 +56,11 @@ public:
         // Bandpass output:  3.0f * (b3 - b4);
 
         return b4 * (1.0 - mix.get()) + (inputValue - b4) * mix.get();
+    }
+
+    void sample(float* buf)
+    {
+        buf[track] = sample(buf[track]);
     }
 
     EffectFilterMultiModeMoog& setCutoff(float value)

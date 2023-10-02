@@ -112,7 +112,7 @@ public:
             open();
             return true;
         }
-        return false;
+        return AudioPlugin::config(key, value);
     }
 
     virtual bool isSink()

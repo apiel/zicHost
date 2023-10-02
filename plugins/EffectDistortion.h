@@ -30,7 +30,7 @@ protected:
 public:
     Val<EffectDistortion>& drive = val(this, 0.0, "DRIVE", &EffectDistortion::setDrive, { "Distortion" });
 
-    EffectDistortion(AudioPlugin::Props& props, char * _name)
+    EffectDistortion(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
     {
         setDrive(drive.get());
@@ -39,6 +39,11 @@ public:
     float sample(float buf)
     {
         return (this->*samplePtr)(buf);
+    }
+
+    void sample(float* buf)
+    {
+        buf[track] = sample(buf[track]);
     }
 
     EffectDistortion& setDrive(float value)

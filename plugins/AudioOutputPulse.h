@@ -11,7 +11,7 @@ protected:
     }
 
 public:
-    AudioOutputPulse(AudioPlugin::Props& props, char * _name)
+    AudioOutputPulse(AudioPlugin::Props& props, char* _name)
         : AudioPulse(props, _name)
     {
         open();
@@ -27,6 +27,11 @@ public:
         }
         buffer[bufferIndex++] = in;
         return in;
+    }
+
+    void sample(float* buf)
+    {
+        buf[track] = sample(buf[track]);
     }
 };
 

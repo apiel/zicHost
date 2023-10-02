@@ -19,7 +19,7 @@ public:
     Val<EffectFilterMultiMode2>& mix = val(this, 0.5, "CUTOFF", &EffectFilterMultiMode2::setCutoff, { "LPF | HPF", .type = VALUE_CENTERED });
     Val<EffectFilterMultiMode2>& resonance = val(this, 0.0, "RESONANCE", &EffectFilterMultiMode2::setResonance, { "Resonance" });
 
-    EffectFilterMultiMode2(AudioPlugin::Props& props, char * _name)
+    EffectFilterMultiMode2(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
     {
         setCutoff(0.5);
@@ -35,6 +35,11 @@ public:
         lpf.setSampleData(inputValue);
 
         return lpf.buf1 * (1.0 - mix.get()) + hpf.hp * mix.get();
+    }
+
+    void sample(float* buf)
+    {
+        buf[track] = sample(buf[track]);
     }
 
     EffectFilterMultiMode2& setCutoff(float value)

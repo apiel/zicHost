@@ -32,6 +32,11 @@ public:
         return buffer[bufferIndex++];
     }
 
+    void sample(float * buf)
+    {
+        buf[track] = sample(buf[track]);
+    }
+
     bool isSink() override
     {
         return false;

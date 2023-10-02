@@ -136,7 +136,7 @@ public:
     Val<Sequencer>& stepNote = val(this, 0.0f, "STEP_NOTE", &Sequencer::setStepNote, { "Note", MIDI_NOTE_COUNT, VALUE_STRING });
     Val<Sequencer>& stepEnabled = val(this, 0.0f, "STEP_ENABLED", &Sequencer::setStepEnabled, { "Enabled", 2, VALUE_STRING });
 
-    Sequencer(AudioPlugin::Props& props, char * _name)
+    Sequencer(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
         , targetPlugin(props.audioPluginHandler->getPlugin("Granular"))
     {
@@ -208,6 +208,11 @@ public:
     float sample(float in)
     {
         return in;
+    }
+
+    void sample(float* buf)
+    {
+        // buf[track] = sample(buf[track]);
     }
 
     Sequencer& setPattern(float value)

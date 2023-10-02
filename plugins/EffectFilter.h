@@ -27,7 +27,7 @@ public:
     // TODO how to handle mode in a better way?
     Val<EffectFilter>& mode_value = val(this, 0.0, "MODE", &EffectFilter::setMode, { "Mode" });
 
-    EffectFilter(AudioPlugin::Props& props, char * _name)
+    EffectFilter(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
     {
     }
@@ -47,6 +47,11 @@ public:
         }
         // LPF
         return data.buf0;
+    }
+
+    void sample(float* buf)
+    {
+        buf[track] = sample(buf[track]);
     }
 
     EffectFilter& setCutoff(float value)

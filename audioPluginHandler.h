@@ -9,7 +9,7 @@
 
 class AudioPluginHandler : public AudioPluginHandlerInterface {
 protected:
-    AudioPlugin::Props pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS, this };
+    AudioPlugin::Props pluginProps = { debug, SAMPLE_RATE, APP_CHANNELS, this, MAX_TRACKS };
 
     std::vector<MidiMapping> midiMapping;
 
@@ -65,10 +65,17 @@ public:
     void loop()
     {
         while (isRunning) {
-            float s = 0.0f;
+            float buffer[MAX_TRACKS] = { 0.0f };
             for (Plugin& plugin : plugins) {
-                s = plugin.instance->sample(s);
+                plugin.instance->sample(buffer);
             }
+            // then in props pass max tracks
+            // then as part of audio plugin, setTrack and by default to 0
+
+            // float s = 0.0f;
+            // for (Plugin& plugin : plugins) {
+            //     s = plugin.instance->sample(s);
+            // }
         }
     }
 

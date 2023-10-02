@@ -57,9 +57,9 @@ public:
         return *this;
     }
 
-    float sample(float buf)
+    void sample(float * buf)
     {
-        return (this->*samplePtr)(buf);
+        buf[track] = (this->*samplePtr)(buf[track]);
     }
 };
 

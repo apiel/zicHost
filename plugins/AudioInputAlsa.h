@@ -11,7 +11,7 @@ protected:
     }
 
 public:
-    AudioInputAlsa(AudioPlugin::Props& props, char * _name)
+    AudioInputAlsa(AudioPlugin::Props& props, char* _name)
         : AudioAlsa(props, _name)
     {
         open();
@@ -29,6 +29,11 @@ public:
             }
         }
         return buffer[bufferIndex++] / 2147483647.0f;
+    }
+
+    void sample(float* buf)
+    {
+        buf[track] = sample(buf[track]);
     }
 };
 

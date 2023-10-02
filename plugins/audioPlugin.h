@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <vector>
+#include <cstdlib>
 
 #include "valueInterface.h"
 
@@ -24,6 +25,8 @@ public:
 class AudioPlugin {
 public:
     char name[64];
+    uint16_t maxTracks;
+    uint16_t track = 0;
 
     AudioPluginHandlerInterface* audioPluginHandler;
     int (*debug)(const char* format, ...);
@@ -33,16 +36,18 @@ public:
         uint64_t sampleRate;
         uint8_t channels;
         AudioPluginHandlerInterface* audioPluginHandler;
+        uint16_t maxTracks;
     };
 
     AudioPlugin(Props& props, char* _name)
-        : audioPluginHandler(props.audioPluginHandler)
+        : maxTracks(props.maxTracks)
+        , audioPluginHandler(props.audioPluginHandler)
         , debug(props.debug)
     {
         strcpy(name, _name);
     }
 
-    virtual float sample(float in) = 0;
+    virtual void sample(float * buf) = 0;
 
     virtual ValueInterface* getValue(int valueIndex)
     {
@@ -74,6 +79,12 @@ public:
 
     virtual bool config(char* key, char* value)
     {
+        if (strcmp(key, "TRACK") == 0) {
+            track = atoi(value);
+            if (track >= maxTracks) {
+                track = maxTracks - 1;
+            }
+        }
         return false;
     }
 

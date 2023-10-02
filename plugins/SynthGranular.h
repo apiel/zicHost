@@ -197,11 +197,11 @@ public:
     Val<SynthGranular>& release = val(this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 });
     Val<SynthGranular>& delay = val(this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 });
     Val<SynthGranular>& pitch = val(this, 0.5f, "PITCH", &SynthGranular::setPitch, { "Pitch", 24, VALUE_CENTERED, .stepStart = -12 });
-    Val<SynthGranular>& browser = val( this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count, VALUE_STRING } );
-    
+    Val<SynthGranular>& browser = val(this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count, VALUE_STRING });
+
     // TODO add pitch randomization per grain
 
-    SynthGranular(AudioPlugin::Props& props, char * _name)
+    SynthGranular(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
     {
         setSampleRate(props.sampleRate);
@@ -227,7 +227,7 @@ public:
 
             return true;
         }
-        return false;
+        return AudioPlugin::config(key, value);
     }
 
     SynthGranular& close()
@@ -403,6 +403,11 @@ public:
             }
         }
         return s * mix.get() + in * (1 - mix.get());
+    }
+
+    void sample(float* buf)
+    {
+        buf[track] = sample(buf[track]);
     }
 
     void noteOn(uint8_t note, uint8_t velocity) override

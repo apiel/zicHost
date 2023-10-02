@@ -1,9 +1,5 @@
 # TODO
 
-- TODO input/output should have multiple possible values, when in[0] and out[0] are default ones, and all the others are pointer to empty audio buffer or just simple sample float...
-       Is it even the job of the plugin to decide which sample goes where
-       Or should it be on the routing of the plugin that decide whih plugin is apply to what....?
-
 - TODO save sequencer state
 
 - TODO try to make granular synth more versatile
@@ -24,7 +20,9 @@
                 base on this state, we can create config files...
      - add lfo on time ratio
 
-- TODO IPC in order to have a main thread that is running all the time, even if the rest crash...
+- INFO should sequencer use track...?
+
+- INFO IPC in order to have a main thread that is running all the time, even if the rest crash...
        https://en.wikipedia.org/wiki/Inter-process_communication
 
 - TODO bitcrusher Resolution reduction: from float 32 bit to 16 to 8 ...

@@ -21,6 +21,11 @@ public:
         return in * volumeWithGain;
     }
 
+    void sample(float * buf)
+    {
+        buf[track] = sample(buf[track]);
+    }
+
     EffectGainVolume& setVolume(float vol)
     {
         debug("setMaster: volume %f\n", vol);
