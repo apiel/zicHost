@@ -13,7 +13,7 @@ class ValueInterface {
 public:
     struct Props {
         const char* label = nullptr;
-        int stepCount = 100;
+        int stepCount = 101; // 100 + 1 for 0
         ValueType type = VALUE_BASIC;
         const char* unit = nullptr;
         int stepStart = 0;
