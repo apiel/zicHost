@@ -137,6 +137,8 @@ public:
 
     void noteOn(uint8_t note, uint8_t velocity) override
     {
+        printf("kick noteOn\n");
+
         // Could change the frequency base on the note...
         // Could change the amplitude base on the velocity...
         sampleIndex = 0;
