@@ -1,6 +1,7 @@
 all:
 	make clean_so EffectGainVolume EffectSampleRateReducer EffectFilter EffectDistortion EffectDelay\
-		EffectFilter EffectFilterMultiMode EffectFilterMultiMode2 EffectFilterMultiModeMoog SynthGranular\
+		EffectFilter EffectFilterMultiMode EffectFilterMultiMode2 EffectFilterMultiModeMoog\
+		SynthKick23 SynthGranular\
 		Sequencer\
 		Mixer2 Mixer4 Mixer8\
 		AudioInputPulse AudioOutputPulse AudioInputAlsa AudioOutputAlsa\
@@ -54,6 +55,9 @@ Mixer8:
 
 SynthGranular:
 	make compile LIBNAME=SynthGranular EXTRA="$(shell pkg-config --cflags --libs sndfile)"
+
+SynthKick23:
+	make compile LIBNAME=SynthKick23 EXTRA="$(shell pkg-config --cflags --libs sndfile)"
 
 Sequencer:
 	make compile LIBNAME=Sequencer
