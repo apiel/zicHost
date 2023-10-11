@@ -27,6 +27,7 @@ protected:
     // unsigned int duration = 300; // in ms
 
     float sampleIndex = 0.0f;
+    uint64_t sampleStart = 0;
 
     unsigned int sampleCountDuration; // = duration * SAMPLE_PER_MS;
     unsigned int sampleDurationCounter = 0;
@@ -56,6 +57,7 @@ protected:
 
 public:
     Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", fileBrowser.count, VALUE_STRING });
+    Val<SynthKick23>& morph = val(this, 0.0f, "MORPH", &SynthKick23::setMorph, { "Morph", 64, .stepStart = 1}); //640, .stepStart = 10, .stepMultiplier = 0.1 });
     Val<SynthKick23>& pitch = val(this, 0.5f, "PITCH", &SynthKick23::setPitch, { "Pitch", .unit = "%", .stepStart = 50 });
     Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setDuration, { "Duration", 499, .unit = "ms", .stepStart = 1, .stepMultiplier = 10 });
 
@@ -81,7 +83,7 @@ public:
                 sampleIndex -= sampleCount;
             }
             sampleDurationCounter++;
-            buf[track] = bufferSamples[(uint16_t)sampleIndex] * envAmp;
+            buf[track] = bufferSamples[(uint16_t)sampleIndex + sampleStart] * envAmp;
         }
     }
 
@@ -89,6 +91,18 @@ public:
     {
         pitch.setFloat(value);
         pitchMult = pitch.get() + 0.5f;
+        return *this;
+    }
+
+    SynthKick23& setMorph(float value)
+    {
+        morph.setFloat(value);
+        sampleStart = morph.get() * bufferSampleCount;
+        uint64_t max = bufferSampleCount / 64 * 63; // TODO make this better :p
+        if (sampleStart > max) {
+            sampleStart = max;
+        }
+        // printf(">>>>>>>>>>>>>>.... sampleStart: %ld (%f bufferSampleCount %ld)\n", sampleStart, morph.get(), bufferSampleCount);
         return *this;
     }
 
