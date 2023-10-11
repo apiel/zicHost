@@ -35,31 +35,34 @@ protected:
     unsigned int envelopAmpIndex = 0;
     unsigned int envelopFreqIndex = 0;
 
-
+    struct Envelop {
+        float modulation;
+        float time;
+    };
 
     // The first 2 steps are readonly, so for amp env there is very short ramp up to avoid clicking noize
     // The last step is also readonly, so the amp and freq end to 0.0f
-    float envelopAmp[ZIC_KICK_ENVELOP_STEPS][2] = { { 0.0f, 0.0f }, { 1.0f, 0.01f }, { 0.3f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } };
-    float envelopFreq[ZIC_KICK_ENVELOP_STEPS][2] = { { 1.0f, 0.0f }, { 1.0f, 0.0f }, { 0.26f, 0.03f }, { 0.24f, 0.35f }, { 0.22f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } };
+    Envelop envelopAmp[ZIC_KICK_ENVELOP_STEPS] = { { 0.0f, 0.0f }, { 1.0f, 0.01f }, { 0.3f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } };
+    Envelop envelopFreq[ZIC_KICK_ENVELOP_STEPS] = { { 1.0f, 0.0f }, { 1.0f, 0.0f }, { 0.26f, 0.03f }, { 0.24f, 0.35f }, { 0.22f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } };
 
-    float envelop(float (*envelop)[2], unsigned int* envelopIndex)
+    float envelop(Envelop(*envelop), unsigned int* envelopIndex)
     {
         if (*envelopIndex > ZIC_KICK_ENVELOP_STEPS - 1) {
             return 0.0f;
         }
 
         float time = (float)sampleDurationCounter / (float)sampleCountDuration;
-        if (time >= envelop[*envelopIndex + 1][1]) {
+        if (time >= envelop[*envelopIndex + 1].time) {
             (*envelopIndex)++;
         }
-        float timeOffset = envelop[*envelopIndex + 1][1] - envelop[*envelopIndex][1];
-        float timeRatio = (time - envelop[*envelopIndex][1]) / timeOffset;
-        return (envelop[*envelopIndex + 1][0] - envelop[*envelopIndex][0]) * timeRatio + envelop[*envelopIndex][0];
+        float timeOffset = envelop[*envelopIndex + 1].time - envelop[*envelopIndex].time;
+        float timeRatio = (time - envelop[*envelopIndex].time) / timeOffset;
+        return (envelop[*envelopIndex + 1].modulation - envelop[*envelopIndex].modulation) * timeRatio + envelop[*envelopIndex].modulation;
     }
 
 public:
     Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", fileBrowser.count, VALUE_STRING });
-    Val<SynthKick23>& morph = val(this, 0.0f, "MORPH", &SynthKick23::setMorph, { "Morph", 64, .stepStart = 1}); //640, .stepStart = 10, .stepMultiplier = 0.1 });
+    Val<SynthKick23>& morph = val(this, 0.0f, "MORPH", &SynthKick23::setMorph, { "Morph", 64, .stepStart = 1 }); // 640, .stepStart = 10, .stepMultiplier = 0.1 });
     Val<SynthKick23>& pitch = val(this, 0.5f, "PITCH", &SynthKick23::setPitch, { "Pitch", .unit = "%", .stepStart = 50 });
     Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setDuration, { "Duration", 100, .unit = "ms", .stepStart = 50, .stepMultiplier = 50 });
 
