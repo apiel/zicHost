@@ -17,6 +17,7 @@ public:
         ValueType type = VALUE_BASIC;
         const char* unit = nullptr;
         int stepStart = 0;
+        float stepMultiplier = 1.0f;
     };
 
     virtual const char* key() = 0;

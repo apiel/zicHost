@@ -55,7 +55,7 @@ public:
 
     inline int getAsInt()
     {
-        return value_f * (_props.stepCount - 1) + _props.stepStart;
+        return value_f * _props.stepMultiplier * (_props.stepCount - 1) + _props.stepStart;
     }
 
     char* string()

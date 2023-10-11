@@ -56,8 +56,8 @@ protected:
 
 public:
     Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", fileBrowser.count, VALUE_STRING });
-    Val<SynthKick23>& pitch = val(this, 0.5f, "PITCH", &SynthKick23::setPitch, { "Pitch", .stepStart = 50 });
-    Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setDuration, { "Duration", 4990, .unit = "ms", .stepStart = 10 });
+    Val<SynthKick23>& pitch = val(this, 0.5f, "PITCH", &SynthKick23::setPitch, { "Pitch", .unit = "%", .stepStart = 50 });
+    Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setDuration, { "Duration", 499, .unit = "ms", .stepStart = 1, .stepMultiplier = 10 });
 
     SynthKick23(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
@@ -77,7 +77,6 @@ public:
             float envAmp = envelop(envelopAmp, &envelopAmpIndex);
 
             sampleIndex += pitchMult * envFreq;
-            // sampleIndex += freqMult;
             while (sampleIndex >= sampleCount) {
                 sampleIndex -= sampleCount;
             }
