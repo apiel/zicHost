@@ -22,7 +22,7 @@ protected:
 
     FileBrowser fileBrowser = FileBrowser("../zicHost/wavetables");
 
-    float freqMult = 0.0f;
+    float pitchMult = 1.0f;
     // float frequency = 600.0f;
     // unsigned int duration = 300; // in ms
 
@@ -56,14 +56,18 @@ protected:
 
 public:
     Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", fileBrowser.count, VALUE_STRING });
-    Val<SynthKick23>& frequency = val(this, 1.0f, "FREQUENCY", &SynthKick23::setFrequency, { "Frequency", 2000, .unit = "Hz", .stepStart = 50 });
-    Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setFrequency, { "Duration", 4990, .unit = "ms", .stepStart = 10 });
+    Val<SynthKick23>& pitch = val(this, 0.5f, "PITCH", &SynthKick23::setPitch, { "Pitch", .stepStart = 50 });
+    Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setDuration, { "Duration", 4990, .unit = "ms", .stepStart = 10 });
 
     SynthKick23(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
         , sampleRate(props.sampleRate)
     {
-        sampleCountDuration = sampleCount * props.sampleRate * 0.0001f;
+        memset(&sfinfo, 0, sizeof(sfinfo));
+        open(0.0, true);
+
+        setPitch(pitch.get());
+        setDuration(duration.get());
     }
 
     void sample(float* buf)
@@ -72,7 +76,8 @@ public:
             float envFreq = envelop(envelopFreq, &envelopFreqIndex);
             float envAmp = envelop(envelopAmp, &envelopAmpIndex);
 
-            sampleIndex += freqMult * envFreq;
+            sampleIndex += pitchMult * envFreq;
+            // sampleIndex += freqMult;
             while (sampleIndex >= sampleCount) {
                 sampleIndex -= sampleCount;
             }
@@ -81,15 +86,18 @@ public:
         }
     }
 
-    SynthKick23& setFrequency(float value)
+    SynthKick23& setPitch(float value)
     {
-        frequency.setFloat(value);
-        freqMult = sampleCount * frequency.getAsInt() / (float)sampleRate;
+        pitch.setFloat(value);
+        pitchMult = pitch.get() + 0.5f;
         return *this;
     }
 
     SynthKick23& setDuration(float value)
     {
+        duration.setFloat(value);
+        sampleCountDuration = duration.getAsInt() * (sampleRate * 0.0001f);
+        // printf(">>>>>>>>>>>>>>.... sampleCountDuration: %d (%d)\n", sampleCountDuration, duration.getAsInt());
         return *this;
     }
 
