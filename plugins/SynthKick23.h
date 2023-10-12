@@ -7,6 +7,9 @@
 #include "fileBrowser.h"
 #include "mapping.h"
 #include "utils/envelop.h"
+
+#define ZIC_WAVETABLE_WAVEFORMS_COUNT 64
+
 class SynthKick23 : public Mapping<SynthKick23> {
 protected:
     SF_INFO sfinfo;
@@ -14,20 +17,18 @@ protected:
     uint64_t sampleRate;
 
     uint64_t sampleCount = 2048; // should this be configurable?
-    static const uint64_t bufferSize = 64 * 2048;
+    static const uint64_t bufferSize = ZIC_WAVETABLE_WAVEFORMS_COUNT * 2048;
     uint64_t bufferSampleCount = 0;
     float bufferSamples[bufferSize];
 
     FileBrowser fileBrowser = FileBrowser("../zicHost/wavetables");
 
     float pitchMult = 1.0f;
-    // float frequency = 600.0f;
-    // unsigned int duration = 300; // in ms
 
     float sampleIndex = 0.0f;
     uint64_t sampleStart = 0;
 
-    unsigned int sampleCountDuration; // = duration * SAMPLE_PER_MS;
+    unsigned int sampleCountDuration;
     unsigned int sampleDurationCounter = 0;
 
     Envelop envelopAmp = Envelop({ { 0.0f, 0.0f }, { 1.0f, 0.01f }, { 0.3f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } });
@@ -35,7 +36,7 @@ protected:
 
 public:
     Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", fileBrowser.count, VALUE_STRING });
-    Val<SynthKick23>& morph = val(this, 0.0f, "MORPH", &SynthKick23::setMorph, { "Morph", 64, .stepStart = 1 }); // 640, .stepStart = 10, .stepMultiplier = 0.1 });
+    Val<SynthKick23>& morph = val(this, 0.0f, "MORPH", &SynthKick23::setMorph, { "Morph", ZIC_WAVETABLE_WAVEFORMS_COUNT, .stepStart = 1 }); // 640, .stepStart = 10, .stepMultiplier = 0.1 });
     Val<SynthKick23>& pitch = val(this, 0.5f, "PITCH", &SynthKick23::setPitch, { "Pitch", .unit = "%", .stepStart = 50 });
     Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setDuration, { "Duration", 100, .unit = "ms", .stepStart = 50, .stepMultiplier = 50 });
 
@@ -77,7 +78,7 @@ public:
     {
         morph.setFloat(value);
         sampleStart = morph.get() * bufferSampleCount;
-        uint64_t max = bufferSampleCount / 64 * 63; // TODO make this better :p
+        uint64_t max = bufferSampleCount / ZIC_WAVETABLE_WAVEFORMS_COUNT * (ZIC_WAVETABLE_WAVEFORMS_COUNT - 1); // TODO make this better :p
         if (sampleStart > max) {
             sampleStart = max;
         }
@@ -112,6 +113,7 @@ public:
         debug("Audio file %s sampleCount %ld sampleRate %d\n", filename, (long)sfinfo.frames, sfinfo.samplerate);
 
         bufferSampleCount = sf_read_float(file, bufferSamples, bufferSize);
+        sampleCount = bufferSampleCount / (float)ZIC_WAVETABLE_WAVEFORMS_COUNT;
 
         return *this;
     }
