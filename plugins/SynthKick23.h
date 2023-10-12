@@ -7,7 +7,44 @@
 #include "fileBrowser.h"
 #include "mapping.h"
 
-#define ZIC_KICK_ENVELOP_STEPS 7
+#include <vector>
+
+class Envelop {
+protected:
+    unsigned int index = 0;
+
+public:
+    struct Data {
+        float modulation;
+        float time;
+    };
+
+    std::vector<Data> data;
+
+    Envelop(std::vector<Data> data)
+        : data(data)
+    {
+    }
+
+    float next(float time)
+    {
+        if (index > data.size() - 1) {
+            return 0.0f;
+        }
+
+        if (time >= data[index + 1].time) {
+            index++;
+        }
+        float timeOffset = data[index + 1].time - data[index].time;
+        float timeRatio = (time - data[index].time) / timeOffset;
+        return (data[index + 1].modulation - data[index].modulation) * timeRatio + data[index].modulation;
+    }
+
+    void reset()
+    {
+        index = 0;
+    }
+};
 
 class SynthKick23 : public Mapping<SynthKick23> {
 protected:
@@ -32,33 +69,8 @@ protected:
     unsigned int sampleCountDuration; // = duration * SAMPLE_PER_MS;
     unsigned int sampleDurationCounter = 0;
 
-    unsigned int envelopAmpIndex = 0;
-    unsigned int envelopFreqIndex = 0;
-
-    struct Envelop {
-        float modulation;
-        float time;
-    };
-
-    // The first 2 steps are readonly, so for amp env there is very short ramp up to avoid clicking noize
-    // The last step is also readonly, so the amp and freq end to 0.0f
-    Envelop envelopAmp[ZIC_KICK_ENVELOP_STEPS] = { { 0.0f, 0.0f }, { 1.0f, 0.01f }, { 0.3f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } };
-    Envelop envelopFreq[ZIC_KICK_ENVELOP_STEPS] = { { 1.0f, 0.0f }, { 1.0f, 0.0f }, { 0.26f, 0.03f }, { 0.24f, 0.35f }, { 0.22f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } };
-
-    float envelop(Envelop(*envelop), unsigned int* envelopIndex)
-    {
-        if (*envelopIndex > ZIC_KICK_ENVELOP_STEPS - 1) {
-            return 0.0f;
-        }
-
-        float time = (float)sampleDurationCounter / (float)sampleCountDuration;
-        if (time >= envelop[*envelopIndex + 1].time) {
-            (*envelopIndex)++;
-        }
-        float timeOffset = envelop[*envelopIndex + 1].time - envelop[*envelopIndex].time;
-        float timeRatio = (time - envelop[*envelopIndex].time) / timeOffset;
-        return (envelop[*envelopIndex + 1].modulation - envelop[*envelopIndex].modulation) * timeRatio + envelop[*envelopIndex].modulation;
-    }
+    Envelop envelopAmp = Envelop({ { 0.0f, 0.0f }, { 1.0f, 0.01f }, { 0.3f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } });
+    Envelop envelopFreq = Envelop({ { 1.0f, 0.0f }, { 0.26f, 0.03f }, { 0.24f, 0.35f }, { 0.22f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } });
 
 public:
     Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", fileBrowser.count, VALUE_STRING });
@@ -80,8 +92,9 @@ public:
     void sample(float* buf)
     {
         if (sampleDurationCounter < sampleCountDuration) {
-            float envFreq = envelop(envelopFreq, &envelopFreqIndex);
-            float envAmp = envelop(envelopAmp, &envelopAmpIndex);
+            float time = (float)sampleDurationCounter / (float)sampleCountDuration;
+            float envFreq = envelopFreq.next(time);
+            float envAmp = envelopAmp.next(time);
 
             sampleIndex += pitchMult * envFreq;
             while (sampleIndex >= sampleCount) {
@@ -169,8 +182,8 @@ public:
         // Could change the amplitude base on the velocity...
         sampleIndex = 0;
         sampleDurationCounter = 0;
-        envelopAmpIndex = 0;
-        envelopFreqIndex = 0;
+        envelopAmp.reset();
+        envelopFreq.reset();
     }
 };
 
