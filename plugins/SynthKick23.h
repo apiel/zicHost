@@ -43,28 +43,28 @@ public:
     Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setDuration, { "Duration", 100, .unit = "ms", .stepStart = 50, .stepMultiplier = 50 });
 
     Val<SynthKick23> envAmpMod[ZIC_KICK_ENV_AMP_STEP] = {
-        { this, 0.5f, "ENVELOP_AMP_MOD_1", &SynthKick23::setEnvAmpMod1, { "Env.Amp.Mod.1", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_MOD_2", &SynthKick23::setEnvAmpMod2, { "Env.Amp.Mod.2", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_MOD_3", &SynthKick23::setEnvAmpMod3, { "Env.Amp.Mod.3", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_MOD_4", &SynthKick23::setEnvAmpMod4, { "Env.Amp.Mod.4", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_AMP_MOD_1", &SynthKick23::setEnvAmpMod1, { "Amp.Mod.1", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_AMP_MOD_2", &SynthKick23::setEnvAmpMod2, { "Amp.Mod.2", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_AMP_MOD_3", &SynthKick23::setEnvAmpMod3, { "Amp.Mod.3", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_AMP_MOD_4", &SynthKick23::setEnvAmpMod4, { "Amp.Mod.4", .unit = "%" } },
     };
     Val<SynthKick23> envAmpTime[ZIC_KICK_ENV_AMP_STEP] = {
-        { this, 0.5f, "ENVELOP_AMP_TIME_1", &SynthKick23::setEnvAmpTime1, { "Env.Amp.Time 1", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_TIME_2", &SynthKick23::setEnvAmpTime2, { "Env.Amp.Time 2", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_TIME_3", &SynthKick23::setEnvAmpTime3, { "Env.Amp.Time 3", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_TIME_4", &SynthKick23::setEnvAmpTime4, { "Env.Amp.Time 4", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_AMP_TIME_1", &SynthKick23::setEnvAmpTime1, { "Amp.Time 1", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_AMP_TIME_2", &SynthKick23::setEnvAmpTime2, { "Amp.Time 2", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_AMP_TIME_3", &SynthKick23::setEnvAmpTime3, { "Amp.Time 3", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_AMP_TIME_4", &SynthKick23::setEnvAmpTime4, { "Amp.Time 4", .unit = "%" } },
     };
     Val<SynthKick23> envFreqMod[ZIC_KICK_ENV_FREQ_STEP] = {
-        { this, 0.5f, "ENVELOP_FREQ_MOD_1", &SynthKick23::setEnvFreqMod1, { "Env.Freq.Mod.1", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_MOD_2", &SynthKick23::setEnvFreqMod2, { "Env.Freq.Mod.2", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_MOD_3", &SynthKick23::setEnvFreqMod3, { "Env.Freq.Mod.3", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_MOD_4", &SynthKick23::setEnvFreqMod4, { "Env.Freq.Mod.4", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_FREQ_MOD_1", &SynthKick23::setEnvFreqMod1, { "Freq.Mod.1", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_FREQ_MOD_2", &SynthKick23::setEnvFreqMod2, { "Freq.Mod.2", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_FREQ_MOD_3", &SynthKick23::setEnvFreqMod3, { "Freq.Mod.3", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_FREQ_MOD_4", &SynthKick23::setEnvFreqMod4, { "Freq.Mod.4", .unit = "%" } },
     };
     Val<SynthKick23> envFreqTime[ZIC_KICK_ENV_FREQ_STEP] = {
-        { this, 0.5f, "ENVELOP_FREQ_TIME_1", &SynthKick23::setEnvFreqTime1, { "Env.Freq.Time 1", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_TIME_2", &SynthKick23::setEnvFreqTime2, { "Env.Freq.Time 2", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_TIME_3", &SynthKick23::setEnvFreqTime3, { "Env.Freq.Time 3", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_TIME_4", &SynthKick23::setEnvFreqTime4, { "Env.Freq.Time 4", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_FREQ_TIME_1", &SynthKick23::setEnvFreqTime1, { "Freq.Time 1", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_FREQ_TIME_2", &SynthKick23::setEnvFreqTime2, { "Freq.Time 2", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_FREQ_TIME_3", &SynthKick23::setEnvFreqTime3, { "Freq.Time 3", .unit = "%" } },
+        { this, 0.5f, "ENVELOP_FREQ_TIME_4", &SynthKick23::setEnvFreqTime4, { "Freq.Time 4", .unit = "%" } },
     };
 
     SynthKick23(AudioPlugin::Props& props, char* _name)
@@ -82,6 +82,16 @@ public:
 
         setPitch(pitch.get());
         setDuration(duration.get());
+
+        for (int i = 0; i < ZIC_KICK_ENV_AMP_STEP; i++) {
+            envAmpMod[i].setFloat(envelopAmp.data[i + 2].modulation);
+            envAmpTime[i].setFloat(envelopAmp.data[i + 2].time);
+        }
+        for (int i = 0; i < ZIC_KICK_ENV_FREQ_STEP; i++) {
+            envFreqMod[i].setFloat(envelopFreq.data[i + 1].modulation);
+            envFreqTime[i].setFloat(envelopFreq.data[i + 1].time);
+        }
+
     }
 
     void sample(float* buf)
