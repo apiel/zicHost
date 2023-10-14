@@ -11,6 +11,7 @@
 #define ZIC_WAVETABLE_WAVEFORMS_COUNT 64
 #define ZIC_KICK_ENV_AMP_STEP 4
 #define ZIC_KICK_ENV_FREQ_STEP 4
+#define ZIC_KICK_UI 1000
 
 class SynthKick23 : public Mapping<SynthKick23> {
 protected:
@@ -22,6 +23,7 @@ protected:
     static const uint64_t bufferSize = ZIC_WAVETABLE_WAVEFORMS_COUNT * 2048;
     uint64_t bufferSampleCount = 0;
     float bufferSamples[bufferSize];
+    float bufferUi[ZIC_KICK_UI];
 
     FileBrowser fileBrowser = FileBrowser("../zicHost/wavetables");
 
@@ -35,6 +37,18 @@ protected:
 
     Envelop envelopAmp = Envelop({ { 0.0f, 0.0f }, { 1.0f, 0.01f }, { 0.3f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } });
     Envelop envelopFreq = Envelop({ { 1.0f, 0.0f }, { 0.26f, 0.03f }, { 0.24f, 0.35f }, { 0.22f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } });
+
+    float sample(float time, float* index)
+    {
+        float envFreq = envelopFreq.next(time);
+        float envAmp = envelopAmp.next(time);
+
+        (*index) += pitchMult * envFreq;
+        while ((*index) >= sampleCount) {
+            (*index) -= sampleCount;
+        }
+        return bufferSamples[(uint16_t)(*index) + sampleStart] * envAmp;
+    }
 
 public:
     Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", fileBrowser.count, VALUE_STRING });
@@ -91,22 +105,14 @@ public:
             envFreqMod[i].setFloat(envelopFreq.data[i + 1].modulation);
             envFreqTime[i].setFloat(envelopFreq.data[i + 1].time);
         }
-
     }
 
     void sample(float* buf)
     {
         if (sampleDurationCounter < sampleCountDuration) {
             float time = (float)sampleDurationCounter / (float)sampleCountDuration;
-            float envFreq = envelopFreq.next(time);
-            float envAmp = envelopAmp.next(time);
-
-            sampleIndex += pitchMult * envFreq;
-            while (sampleIndex >= sampleCount) {
-                sampleIndex -= sampleCount;
-            }
+            buf[track] = sample(time, &sampleIndex);
             sampleDurationCounter++;
-            buf[track] = bufferSamples[(uint16_t)sampleIndex + sampleStart] * envAmp;
         }
     }
 
@@ -244,6 +250,21 @@ public:
         sampleDurationCounter = 0;
         envelopAmp.reset();
         envelopFreq.reset();
+    }
+
+    void* data(int id)
+    {
+        switch (id) {
+        case 0: {
+            float index = 0;
+            for (int i = 0; i < ZIC_KICK_UI; i++) {
+                float time = i / (float)ZIC_KICK_UI;
+                bufferUi[i] = sample(time, &index);
+            }
+            return (void*)&bufferUi;
+        }
+        }
+        return NULL;
     }
 };
 
