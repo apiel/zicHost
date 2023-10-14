@@ -70,7 +70,7 @@ public:
 
     void setFloat(float value)
     {
-        value_f = range(value, 0.0, 1.0);
+        value_f = range(value, _props.min, _props.max);
     }
 
     void set(float value)

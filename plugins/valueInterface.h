@@ -18,6 +18,8 @@ public:
         const char* unit = nullptr;
         int stepStart = 0;
         float stepMultiplier = 1.0f;
+        float min = 0.0f;
+        float max = 1.0f;
     };
 
     virtual const char* key() = 0;
