@@ -44,6 +44,8 @@ protected:
         float envFreq = envelopFreq.next(time);
         float envAmp = envelopAmp.next(time);
 
+        printf("(%f) envAmp %f envFreq %f\n", time, envAmp, envFreq);
+
         (*index) += pitchMult * envFreq;
         while ((*index) >= sampleCount) {
             (*index) -= sampleCount;
@@ -101,10 +103,20 @@ public:
         for (int i = 0; i < ZIC_KICK_ENV_AMP_STEP; i++) {
             envAmpMod[i].setFloat(envelopAmp.data[i + 2].modulation);
             envAmpTime[i].setFloat(envelopAmp.data[i + 2].time);
+            if (i > 0) {
+                envAmpTime[i - 1].props().max = envAmpTime[i].get();
+            } else if (i < 3) {
+                envAmpTime[i + 1].props().min = envAmpTime[i].get();
+            }
         }
         for (int i = 0; i < ZIC_KICK_ENV_FREQ_STEP; i++) {
             envFreqMod[i].setFloat(envelopFreq.data[i + 1].modulation);
             envFreqTime[i].setFloat(envelopFreq.data[i + 1].time);
+            if (i > 0) {
+                envFreqTime[i - 1].props().max = envFreqTime[i].get();
+            } else if (i < 3) {
+                envFreqTime[i + 1].props().min = envFreqTime[i].get();
+            }
         }
     }
 
@@ -265,10 +277,12 @@ public:
     void* data(int id)
     {
         switch (id) {
-        case 0: 
+        case 0:
             return &updateUi;
 
         case 1: {
+            envelopAmp.reset(); // FIXME cannot be
+            envelopFreq.reset(); // FIXME cannot be
             float index = 0;
             for (int i = 0; i < ZIC_KICK_UI; i++) {
                 float time = i / (float)ZIC_KICK_UI;
