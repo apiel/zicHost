@@ -24,6 +24,7 @@ protected:
     uint64_t bufferSampleCount = 0;
     float bufferSamples[bufferSize];
     float bufferUi[ZIC_KICK_UI];
+    int updateUi = 0;
 
     FileBrowser fileBrowser = FileBrowser("../zicHost/wavetables");
 
@@ -124,6 +125,7 @@ public:
     {
         envAmpMod[index].setFloat(value);
         envelopAmp.data[index + 2].modulation = envAmpMod[index].get();
+        updateUi++;
         return *this;
     }
 
@@ -140,6 +142,7 @@ public:
         } else if (index < 3) {
             envAmpTime[index + 1].props().min = envAmpTime[index].get();
         }
+        updateUi++;
         return *this;
     }
 
@@ -151,6 +154,7 @@ public:
     {
         envFreqMod[index].setFloat(value);
         envelopFreq.data[index + 1].modulation = envFreqMod[index].get();
+        updateUi++;
         return *this;
     }
 
@@ -167,6 +171,7 @@ public:
         } else if (index < 3) {
             envFreqTime[index + 1].props().min = envFreqTime[index].get();
         }
+        updateUi++;
         return *this;
     }
 
@@ -174,6 +179,7 @@ public:
     {
         pitch.setFloat(value);
         pitchMult = pitch.get() + 0.5f;
+        updateUi++;
         return *this;
     }
 
@@ -185,6 +191,7 @@ public:
         if (sampleStart > max) {
             sampleStart = max;
         }
+        updateUi++;
         // printf(">>>>>>>>>>>>>>.... sampleStart: %ld (%f bufferSampleCount %ld)\n", sampleStart, morph.get(), bufferSampleCount);
         return *this;
     }
@@ -193,6 +200,7 @@ public:
     {
         duration.setFloat(value);
         sampleCountDuration = duration.getAsInt() * (sampleRate * 0.0001f);
+        updateUi++;
         // printf(">>>>>>>>>>>>>>.... sampleCountDuration: %d (%d)\n", sampleCountDuration, duration.getAsInt());
         return *this;
     }
@@ -217,6 +225,8 @@ public:
 
         bufferSampleCount = sf_read_float(file, bufferSamples, bufferSize);
         sampleCount = bufferSampleCount / (float)ZIC_WAVETABLE_WAVEFORMS_COUNT;
+
+        updateUi++;
 
         return *this;
     }
@@ -262,6 +272,9 @@ public:
                 bufferUi[i] = sample(time, &index);
             }
             return (void*)&bufferUi;
+        }
+        case 1: {
+            return &updateUi;
         }
         }
         return NULL;
