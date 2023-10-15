@@ -265,7 +265,10 @@ public:
     void* data(int id)
     {
         switch (id) {
-        case 0: {
+        case 0: 
+            return &updateUi;
+
+        case 1: {
             float index = 0;
             for (int i = 0; i < ZIC_KICK_UI; i++) {
                 float time = i / (float)ZIC_KICK_UI;
@@ -273,9 +276,10 @@ public:
             }
             return (void*)&bufferUi;
         }
-        case 1: {
-            return &updateUi;
-        }
+        case 2:
+            return &envelopAmp.data;
+        case 3:
+            return &envelopFreq.data;
         }
         return NULL;
     }
