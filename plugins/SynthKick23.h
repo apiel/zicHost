@@ -25,7 +25,7 @@ protected:
     float bufferSamples[bufferSize];
     float bufferUi[ZIC_KICK_UI];
     int updateUiState = 0;
-    std::vector<Envelop::Data> * envelopUi = NULL;
+    std::vector<Envelop::Data>* envelopUi = NULL;
 
     FileBrowser fileBrowser = FileBrowser("../zicHost/wavetables");
 
@@ -51,7 +51,7 @@ protected:
         return bufferSamples[(uint16_t)(*index) + sampleStart] * envAmp;
     }
 
-    void updateUi(std::vector<Envelop::Data> * envData)
+    void updateUi(std::vector<Envelop::Data>* envData)
     {
         envelopUi = envData;
         updateUiState++;
@@ -99,10 +99,10 @@ public:
         , sampleRate(props.sampleRate)
     {
         memset(&sfinfo, 0, sizeof(sfinfo));
-        open(0.0, true);
 
         setPitch(pitch.get());
         setDuration(duration.get());
+        open(0.0, true);
 
         for (int i = 0; i < ZIC_KICK_ENV_AMP_STEP; i++) {
             envAmpMod[i].setFloat(envelopAmp.data[i + 2].modulation);
@@ -118,7 +118,7 @@ public:
             envFreqTime[i].setFloat(envelopFreq.data[i + 1].time);
             if (i > 0) {
                 envFreqTime[i - 1].props().max = envFreqTime[i].get();
-            } else if (i < ZIC_KICK_ENV_FREQ_STEP ) {
+            } else if (i < ZIC_KICK_ENV_FREQ_STEP) {
                 envFreqTime[i + 1].props().min = envFreqTime[i].get();
             }
         }
@@ -244,6 +244,7 @@ public:
         bufferSampleCount = sf_read_float(file, bufferSamples, bufferSize);
         sampleCount = bufferSampleCount / (float)ZIC_WAVETABLE_WAVEFORMS_COUNT;
 
+        sampleDurationCounter = sampleCountDuration;
         updateUi(NULL);
 
         return *this;
