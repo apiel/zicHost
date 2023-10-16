@@ -219,7 +219,6 @@ public:
         duration.setFloat(value);
         sampleCountDuration = duration.getAsInt() * (sampleRate * 0.0001f);
         updateUi(NULL);
-        envelopUi = NULL;
         // printf(">>>>>>>>>>>>>>.... sampleCountDuration: %d (%d)\n", sampleCountDuration, duration.getAsInt());
         return *this;
     }
@@ -246,7 +245,6 @@ public:
         sampleCount = bufferSampleCount / (float)ZIC_WAVETABLE_WAVEFORMS_COUNT;
 
         updateUi(NULL);
-        envelopUi = NULL;
 
         return *this;
     }
