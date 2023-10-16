@@ -24,7 +24,8 @@ protected:
     uint64_t bufferSampleCount = 0;
     float bufferSamples[bufferSize];
     float bufferUi[ZIC_KICK_UI];
-    int updateUi = 0;
+    int updateUiState = 0;
+    std::vector<Envelop::Data> * envelopUi = NULL;
 
     FileBrowser fileBrowser = FileBrowser("../zicHost/wavetables");
 
@@ -48,6 +49,12 @@ protected:
             (*index) -= sampleCount;
         }
         return bufferSamples[(uint16_t)(*index) + sampleStart] * envAmp;
+    }
+
+    void updateUi(std::vector<Envelop::Data> * envData)
+    {
+        envelopUi = envData;
+        updateUiState++;
     }
 
 public:
@@ -136,7 +143,7 @@ public:
     {
         envAmpMod[index].setFloat(value);
         envelopAmp.data[index + 2].modulation = envAmpMod[index].get();
-        updateUi++;
+        updateUi(&envelopAmp.data);
         return *this;
     }
 
@@ -153,7 +160,7 @@ public:
         } else if (index < 3) {
             envAmpTime[index + 1].props().min = envAmpTime[index].get();
         }
-        updateUi++;
+        updateUi(&envelopAmp.data);
         return *this;
     }
 
@@ -165,7 +172,7 @@ public:
     {
         envFreqMod[index].setFloat(value);
         envelopFreq.data[index + 1].modulation = envFreqMod[index].get();
-        updateUi++;
+        updateUi(&envelopFreq.data);
         return *this;
     }
 
@@ -182,7 +189,7 @@ public:
         } else if (index < 3) {
             envFreqTime[index + 1].props().min = envFreqTime[index].get();
         }
-        updateUi++;
+        updateUi(&envelopFreq.data);
         return *this;
     }
 
@@ -190,7 +197,7 @@ public:
     {
         pitch.setFloat(value);
         pitchMult = pitch.get() + 0.5f;
-        updateUi++;
+        updateUi(NULL);
         return *this;
     }
 
@@ -202,7 +209,7 @@ public:
         if (sampleStart > max) {
             sampleStart = max;
         }
-        updateUi++;
+        updateUi(NULL);
         // printf(">>>>>>>>>>>>>>.... sampleStart: %ld (%f bufferSampleCount %ld)\n", sampleStart, morph.get(), bufferSampleCount);
         return *this;
     }
@@ -211,7 +218,8 @@ public:
     {
         duration.setFloat(value);
         sampleCountDuration = duration.getAsInt() * (sampleRate * 0.0001f);
-        updateUi++;
+        updateUi(NULL);
+        envelopUi = NULL;
         // printf(">>>>>>>>>>>>>>.... sampleCountDuration: %d (%d)\n", sampleCountDuration, duration.getAsInt());
         return *this;
     }
@@ -237,7 +245,8 @@ public:
         bufferSampleCount = sf_read_float(file, bufferSamples, bufferSize);
         sampleCount = bufferSampleCount / (float)ZIC_WAVETABLE_WAVEFORMS_COUNT;
 
-        updateUi++;
+        updateUi(NULL);
+        envelopUi = NULL;
 
         return *this;
     }
@@ -275,7 +284,7 @@ public:
     {
         switch (id) {
         case 0:
-            return &updateUi;
+            return &updateUiState;
 
         case 1: {
             unsigned int ampIndex = 0;
@@ -290,9 +299,7 @@ public:
             return (void*)&bufferUi;
         }
         case 2:
-            return &envelopAmp.data;
-        case 3:
-            return &envelopFreq.data;
+            return envelopUi;
         }
         return NULL;
     }
