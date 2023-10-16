@@ -4,10 +4,9 @@
 #include <vector>
 
 class Envelop {
-protected:
+public:
     unsigned int index = 0;
 
-public:
     struct Data {
         float modulation;
         float time;
@@ -20,18 +19,23 @@ public:
     {
     }
 
-    float next(float time)
+    float next(float time, unsigned int* indexPtr)
     {
-        if (index > data.size() - 1) {
+        if (*indexPtr > data.size() - 1) {
             return 0.0f;
         }
 
-        if (time >= data[index + 1].time) {
-            index++;
+        if (time >= data[*indexPtr + 1].time) {
+            (*indexPtr)++;
         }
-        float timeOffset = data[index + 1].time - data[index].time;
-        float timeRatio = (time - data[index].time) / timeOffset;
-        return (data[index + 1].modulation - data[index].modulation) * timeRatio + data[index].modulation;
+        float timeOffset = data[*indexPtr + 1].time - data[*indexPtr].time;
+        float timeRatio = (time - data[*indexPtr].time) / timeOffset;
+        return (data[*indexPtr + 1].modulation - data[*indexPtr].modulation) * timeRatio + data[*indexPtr].modulation;
+    }
+
+    float next(float time)
+    {
+        return next(time, &index);
     }
 
     void reset()

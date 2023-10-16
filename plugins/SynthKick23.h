@@ -39,12 +39,9 @@ protected:
     Envelop envelopAmp = Envelop({ { 0.0f, 0.0f }, { 1.0f, 0.01f }, { 0.3f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } });
     Envelop envelopFreq = Envelop({ { 1.0f, 0.0f }, { 0.26f, 0.03f }, { 0.24f, 0.35f }, { 0.22f, 0.4f }, { 0.0f, 1.0f }, { 0.0f, 1.0f } });
 
-    float sample(float time, float* index)
+    float sample(float time, float* index, float envAmp, float envFreq)
     {
-        float envFreq = envelopFreq.next(time);
-        float envAmp = envelopAmp.next(time);
-
-        printf("(%f) envAmp %f envFreq %f\n", time, envAmp, envFreq);
+        // printf("(%f) envAmp %f envFreq %f\n", time, envAmp, envFreq);
 
         (*index) += pitchMult * envFreq;
         while ((*index) >= sampleCount) {
@@ -124,7 +121,9 @@ public:
     {
         if (sampleDurationCounter < sampleCountDuration) {
             float time = (float)sampleDurationCounter / (float)sampleCountDuration;
-            buf[track] = sample(time, &sampleIndex);
+            float envAmp = envelopAmp.next(time);
+            float envFreq = envelopFreq.next(time);
+            buf[track] = sample(time, &sampleIndex, envAmp, envFreq);
             sampleDurationCounter++;
         }
     }
@@ -264,8 +263,6 @@ public:
 
     void noteOn(uint8_t note, uint8_t velocity) override
     {
-        printf("kick noteOn\n");
-
         // Could change the frequency base on the note...
         // Could change the amplitude base on the velocity...
         sampleIndex = 0;
@@ -281,12 +278,14 @@ public:
             return &updateUi;
 
         case 1: {
-            envelopAmp.reset(); // FIXME cannot be
-            envelopFreq.reset(); // FIXME cannot be
+            unsigned int ampIndex = 0;
+            unsigned int freqIndex = 0;
             float index = 0;
             for (int i = 0; i < ZIC_KICK_UI; i++) {
                 float time = i / (float)ZIC_KICK_UI;
-                bufferUi[i] = sample(time, &index);
+                float envAmp = envelopAmp.next(time, &ampIndex);
+                float envFreq = envelopFreq.next(time, &freqIndex);
+                bufferUi[i] = sample(time, &index, envAmp, envFreq);
             }
             return (void*)&bufferUi;
         }
