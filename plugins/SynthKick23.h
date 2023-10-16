@@ -109,7 +109,7 @@ public:
             envAmpTime[i].setFloat(envelopAmp.data[i + 2].time);
             if (i > 0) {
                 envAmpTime[i - 1].props().max = envAmpTime[i].get();
-            } else if (i < 3) {
+            } else if (i < ZIC_KICK_ENV_AMP_STEP) {
                 envAmpTime[i + 1].props().min = envAmpTime[i].get();
             }
         }
@@ -118,7 +118,7 @@ public:
             envFreqTime[i].setFloat(envelopFreq.data[i + 1].time);
             if (i > 0) {
                 envFreqTime[i - 1].props().max = envFreqTime[i].get();
-            } else if (i < 3) {
+            } else if (i < ZIC_KICK_ENV_FREQ_STEP ) {
                 envFreqTime[i + 1].props().min = envFreqTime[i].get();
             }
         }
@@ -157,7 +157,7 @@ public:
         envelopAmp.data[index + 2].time = envAmpTime[index].get();
         if (index > 0) {
             envAmpTime[index - 1].props().max = envAmpTime[index].get();
-        } else if (index < 3) {
+        } else if (index < ZIC_KICK_ENV_AMP_STEP) {
             envAmpTime[index + 1].props().min = envAmpTime[index].get();
         }
         updateUi(&envelopAmp.data);
@@ -186,7 +186,7 @@ public:
         envelopFreq.data[index + 1].time = envFreqTime[index].get();
         if (index > 0) {
             envFreqTime[index - 1].props().max = envFreqTime[index].get();
-        } else if (index < 3) {
+        } else if (index < ZIC_KICK_ENV_FREQ_STEP) {
             envFreqTime[index + 1].props().min = envFreqTime[index].get();
         }
         updateUi(&envelopFreq.data);
