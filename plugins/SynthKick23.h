@@ -107,20 +107,10 @@ public:
         for (int i = 0; i < ZIC_KICK_ENV_AMP_STEP; i++) {
             envAmpMod[i].setFloat(envelopAmp.data[i + 2].modulation);
             envAmpTime[i].setFloat(envelopAmp.data[i + 2].time);
-            if (i > 0) {
-                envAmpTime[i - 1].props().max = envAmpTime[i].get();
-            } else if (i < ZIC_KICK_ENV_AMP_STEP) {
-                envAmpTime[i + 1].props().min = envAmpTime[i].get();
-            }
         }
         for (int i = 0; i < ZIC_KICK_ENV_FREQ_STEP; i++) {
             envFreqMod[i].setFloat(envelopFreq.data[i + 1].modulation);
             envFreqTime[i].setFloat(envelopFreq.data[i + 1].time);
-            if (i > 0) {
-                envFreqTime[i - 1].props().max = envFreqTime[i].get();
-            } else if (i < ZIC_KICK_ENV_FREQ_STEP) {
-                envFreqTime[i + 1].props().min = envFreqTime[i].get();
-            }
         }
     }
 
@@ -153,13 +143,14 @@ public:
     SynthKick23& setEnvAmpTime4(float value) { return setEnvAmpTime(value, 3); }
     SynthKick23& setEnvAmpTime(float value, uint8_t index)
     {
+        if (index > 0 && envAmpTime[index - 1].get() > value) {
+            return *this;
+        }
+        if (index < ZIC_KICK_ENV_AMP_STEP - 1 && envAmpTime[index + 1].get() < value) {
+            return *this;
+        }
         envAmpTime[index].setFloat(value);
         envelopAmp.data[index + 2].time = envAmpTime[index].get();
-        if (index > 0) {
-            envAmpTime[index - 1].props().max = envAmpTime[index].get();
-        } else if (index < ZIC_KICK_ENV_AMP_STEP) {
-            envAmpTime[index + 1].props().min = envAmpTime[index].get();
-        }
         updateUi(&envelopAmp.data);
         return *this;
     }
@@ -182,13 +173,14 @@ public:
     SynthKick23& setEnvFreqTime4(float value) { return setEnvFreqTime(value, 3); }
     SynthKick23& setEnvFreqTime(float value, uint8_t index)
     {
+        if (index > 0 && envFreqTime[index - 1].get() > value) {
+            return *this;
+        }
+        if (index < ZIC_KICK_ENV_FREQ_STEP - 1 && envFreqTime[index + 1].get() < value) {
+            return *this;
+        }
         envFreqTime[index].setFloat(value);
         envelopFreq.data[index + 1].time = envFreqTime[index].get();
-        if (index > 0) {
-            envFreqTime[index - 1].props().max = envFreqTime[index].get();
-        } else if (index < ZIC_KICK_ENV_FREQ_STEP) {
-            envFreqTime[index + 1].props().min = envFreqTime[index].get();
-        }
         updateUi(&envelopFreq.data);
         return *this;
     }
