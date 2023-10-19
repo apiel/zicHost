@@ -1,12 +1,10 @@
 # TODO
 
-- MIXER track=1 vs track_b... should it be track_1 but ...?
+TODO
+- TODO getAsInt, instead to have step start and step multiplier, make a pointer function de redefine it...
+- TODO should there be as well a getStep() return the step for increment or decrement???
+TODO
 
-- TODO sequencer can configure target
-            - would there be a way to use track number??
-
-- TODO Zic_Drum_Kick23 give possibility to play sample in the same time as the engine...
-       Should it be also possible to record the generated kick inside a sample?
 
 - TODO save sequencer state
 
@@ -15,6 +13,11 @@
             - play wavetable (give the possibility to give sample coutn instead of len, lock spray, and maybe morphing by bank)
 
 - TODO tempo plugin, that would shalow midi clock in favour of custom clock
+
+- TODO MIXER track=1 vs track_b... should it be track_1 but ...?
+
+- TODO Zic_Drum_Kick23 give possibility to play sample in the same time as the engine...
+       Should it be also possible to record the generated kick inside a sample?
 
 - TODO puredata plugin
 
@@ -26,7 +29,8 @@
                 base on this state, we can create config files...
      - add lfo on time ratio
 
-- INFO should sequencer use track...?
+- INFO could sequencer use track...?
+- TODO make sequencer being to have multiple target
 
 - INFO IPC in order to have a main thread that is running all the time, even if the rest crash...
        https://en.wikipedia.org/wiki/Inter-process_communication

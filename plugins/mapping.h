@@ -55,7 +55,8 @@ public:
 
     inline int getAsInt()
     {
-        return value_f * _props.stepMultiplier * (_props.stepCount - 1) + _props.stepStart;
+        // printf("%f * %f * (%d - 1) + %d\n", value_f, _props.stepMultiplier, _props.stepCount, _props.stepStart);
+        return round(value_f * _props.stepMultiplier * (_props.stepCount - 1) + _props.stepStart);
     }
 
     char* string()

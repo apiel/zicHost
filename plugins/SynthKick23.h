@@ -143,6 +143,9 @@ public:
     SynthKick23& setEnvAmpTime4(float value) { return setEnvAmpTime(value, 3); }
     SynthKick23& setEnvAmpTime(float value, uint8_t index)
     {
+        if (value <= 0.0f) {
+            return *this;
+        }
         if (index > 0 && envAmpTime[index - 1].get() >= value) {
             return *this;
         }
@@ -173,6 +176,9 @@ public:
     SynthKick23& setEnvFreqTime4(float value) { return setEnvFreqTime(value, 3); }
     SynthKick23& setEnvFreqTime(float value, uint8_t index)
     {
+        if (value <= 0.0f) {
+            return *this;
+        }
         if (index > 0 && envFreqTime[index - 1].get() > value) {
             return *this;
         }
