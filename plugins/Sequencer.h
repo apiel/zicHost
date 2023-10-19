@@ -67,6 +67,7 @@ const uint8_t MAX_STEPS = 32;
 
 class Sequencer : public Mapping<Sequencer> {
 protected:
+AudioPlugin::Props &props;
     const char* folder = "../zicHost/patterns/";
     char patternFilename[255];
     Step steps[MAX_STEPS];
@@ -78,7 +79,7 @@ protected:
 
     bool active = false;
 
-    AudioPlugin& targetPlugin;
+    AudioPlugin* targetPlugin = NULL;
 
     void resetStep(Step& step)
     {
@@ -107,15 +108,15 @@ protected:
                 Step& step = steps[i];
                 if (step.counter) {
                     step.counter--;
-                    if (step.counter == 0) {
-                        targetPlugin.noteOff(step.note, 0);
+                    if (targetPlugin && step.counter == 0) {
+                        targetPlugin->noteOff(step.note, 0);
                     }
                 }
             }
             Step& step = steps[stepCounter];
-            if (step.enabled && conditionMet(step)) {
+            if (targetPlugin && step.enabled && conditionMet(step)) {
                 step.counter = step.len;
-                targetPlugin.noteOn(step.note, step.velocity);
+                targetPlugin->noteOn(step.note, step.velocity);
             }
         }
     }
@@ -138,7 +139,7 @@ public:
 
     Sequencer(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
-        , targetPlugin(props.audioPluginHandler->getPlugin("Granular"))
+        , props(props)
     {
         // steps[0].setVelocity(1.0).setLen(8).enabled = true;
         // steps[16].setVelocity(1.0).setNote(52).setLen(16).enabled = true;
@@ -185,8 +186,8 @@ public:
         case AudioPlugin::Status::STOP: {
             active = false;
             for (int i = 0; i < MAX_STEPS; i++) {
-                if (steps[i].counter) {
-                    targetPlugin.noteOff(steps[i].note, 0);
+                if (targetPlugin && steps[i].counter) {
+                    targetPlugin->noteOff(steps[i].note, 0);
                     steps[i].counter = 0;
                 }
             }
@@ -302,6 +303,15 @@ public:
         FILE* file = fopen(patternFilename, "wb");
         fwrite(steps, sizeof(Step), MAX_STEPS, file);
         fclose(file);
+    }
+
+    bool config(char* key, char* value)
+    {
+        if (strcmp(key, "TARGET") == 0) {
+            targetPlugin = &props.audioPluginHandler->getPlugin(value);
+            return true;
+        }
+        return false;
     }
 };
 

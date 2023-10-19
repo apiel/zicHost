@@ -1,8 +1,9 @@
 # TODO
 
+- MIXER track=1 vs track_b... should it be track_1 but ...?
+
 - TODO sequencer can configure target
-            - use plugin name...
-            - but would there be a way to use track number??
+            - would there be a way to use track number??
 
 - TODO Zic_Drum_Kick23 give possibility to play sample in the same time as the engine...
        Should it be also possible to record the generated kick inside a sample?
