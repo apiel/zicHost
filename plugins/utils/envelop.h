@@ -29,6 +29,9 @@ public:
             (*indexPtr)++;
         }
         float timeOffset = data[*indexPtr + 1].time - data[*indexPtr].time;
+        // if (timeOffset == 0.0f) {
+        //     return data[*indexPtr].modulation;
+        // }
         float timeRatio = (time - data[*indexPtr].time) / timeOffset;
         return (data[*indexPtr + 1].modulation - data[*indexPtr].modulation) * timeRatio + data[*indexPtr].modulation;
     }

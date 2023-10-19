@@ -4,7 +4,8 @@
             - use plugin name...
             - but would there be a way to use track number??
 
-- TODO Zic_Drum_Kick23
+- TODO Zic_Drum_Kick23 give possibility to play sample in the same time as the engine...
+       Should it be also possible to record the generated kick inside a sample?
 
 - TODO save sequencer state
 

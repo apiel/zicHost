@@ -143,10 +143,10 @@ public:
     SynthKick23& setEnvAmpTime4(float value) { return setEnvAmpTime(value, 3); }
     SynthKick23& setEnvAmpTime(float value, uint8_t index)
     {
-        if (index > 0 && envAmpTime[index - 1].get() > value) {
+        if (index > 0 && envAmpTime[index - 1].get() >= value) {
             return *this;
         }
-        if (index < ZIC_KICK_ENV_AMP_STEP - 1 && envAmpTime[index + 1].get() < value) {
+        if (index < ZIC_KICK_ENV_AMP_STEP - 1 && envAmpTime[index + 1].get() <= value) {
             return *this;
         }
         envAmpTime[index].setFloat(value);
