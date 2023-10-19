@@ -45,6 +45,10 @@ public:
             trackTarget = atoi(value);
             return true;
         }
+        if (strcmp(key, "VALUE") == 0) {
+            mix.set(atof(value));
+            return true;
+        }
         return false;
     }
 };

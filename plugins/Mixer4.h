@@ -84,6 +84,22 @@ public:
             divider = atof(value);
             return true;
         }
+        if (strcmp(key, "VALUE_A") == 0) {
+            mixA.set(atof(value));
+            return true;
+        }
+        if (strcmp(key, "VALUE_B") == 0) {
+            mixB.set(atof(value));
+            return true;
+        }
+        if (strcmp(key, "VALUE_C") == 0) {
+            mixC.set(atof(value));
+            return true;
+        }
+        if (strcmp(key, "VALUE_D") == 0) {
+            mixD.set(atof(value));
+            return true;
+        }
         return false;
     }
 };

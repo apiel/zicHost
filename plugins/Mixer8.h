@@ -89,7 +89,7 @@ public:
         mixH.setFloat(value);
         return *this;
     }
-    
+
     bool config(char* key, char* value)
     {
         if (strcmp(key, "TRACK_A") == 0) {
@@ -134,6 +134,38 @@ public:
         }
         if (strcmp(key, "DIVIDER") == 0) {
             divider = atof(value);
+            return true;
+        }
+        if (strcmp(key, "VALUE_A") == 0) {
+            mixA.set(atof(value));
+            return true;
+        }
+        if (strcmp(key, "VALUE_B") == 0) {
+            mixB.set(atof(value));
+            return true;
+        }
+        if (strcmp(key, "VALUE_C") == 0) {
+            mixC.set(atof(value));
+            return true;
+        }
+        if (strcmp(key, "VALUE_D") == 0) {
+            mixD.set(atof(value));
+            return true;
+        }
+        if (strcmp(key, "VALUE_E") == 0) {
+            mixE.set(atof(value));
+            return true;
+        }
+        if (strcmp(key, "VALUE_F") == 0) {
+            mixF.set(atof(value));
+            return true;
+        }
+        if (strcmp(key, "VALUE_G") == 0) {
+            mixG.set(atof(value));
+            return true;
+        }
+        if (strcmp(key, "VALUE_H") == 0) {
+            mixH.set(atof(value));
             return true;
         }
         return false;
