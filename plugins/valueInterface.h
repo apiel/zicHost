@@ -18,14 +18,13 @@ public:
         const char* unit = nullptr;
         int stepStart = 0;
         float stepMultiplier = 1.0f;
-        float min = 0.0f;
-        float max = 1.0f;
     };
 
     virtual const char* key() = 0;
     virtual Props& props() = 0;
     virtual const char* label() = 0;
     virtual inline float get() = 0;
+    virtual void increment(int8_t steps) = 0;
     virtual inline int getAsInt() = 0;
     virtual char* string() = 0;
     virtual void set(float value) = 0;
