@@ -1,11 +1,6 @@
 # TODO
 
-TODO
-- TODO getAsInt, instead to have step start and step multiplier, make a pointer function de redefine it...
-- TODO should there be as well a getStep() return the step for increment or decrement???
-TODO
-
-
+- TODO sequencer cleanup? --> stepCount...
 - TODO save sequencer state
 
 - TODO try to make granular synth more versatile

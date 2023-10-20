@@ -245,7 +245,7 @@ public:
     Sequencer& setStepNote(float value)
     {
         stepNote.setFloat(value);
-        selectedStepPtr->note = stepNote.get() * stepNote.props().stepCount;
+        selectedStepPtr->note = stepNote.get() * stepNote.props().stepCount; // FIXME can this be stepNote.getAsInt()
         stepNote.setString((char*)MIDI_NOTES_STR[selectedStepPtr->note]);
         // printf("Note: %d = %s\n", selectedStepPtr->note, (char*)MIDI_NOTES_STR[selectedStepPtr->note]);
         return *this;
