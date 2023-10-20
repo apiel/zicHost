@@ -67,7 +67,7 @@ const uint8_t MAX_STEPS = 32;
 
 class Sequencer : public Mapping<Sequencer> {
 protected:
-AudioPlugin::Props &props;
+    AudioPlugin::Props& props;
     const char* folder = "../zicHost/patterns/";
     char patternFilename[255];
     Step steps[MAX_STEPS];
@@ -128,11 +128,11 @@ AudioPlugin::Props &props;
     }
 
 public:
-    Val<Sequencer>& detune = val(this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED, .stepStart = 04 });
+    Val<Sequencer>& detune = val(this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED, .asInt = [](int value) { return value - 24; } });
     Val<Sequencer>& pattern = val(this, 0.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" });
-    Val<Sequencer>& selectedStep = val(this, 0.0f, "SELECTED_STEP", &Sequencer::setSelectedStep, { "Step", MAX_STEPS, .stepStart = 1 });
+    Val<Sequencer>& selectedStep = val(this, 0.0f, "SELECTED_STEP", &Sequencer::setSelectedStep, { "Step", MAX_STEPS, .asInt = [](int value) { return value + 1; } });
     Val<Sequencer>& stepVelocity = val(this, 0.0f, "STEP_VELOCITY", &Sequencer::setStepVelocity, { "Velocity" });
-    Val<Sequencer>& stepLength = val(this, 0.0f, "STEP_LENGTH", &Sequencer::setStepLength, { "Len", MAX_STEPS, .stepStart = 1 });
+    Val<Sequencer>& stepLength = val(this, 0.0f, "STEP_LENGTH", &Sequencer::setStepLength, { "Len", MAX_STEPS, .asInt = [](int value) { return value + 1; } });
     Val<Sequencer>& stepCondition = val(this, 0.0f, "STEP_CONDITION", &Sequencer::setStepCondition, { "Condition", STEP_CONDITIONS_COUNT, VALUE_STRING });
     Val<Sequencer>& stepNote = val(this, 0.0f, "STEP_NOTE", &Sequencer::setStepNote, { "Note", MIDI_NOTE_COUNT, VALUE_STRING });
     Val<Sequencer>& stepEnabled = val(this, 0.0f, "STEP_ENABLED", &Sequencer::setStepEnabled, { "Enabled", 2, VALUE_STRING });

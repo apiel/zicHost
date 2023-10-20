@@ -59,9 +59,9 @@ protected:
 
 public:
     Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", fileBrowser.count, VALUE_STRING });
-    Val<SynthKick23>& morph = val(this, 0.0f, "MORPH", &SynthKick23::setMorph, { "Morph", ZIC_WAVETABLE_WAVEFORMS_COUNT, .stepStart = 1 }); // 640, .stepStart = 10, .stepMultiplier = 0.1 });
-    Val<SynthKick23>& pitch = val(this, 0.5f, "PITCH", &SynthKick23::setPitch, { "Pitch", .unit = "%", .stepStart = 50 });
-    Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setDuration, { "Duration", 100, .unit = "ms", .stepStart = 50, .stepMultiplier = 50 });
+    Val<SynthKick23>& morph = val(this, 0.0f, "MORPH", &SynthKick23::setMorph, { "Morph", ZIC_WAVETABLE_WAVEFORMS_COUNT, .asInt = [](int value) { return value + 1; } }); // 640, .stepStart = 10, .stepMultiplier = 0.1 });
+    Val<SynthKick23>& pitch = val(this, 0.5f, "PITCH", &SynthKick23::setPitch, { "Pitch", .unit = "%", .asInt = [](int value) { return value + 50; } });
+    Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setDuration, { "Duration", 100, .unit = "ms", .asInt = [](int value) { return (value * 50) + 50; } });
 
     Val<SynthKick23> envAmpMod[ZIC_KICK_ENV_AMP_STEP] = {
         { this, 0.5f, "ENVELOP_AMP_MOD_1", &SynthKick23::setEnvAmpMod1, { "Amp.Mod.1", .unit = "%" } },

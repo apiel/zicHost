@@ -1,11 +1,9 @@
 #ifndef _MAPPING_H_
 #define _MAPPING_H_
 
-#include <stdint.h>
 #include <math.h>
+#include <stdint.h>
 #include <vector>
-
-#include <stdio.h> // FIXME to remove
 
 #include "../helpers/range.h"
 
@@ -17,7 +15,6 @@ protected:
     T* instance;
     float value_f;
     char* value_s = NULL;
-    float incrementStep = 0.0f;
 
     void (*onUpdatePtr)(float, void* data) = [](float, void* data) {};
     void* onUpdateData = NULL;
@@ -35,8 +32,6 @@ public:
         , _key(_key)
         , callback(_callback)
     {
-         // INFO should this be configurable?
-        incrementStep = 1.0f / (float)(_props.stepCount - 1);
     }
 
     ValueInterface::Props& props()
@@ -61,13 +56,18 @@ public:
 
     void increment(int8_t steps)
     {
-        set(get() + ((float)steps * incrementStep));
+        if (_props.stepCount <= 1) {
+            return;
+        }
+        float incrementStep = 1.0f / (float)(_props.stepCount - 1);
+        float val = get() + ((float)steps * incrementStep);
+        set(val);
     }
 
     inline int getAsInt()
     {
-        // printf("%f * %f * (%d - 1) + %d\n", value_f, _props.stepMultiplier, _props.stepCount, _props.stepStart);
-        return round(value_f * _props.stepMultiplier * (_props.stepCount - 1) + _props.stepStart);
+        int value = round(value_f * (_props.stepCount - 1));
+        return _props.asInt(value);
     }
 
     char* string()

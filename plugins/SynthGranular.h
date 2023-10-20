@@ -191,11 +191,11 @@ public:
     Val<SynthGranular>& start = val(this, 0.0f, "START", &SynthGranular::setStart, { "Start" });
     Val<SynthGranular>& spray = val(this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" });
     Val<SynthGranular>& grainSize = val(this, 1.0f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Size" });
-    Val<SynthGranular>& density = val(this, (float)(1.0 / (float)MAX_GRAINS_PER_VOICE * (float)densityUint8), "DENSITY", &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE - 1, .stepStart = 1 });
+    Val<SynthGranular>& density = val(this, (float)(1.0 / (float)MAX_GRAINS_PER_VOICE * (float)densityUint8), "DENSITY", &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE - 1, .asInt = [](int value) { return value + 1; } });
     Val<SynthGranular>& attack = val(this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 });
     Val<SynthGranular>& release = val(this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 });
     Val<SynthGranular>& delay = val(this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 });
-    Val<SynthGranular>& pitch = val(this, 0.5f, "PITCH", &SynthGranular::setPitch, { "Pitch", 24, VALUE_CENTERED, .stepStart = -12 });
+    Val<SynthGranular>& pitch = val(this, 0.5f, "PITCH", &SynthGranular::setPitch, { "Pitch", 24, VALUE_CENTERED, .asInt = [](int value) { return value - 12; } });
     Val<SynthGranular>& browser = val(this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count, VALUE_STRING });
 
     // TODO add pitch randomization per grain

@@ -16,8 +16,7 @@ public:
         int stepCount = 101; // 100 + 1 for 0
         ValueType type = VALUE_BASIC;
         const char* unit = nullptr;
-        int stepStart = 0;
-        float stepMultiplier = 1.0f;
+        int (*asInt)(int value) = [](int value) { return value; };
     };
 
     virtual const char* key() = 0;
