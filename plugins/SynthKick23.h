@@ -61,7 +61,7 @@ public:
     Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", VALUE_STRING, .max = (float)fileBrowser.count });
     Val<SynthKick23>& morph = val(this, 0.0f, "MORPH", &SynthKick23::setMorph, { "Morph", .min = 1.0, .max = ZIC_WAVETABLE_WAVEFORMS_COUNT, .step = 0.1, .floatingPoint = 1 });
     Val<SynthKick23>& pitch = val(this, 0, "PITCH", &SynthKick23::setPitch, { "Pitch", .min = -12, .max = 12 });
-    Val<SynthKick23>& duration = val(this, 100.0f, "DURATION", &SynthKick23::setDuration, { "Duration", .min = 10.0, .max = 5000.0, .step = 10.0, .unit = "ms" });
+    Val<SynthKick23>& duration = val(this, 100.0f, "DURATION", &SynthKick23::setDuration, { "Duration", .min = 100.0, .max = 5000.0, .step = 100.0, .unit = "ms" });
 
     Val<SynthKick23> envAmpMod[ZIC_KICK_ENV_AMP_STEP] = {
         { this, 50.0f, "ENVELOP_AMP_MOD_1", &SynthKick23::setEnvAmpMod1, { "Amp.Mod.1", .unit = "%" } },
