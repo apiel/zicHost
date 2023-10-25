@@ -13,6 +13,7 @@
 
 - TODO Zic_Drum_Kick23 give possibility to play sample in the same time as the engine...
        Should it be also possible to record the generated kick inside a sample?
+       Could it become a more generic drum engine...
 
 - TODO puredata plugin
 
