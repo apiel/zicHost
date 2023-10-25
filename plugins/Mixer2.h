@@ -6,7 +6,7 @@
 
 class Mixer2 : public Mapping<Mixer2> {
 public:
-    Val<Mixer2>& mix = val(this, 0.5f, "MIX", &Mixer2::setMix, { "Mix", .type = VALUE_CENTERED });
+    Val<Mixer2>& mix = val(this, 50.0f, "MIX", &Mixer2::setMix, { "Mix", .type = VALUE_CENTERED });
     uint16_t trackA = 0;
     uint16_t trackB = 1;
     uint16_t trackTarget = 0;
@@ -18,7 +18,7 @@ public:
 
     void sample(float* buf)
     {
-        buf[trackTarget] = buf[trackA] * (1.0f - mix.get()) + buf[trackB] * mix.get();
+        buf[trackTarget] = buf[trackA] * (1.0f - mix.pct()) + buf[trackB] * mix.pct();
     }
 
     Mixer2& setMix(float value)

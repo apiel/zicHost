@@ -6,7 +6,7 @@
 
 class EffectGainVolume : public Mapping<EffectGainVolume> {
 public:
-    Val<EffectGainVolume>& volume = val(this, 1.0f, "VOLUME", &EffectGainVolume::setVolume, { "Volume" });
+    Val<EffectGainVolume>& volume = val(this, 100.0f, "VOLUME", &EffectGainVolume::setVolume, { "Volume" });
     Val<EffectGainVolume>& gain = val(this, 0.0f, "GAIN", &EffectGainVolume::setGain, { "Gain" });
     float volumeWithGain = volume.get();
 
@@ -31,7 +31,7 @@ public:
     {
         gain.setFloat(_gain);
         volume.setFloat(vol);
-        volumeWithGain = (1.0 + (gain.get() * 4.0)) * volume.get();
+        volumeWithGain = (1.0 + (gain.pct() * 4.0)) * volume.pct();
 
         return *this;
     }

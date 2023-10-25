@@ -23,19 +23,17 @@ protected:
         f = p + p - 1.0f;
         // resonance should be from 0.0 to 0.90, higher values is too high
         q = (_resonance * 0.90) * (1.0f + 0.5f * q * (1.0f - q + 5.6f * q * q));
-
-        debug("mix %f cutoff %f q=%f\n", mix, _cutoff, q);
     }
 
 public:
     // Cutoff mix
-    Val<EffectFilterMultiModeMoog>& mix = val(this, 0.5, "CUTOFF", &EffectFilterMultiModeMoog::setCutoff, { "LPF | HPF", .type = VALUE_CENTERED });
+    Val<EffectFilterMultiModeMoog>& mix = val(this, 50.0, "CUTOFF", &EffectFilterMultiModeMoog::setCutoff, { "LPF | HPF", .type = VALUE_CENTERED });
     Val<EffectFilterMultiModeMoog>& resonance = val(this, 0.0, "RESONANCE", &EffectFilterMultiModeMoog::setResonance, { "Resonance" });
 
     EffectFilterMultiModeMoog(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
     {
-        setCutoff(0.5);
+        setCutoff(50.0);
     };
 
     float sample(float inputValue)
@@ -55,7 +53,7 @@ public:
         // Highpass output:  in - b4;
         // Bandpass output:  3.0f * (b3 - b4);
 
-        return b4 * (1.0 - mix.get()) + (inputValue - b4) * mix.get();
+        return b4 * (1.0 - mix.pct()) + (inputValue - b4) * mix.pct();
     }
 
     void sample(float* buf)
@@ -67,18 +65,18 @@ public:
     {
         mix.setFloat(value);
         if (mix.get() > 0.5) {
-            cutoff = 1 - mix.get() + 0.0707;
+            cutoff = 1 - mix.pct() + 0.0707;
         } else {
-            cutoff = mix.get() + 0.05; // LPF should not be 0.0
+            cutoff = mix.pct() + 0.05; // LPF should not be 0.0
         }
-        calculateVar(cutoff, resonance.get());
+        calculateVar(cutoff, resonance.pct());
         return *this;
     }
 
     EffectFilterMultiModeMoog& setResonance(float value)
     {
         resonance.setFloat(value);
-        calculateVar(cutoff, resonance.get());
+        calculateVar(cutoff, resonance.pct());
         return *this;
     };
 };

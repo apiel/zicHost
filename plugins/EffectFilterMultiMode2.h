@@ -16,13 +16,13 @@ protected:
 
 public:
     // Cutoff mix
-    Val<EffectFilterMultiMode2>& mix = val(this, 0.5, "CUTOFF", &EffectFilterMultiMode2::setCutoff, { "LPF | HPF", .type = VALUE_CENTERED });
+    Val<EffectFilterMultiMode2>& mix = val(this, 50.0, "CUTOFF", &EffectFilterMultiMode2::setCutoff, { "LPF | HPF", .type = VALUE_CENTERED });
     Val<EffectFilterMultiMode2>& resonance = val(this, 0.0, "RESONANCE", &EffectFilterMultiMode2::setResonance, { "Resonance" });
 
     EffectFilterMultiMode2(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
     {
-        setCutoff(0.5);
+        setCutoff(50.0);
     };
 
     float sample(float inputValue)
@@ -34,7 +34,7 @@ public:
         hpf.setSampleData(inputValue);
         lpf.setSampleData(inputValue);
 
-        return lpf.buf1 * (1.0 - mix.get()) + hpf.hp * mix.get();
+        return lpf.buf1 * (1.0 - mix.pct()) + hpf.hp * mix.pct();
     }
 
     void sample(float* buf)
@@ -48,17 +48,15 @@ public:
 
         if (value > 0.5) {
             // 0 to 0.10
-            float cutoff = (0.10 * ((mix.get() - 0.5) * 2)) + 0.00707;
+            float cutoff = (0.10 * ((mix.pct() - 0.5) * 2)) + 0.00707;
             hpf.setCutoff(cutoff);
             lpf.setCutoff(0.99);
         } else {
             // From 0.95 to 0.1
-            float cutoff = 0.85 * (mix.get() * 2) + 0.1;
+            float cutoff = 0.85 * (mix.pct() * 2) + 0.1;
             hpf.setCutoff(0.00707);
             lpf.setCutoff(cutoff);
         }
-
-        debug("Filter: cutoff=%f\n", mix.get());
 
         return *this;
     }
@@ -66,10 +64,8 @@ public:
     EffectFilterMultiMode2& setResonance(float value)
     {
         resonance.setFloat(value);
-        lpf.setResonance(resonance.get());
-        hpf.setResonance(resonance.get());
-
-        debug("Filter: resonance=%f\n", resonance.get());
+        lpf.setResonance(resonance.pct());
+        hpf.setResonance(resonance.pct());
 
         return *this;
     };

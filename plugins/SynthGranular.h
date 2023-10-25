@@ -91,16 +91,16 @@ protected:
         grain.pos = 0.0f;
 
         // sprayToAdd is a random value between 0 and spray from starting point till end of file
-        float sprayToAdd = spray.get() ? (getRandPct() * spray.get() * (1 - start.get())) : 0.0;
-        grain.start = (start.get() + sprayToAdd) * bufferSampleCount;
+        float sprayToAdd = spray.pct() ? (getRandPct() * spray.pct() * (1 - start.pct())) : 0.0;
+        grain.start = (start.pct() + sprayToAdd) * bufferSampleCount;
 
         // we deduct minGrainSampleCount to avoid grainSize to be too small
-        grain.sampleCount = (bufferSampleCount - (grain.start + minGrainSampleCount)) * grainSize.get() + minGrainSampleCount;
+        grain.sampleCount = (bufferSampleCount - (grain.start + minGrainSampleCount)) * grainSize.pct() + minGrainSampleCount;
 
         // delayInt = delay.get() * SAMPLE_RATE * 0.001f * 1000;
         // can be simplified to:
         // delayInt = delay.get() * SAMPLE_RATE;
-        grain.delay = delay.get() > 0 ? (getRand() % (int)(delay.get() * sampleRate)) : 0;
+        grain.delay = delay.pct() > 0 ? (getRand() % (int)(delay.pct() * sampleRate)) : 0;
 
         // debug("initGrain: grain.start %d grain.sampleCount %d grain.delay %d\n", grain.start, grain.sampleCount, grain.delay);
     }
@@ -190,13 +190,13 @@ public:
 
     Val<SynthGranular>& start = val(this, 0.0f, "START", &SynthGranular::setStart, { "Start" });
     Val<SynthGranular>& spray = val(this, 0.0f, "SPRAY", &SynthGranular::setSpray, { "Spray" });
-    Val<SynthGranular>& grainSize = val(this, 1.0f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Size" });
-    Val<SynthGranular>& density = val(this, (float)(1.0 / (float)MAX_GRAINS_PER_VOICE * (float)densityUint8), "DENSITY", &SynthGranular::setDensity, { "Density", MAX_GRAINS_PER_VOICE - 1, .asInt = [](int value) { return value + 1; } });
-    Val<SynthGranular>& attack = val(this, 1 / 5000 * 20, "ATTACK", &SynthGranular::setAttack, { "Attack", 5000 });
-    Val<SynthGranular>& release = val(this, 1 / 10000 * 50, "RELEASE", &SynthGranular::setRelease, { "Release", 10000 });
-    Val<SynthGranular>& delay = val(this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", 1000 });
-    Val<SynthGranular>& pitch = val(this, 0.5f, "PITCH", &SynthGranular::setPitch, { "Pitch", 24, VALUE_CENTERED, .asInt = [](int value) { return value - 12; } });
-    Val<SynthGranular>& browser = val(this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", fileBrowser.count, VALUE_STRING });
+    Val<SynthGranular>& grainSize = val(this, 100.0f, "GRAIN_SIZE", &SynthGranular::setGrainSize, { "Size" });
+    Val<SynthGranular>& density = val(this, (float)densityUint8, "DENSITY", &SynthGranular::setDensity, { "Density", .min = 1.0, .max = MAX_GRAINS_PER_VOICE });
+    Val<SynthGranular>& attack = val(this, 20, "ATTACK", &SynthGranular::setAttack, { "Attack", .min = 20.0, .max = 5000.0, .step = 20.0, .unit = "ms" });
+    Val<SynthGranular>& release = val(this, 50, "RELEASE", &SynthGranular::setRelease, { "Release", .min = 50.0, .max = 10000.0, .step = 50.0, .unit = "ms" });
+    Val<SynthGranular>& delay = val(this, 0.0f, "DELAY", &SynthGranular::setDelay, { "Delay", .max = 1000.0f, .step = 10.0f, .unit = "ms" });
+    Val<SynthGranular>& pitch = val(this, 0.0f, "PITCH", &SynthGranular::setPitch, { "Pitch", VALUE_CENTERED, .min = -12.0, .max = 12.0 });
+    Val<SynthGranular>& browser = val(this, 0.0f, "BROWSER", &SynthGranular::open, { "Browser", VALUE_STRING, .max = (float)fileBrowser.count });
 
     // TODO add pitch randomization per grain
 
@@ -221,7 +221,7 @@ public:
         if (strcmp(key, "SAMPLES_FOLDER") == 0) {
             debug("Granular SAMPLES_FOLDER: %s\n", value);
             fileBrowser.openFolder(value);
-            browser.props().stepCount = fileBrowser.count;
+            browser.props().max = fileBrowser.count;
             open(0.0, true);
 
             return true;
@@ -255,7 +255,7 @@ public:
     SynthGranular& open(float value, bool force)
     {
         browser.setFloat(value);
-        int position = browser.get() * fileBrowser.count;
+        int position = browser.get();
         if (force || position != fileBrowser.position) {
             char* filepath = fileBrowser.getFilePath(position);
             browser.setString(fileBrowser.getFile(position));
@@ -274,7 +274,7 @@ public:
     SynthGranular& setPitch(float value)
     {
         pitch.setFloat(value);
-        pitchSemitone = pitch.get() * 24 - 12;
+        pitchSemitone = pitch.get();
         debug("pitch %d\n", pitchSemitone);
         for (uint8_t v = 0; v < MAX_GRAIN_VOICES; v++) {
             for (uint8_t g = 0; g < MAX_GRAINS_PER_VOICE; g++) {
@@ -320,7 +320,7 @@ public:
     SynthGranular& setDensity(float value)
     {
         density.setFloat(value);
-        densityUint8 = density.get() * (MAX_GRAINS_PER_VOICE - 1) + 1; // 1 to MAX_GRAINS_PER_VOICE
+        densityUint8 = density.get();
         debug("density %d\n", densityUint8);
         return *this;
     }
@@ -348,7 +348,7 @@ public:
     SynthGranular& setDelay(float value)
     {
         delay.setFloat(value);
-        debug("delay %f\n", delay.get());
+        debug("delay %f ms\n", delay.get());
         return *this;
     }
 
@@ -361,9 +361,9 @@ public:
     SynthGranular& setAttack(float value)
     {
         attack.setFloat(value);
-        // uint64_t attackSamples = attack.get() * SAMPLE_RATE * 0.001f * 5000;
+        // uint64_t attackSamples = attack.pct() * SAMPLE_RATE * 0.001f * 5000;
         // can be simplified to:
-        uint64_t attackSamples = attack.get() * sampleRate * 5;
+        uint64_t attackSamples = attack.pct() * sampleRate * 5;
         attackStep = 1.0f / attackSamples;
         debug("attack %ld samples %f step\n", attackSamples, attackStep);
         return *this;
@@ -378,9 +378,9 @@ public:
     SynthGranular& setRelease(float value)
     {
         release.setFloat(value);
-        // uint64_t releaseSamples = release.get() * SAMPLE_RATE * 0.001f * 10000;
+        // uint64_t releaseSamples = release.pct() * SAMPLE_RATE * 0.001f * 10000;
         // can be simplified to:
-        uint64_t releaseSamples = release.get() * sampleRate * 10;
+        uint64_t releaseSamples = release.pct() * sampleRate * 10;
         releaseStep = 1.0f / releaseSamples;
         debug("release %ld samples %f step\n", releaseSamples, releaseStep);
         return *this;

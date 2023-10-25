@@ -26,10 +26,10 @@ protected:
             if (voice.index++ >= buffer.size) {
                 voice.index = 0;
             }
-            if (masterAmplitude.get() && voice.amplitude.get() > 0.0f) {
-                delay += buffer.samples[voice.index] * voice.amplitude.get() * masterAmplitude.get();
-                if (voice.feedback.get() > 0.0f) {
-                    buffer.samples[buffer.index] += delay * voice.feedback.get();
+            if (masterAmplitude.pct() && voice.amplitude.pct() > 0.0f) {
+                delay += buffer.samples[voice.index] * voice.amplitude.pct() * masterAmplitude.pct();
+                if (voice.feedback.pct() > 0.0f) {
+                    buffer.samples[buffer.index] += delay * voice.feedback.pct();
                 }
             }
         }
@@ -46,40 +46,40 @@ protected:
         { 0,
             { this, 0.0, "AMPLITUDE_0", &EffectDelay::setAmplitude0 },
             { this, 0.0, "FEEDBACK_0", &EffectDelay::setFeedback0 },
-            { this, 0.1, "SEC_0", &EffectDelay::setSec0 } },
+            { this, 10.0, "SEC_0", &EffectDelay::setSec0 } }, // FIXME this is not seconds...
         { 1,
             { this, 0.0, "AMPLITUDE_1", &EffectDelay::setAmplitude1 },
             { this, 0.0, "FEEDBACK_1", &EffectDelay::setFeedback1 },
-            { this, 0.1, "SEC_1", &EffectDelay::setSec1 } },
+            { this, 10.0, "SEC_1", &EffectDelay::setSec1 } },
         { 2,
             { this, 0.0, "AMPLITUDE_2", &EffectDelay::setAmplitude2 },
             { this, 0.0, "FEEDBACK_2", &EffectDelay::setFeedback2 },
-            { this, 0.1, "SEC_2", &EffectDelay::setSec2 } },
+            { this, 10.0, "SEC_2", &EffectDelay::setSec2 } },
         { 3,
             { this, 0.0, "AMPLITUDE_3", &EffectDelay::setAmplitude3 },
             { this, 0.0, "FEEDBACK_3", &EffectDelay::setFeedback3 },
-            { this, 0.1, "SEC_3", &EffectDelay::setSec3 } },
+            { this, 10.0, "SEC_3", &EffectDelay::setSec3 } },
         { 4,
             { this, 0.0, "AMPLITUDE_4", &EffectDelay::setAmplitude4 },
             { this, 0.0, "FEEDBACK_4", &EffectDelay::setFeedback4 },
-            { this, 0.1, "SEC_4", &EffectDelay::setSec4 } },
+            { this, 10.0, "SEC_4", &EffectDelay::setSec4 } },
         { 5,
             { this, 0.0, "AMPLITUDE_5", &EffectDelay::setAmplitude5 },
             { this, 0.0, "FEEDBACK_5", &EffectDelay::setFeedback5 },
-            { this, 0.1, "SEC_5", &EffectDelay::setSec5 } },
+            { this, 10.0, "SEC_5", &EffectDelay::setSec5 } },
         { 6,
             { this, 0.0, "AMPLITUDE_6", &EffectDelay::setAmplitude6 },
             { this, 0.0, "FEEDBACK_6", &EffectDelay::setFeedback6 },
-            { this, 0.1, "SEC_6", &EffectDelay::setSec6 } },
+            { this, 10.0, "SEC_6", &EffectDelay::setSec6 } },
         { 7,
             { this, 0.0, "AMPLITUDE_7", &EffectDelay::setAmplitude7 },
             { this, 0.0, "FEEDBACK_7", &EffectDelay::setFeedback7 },
-            { this, 0.1, "SEC_7", &EffectDelay::setSec7 } },
+            { this, 10.0, "SEC_7", &EffectDelay::setSec7 } },
     };
 
 public:
     // From 0.0 to 1.0 to apply time ratio to voice in seconds
-    Val<EffectDelay> timeRatio = { this, 1.0f, "TIME_RATIO", &EffectDelay::setTimeRatio, { "Time Ratio", .unit = "%" } };
+    Val<EffectDelay> timeRatio = { this, 100.0f, "TIME_RATIO", &EffectDelay::setTimeRatio, { "Time Ratio", .unit = "%" } };
     Val<EffectDelay> masterAmplitude = { this, 0.0f, "MASTER_AMPLITUDE", &EffectDelay::setMasterAmplitude, { "Master Amplitude", .unit = "%" } };
 
     // should we inhirate filter so there is no need to defined this...
@@ -105,11 +105,11 @@ public:
         , sampleRate(props.sampleRate)
         , filter(props, _name)
     {
-        setVoice(0, 0.1f, 0.6f, 0.0f);
-        setVoice(1, 0.2f, 0.5f, 0.0f);
-        setVoice(2, 0.3f, 0.4f, 0.0f);
-        setVoice(3, 0.4f, 0.3f, 0.0f);
-        setVoice(4, 0.5f, 0.2f, 0.0f);
+        setVoice(0, 10.0f, 60.0f, 0.0f);
+        setVoice(1, 20.0f, 50.0f, 0.0f);
+        setVoice(2, 30.0f, 40.0f, 0.0f);
+        setVoice(3, 40.0f, 30.0f, 0.0f);
+        setVoice(4, 50.0f, 20.0f, 0.0f);
 
         filter.setResonance(0.95f).setMode(EffectFilter::Mode::HPF);
 
@@ -141,7 +141,7 @@ public:
     EffectDelay& setSec(uint8_t voiceIndex, float sec)
     {
         voices[voiceIndex].sec.setFloat(sec);
-        voices[voiceIndex].index = (buffer.index + buffer.size - (uint64_t)(sampleRate * voices[voiceIndex].sec.get() * timeRatio.get())) % buffer.size;
+        voices[voiceIndex].index = (buffer.index + buffer.size - (uint64_t)(sampleRate * voices[voiceIndex].sec.pct() * timeRatio.pct())) % buffer.size;
         return *this;
     }
 

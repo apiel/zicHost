@@ -13,10 +13,12 @@ class ValueInterface {
 public:
     struct Props {
         const char* label = nullptr;
-        int stepCount = 101; // 100 + 1 for 0
         ValueType type = VALUE_BASIC;
+        float min = 0.0f;
+        float max = 100.0f;
+        float step = 1.00f;
+        uint8_t floatingPoint = 0;
         const char* unit = nullptr;
-        int (*asInt)(int value) = [](int value) { return value; };
     };
 
     virtual const char* key() = 0;
@@ -24,7 +26,7 @@ public:
     virtual const char* label() = 0;
     virtual inline float get() = 0;
     virtual void increment(int8_t steps) = 0;
-    virtual inline int getAsInt() = 0;
+    virtual inline float pct() = 0;
     virtual char* string() = 0;
     virtual void set(float value) = 0;
     virtual void onUpdate(void (*callback)(float, void* data), void* data) = 0;

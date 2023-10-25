@@ -10,7 +10,7 @@ class EffectSampleRateReducer : public Mapping<EffectSampleRateReducer> {
 protected:
     float sampleSqueeze;
     int samplePosition = 0;
-    int sampleStepInt = 0;
+    int sampleStepInt = 0; // Could get rid of this...
 
     float (EffectSampleRateReducer::*samplePtr)(float) = &EffectSampleRateReducer::skipSample;
 
@@ -35,18 +35,18 @@ protected:
     }
 
 public:
-    Val<EffectSampleRateReducer>& sampleStep = val(this, 0, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep, { "Step Reducer", .stepCount = 256, .unit = "steps" });
+    Val<EffectSampleRateReducer>& sampleStep = val(this, 0.0f, "SAMPLE_STEP", &EffectSampleRateReducer::setSampleStep, { "Step Reducer", .max = 256.0, .unit = "steps" });
 
     EffectSampleRateReducer(AudioPlugin::Props& props, char * _name)
         : Mapping(props, _name)
     {
-        setSampleStep(0);
+        setSampleStep(0.0);
     };
 
     EffectSampleRateReducer& setSampleStep(float value)
     {
         sampleStep.setFloat(value);
-        sampleStepInt = sampleStep.get() * sampleStep.props().stepCount;
+        sampleStepInt = sampleStep.get();
         if (sampleStepInt == 0) {
             samplePtr = &EffectSampleRateReducer::skipSample;
             debug("SampleRateReducer: disabled\n");

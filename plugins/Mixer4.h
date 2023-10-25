@@ -6,10 +6,10 @@
 
 class Mixer4 : public Mapping<Mixer4> {
 public:
-    Val<Mixer4>& mixA = val(this, 1.0f, "MIX_A", &Mixer4::setMixA, { "Mix A" });
-    Val<Mixer4>& mixB = val(this, 1.0f, "MIX_B", &Mixer4::setMixB, { "Mix B" });
-    Val<Mixer4>& mixC = val(this, 1.0f, "MIX_C", &Mixer4::setMixC, { "Mix C" });
-    Val<Mixer4>& mixD = val(this, 1.0f, "MIX_D", &Mixer4::setMixD, { "Mix D" });
+    Val<Mixer4>& mixA = val(this, 100.0f, "MIX_A", &Mixer4::setMixA, { "Mix A" });
+    Val<Mixer4>& mixB = val(this, 100.0f, "MIX_B", &Mixer4::setMixB, { "Mix B" });
+    Val<Mixer4>& mixC = val(this, 100.0f, "MIX_C", &Mixer4::setMixC, { "Mix C" });
+    Val<Mixer4>& mixD = val(this, 100.0f, "MIX_D", &Mixer4::setMixD, { "Mix D" });
     uint16_t trackA = 0;
     uint16_t trackB = 1;
     uint16_t trackC = 2;
@@ -24,10 +24,10 @@ public:
 
     void sample(float* buf)
     {
-        buf[trackTarget] = mixA.get() * buf[trackA] * divider
-            + mixB.get() * buf[trackB] * divider
-            + mixC.get() * buf[trackC] * divider
-            + mixD.get() * buf[trackD] * divider;
+        buf[trackTarget] = mixA.pct() * buf[trackA] * divider
+            + mixB.pct() * buf[trackB] * divider
+            + mixC.pct() * buf[trackC] * divider
+            + mixD.pct() * buf[trackD] * divider;
     }
 
     Mixer4& setMixA(float value)

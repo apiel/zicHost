@@ -13,7 +13,7 @@ protected:
 
 public:
     // Cutoff mix
-    Val<EffectFilter>& cutoff = val(this, 0.5, "CUTOFF", &EffectFilter::setCutoff, { "Cutoff" });
+    Val<EffectFilter>& cutoff = val(this, 50.0, "CUTOFF", &EffectFilter::setCutoff, { "Cutoff" });
     Val<EffectFilter>& resonance = val(this, 0.0, "RESONANCE", &EffectFilter::setResonance, { "Resonance" });
 
     enum Mode {
@@ -59,11 +59,11 @@ public:
         cutoff.setFloat(value);
 
         if (mode == LPF) {
-            data.setCutoff(0.85 * cutoff.get() + 0.1);
+            data.setCutoff(0.85 * cutoff.pct() + 0.1);
         } else if (mode == BPF) {
-            data.setCutoff(0.85 * cutoff.get() + 0.1);
+            data.setCutoff(0.85 * cutoff.pct() + 0.1);
         } else { // HPF
-            data.setCutoff((0.20 * cutoff.get()) + 0.00707);
+            data.setCutoff((0.20 * cutoff.pct()) + 0.00707);
         }
 
         return *this;
@@ -72,7 +72,7 @@ public:
     EffectFilter& setResonance(float value)
     {
         resonance.setFloat(value);
-        data.setResonance(resonance.get());
+        data.setResonance(resonance.pct());
 
         return *this;
     };
@@ -87,7 +87,7 @@ public:
     EffectFilter& setMode(float value)
     {
         mode_value.setFloat(value);
-        mode = (Mode)range(mode_value.get() * 100, 0, (uint8_t)MODE_COUNT);
+        mode = (Mode)range((uint8_t)mode_value.get(), 0, (uint8_t)MODE_COUNT);
         return setMode(mode);
     }
 };

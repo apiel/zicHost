@@ -6,14 +6,14 @@
 
 class Mixer8 : public Mapping<Mixer8> {
 public:
-    Val<Mixer8>& mixA = val(this, 1.0f, "MIX_A", &Mixer8::setMixA, { "Mix A" });
-    Val<Mixer8>& mixB = val(this, 1.0f, "MIX_B", &Mixer8::setMixB, { "Mix B" });
-    Val<Mixer8>& mixC = val(this, 1.0f, "MIX_C", &Mixer8::setMixC, { "Mix C" });
-    Val<Mixer8>& mixD = val(this, 1.0f, "MIX_D", &Mixer8::setMixD, { "Mix D" });
-    Val<Mixer8>& mixE = val(this, 1.0f, "MIX_E", &Mixer8::setMixE, { "Mix E" });
-    Val<Mixer8>& mixF = val(this, 1.0f, "MIX_F", &Mixer8::setMixF, { "Mix F" });
-    Val<Mixer8>& mixG = val(this, 1.0f, "MIX_G", &Mixer8::setMixG, { "Mix G" });
-    Val<Mixer8>& mixH = val(this, 1.0f, "MIX_H", &Mixer8::setMixH, { "Mix H" });
+    Val<Mixer8>& mixA = val(this, 100.0f, "MIX_A", &Mixer8::setMixA, { "Mix A" });
+    Val<Mixer8>& mixB = val(this, 100.0f, "MIX_B", &Mixer8::setMixB, { "Mix B" });
+    Val<Mixer8>& mixC = val(this, 100.0f, "MIX_C", &Mixer8::setMixC, { "Mix C" });
+    Val<Mixer8>& mixD = val(this, 100.0f, "MIX_D", &Mixer8::setMixD, { "Mix D" });
+    Val<Mixer8>& mixE = val(this, 100.0f, "MIX_E", &Mixer8::setMixE, { "Mix E" });
+    Val<Mixer8>& mixF = val(this, 100.0f, "MIX_F", &Mixer8::setMixF, { "Mix F" });
+    Val<Mixer8>& mixG = val(this, 100.0f, "MIX_G", &Mixer8::setMixG, { "Mix G" });
+    Val<Mixer8>& mixH = val(this, 100.0f, "MIX_H", &Mixer8::setMixH, { "Mix H" });
     uint16_t trackA = 0;
     uint16_t trackB = 1;
     uint16_t trackC = 2;
@@ -32,14 +32,14 @@ public:
 
     void sample(float* buf)
     {
-        buf[trackTarget] = mixA.get() * buf[trackA] * divider
-            + mixB.get() * buf[trackB] * divider
-            + mixC.get() * buf[trackC] * divider
-            + mixD.get() * buf[trackD] * divider
-            + mixE.get() * buf[trackE] * divider
-            + mixF.get() * buf[trackF] * divider
-            + mixG.get() * buf[trackG] * divider
-            + mixH.get() * buf[trackH] * divider;
+        buf[trackTarget] = mixA.pct() * buf[trackA] * divider
+            + mixB.pct() * buf[trackB] * divider
+            + mixC.pct() * buf[trackC] * divider
+            + mixD.pct() * buf[trackD] * divider
+            + mixE.pct() * buf[trackE] * divider
+            + mixF.pct() * buf[trackF] * divider
+            + mixG.pct() * buf[trackG] * divider
+            + mixH.pct() * buf[trackH] * divider;
     }
 
     Mixer8& setMixA(float value)

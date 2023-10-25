@@ -14,6 +14,7 @@ class Val : public ValueInterface {
 protected:
     T* instance;
     float value_f;
+    float value_pct;
     char* value_s = NULL;
 
     void (*onUpdatePtr)(float, void* data) = [](float, void* data) {};
@@ -28,10 +29,10 @@ public:
     Val(T* instance, float initValue, const char* _key, T& (T::*_callback)(float value), ValueInterface::Props props = {})
         : instance(instance)
         , _props(props)
-        , value_f(initValue)
         , _key(_key)
         , callback(_callback)
     {
+        setFloat(initValue);
     }
 
     ValueInterface::Props& props()
@@ -56,18 +57,7 @@ public:
 
     void increment(int8_t steps)
     {
-        if (_props.stepCount <= 1) {
-            return;
-        }
-        float incrementStep = 1.0f / (float)(_props.stepCount - 1);
-        float val = get() + ((float)steps * incrementStep);
-        set(val);
-    }
-
-    inline int getAsInt()
-    {
-        int value = round(value_f * (_props.stepCount - 1));
-        return _props.asInt(value);
+        set(get() + ((float)steps * _props.step));
     }
 
     char* string()
@@ -82,7 +72,8 @@ public:
 
     void setFloat(float value)
     {
-        value_f = range(value, 0.0f, 1.0f);
+        value_f = range(value, _props.min, _props.max);
+        value_pct = (value_f - _props.min) / (_props.max - _props.min);
     }
 
     void set(float value)
@@ -95,6 +86,11 @@ public:
     {
         onUpdatePtr = callback;
         onUpdateData = data;
+    }
+
+    float pct()
+    {
+        return value_pct;
     }
 };
 

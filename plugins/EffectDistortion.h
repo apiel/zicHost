@@ -54,7 +54,7 @@ public:
             debug("Distortion: disabled\n");
         } else {
             samplePtr = &EffectDistortion::processSample;
-            shape = 2 * (drive.get() - 0.000001) / (1 - (drive.get() - 0.000001));
+            shape = 2 * (drive.get() - 0.0001) / (1 - (drive.get() - 0.0001));
             debug("Distortion: drive=%f shape=%f\n", drive.get(), shape);
         }
         return *this;

@@ -58,34 +58,34 @@ protected:
     }
 
 public:
-    Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", fileBrowser.count, VALUE_STRING });
-    Val<SynthKick23>& morph = val(this, 0.0f, "MORPH", &SynthKick23::setMorph, { "Morph", ZIC_WAVETABLE_WAVEFORMS_COUNT, .asInt = [](int value) { return value + 1; } }); // 640, .stepStart = 10, .stepMultiplier = 0.1 });
-    Val<SynthKick23>& pitch = val(this, 0.5f, "PITCH", &SynthKick23::setPitch, { "Pitch", .unit = "%", .asInt = [](int value) { return value + 50; } });
-    Val<SynthKick23>& duration = val(this, 0.1f, "DURATION", &SynthKick23::setDuration, { "Duration", 100, .unit = "ms", .asInt = [](int value) { return (value * 50) + 50; } });
+    Val<SynthKick23>& browser = val(this, 0.0f, "BROWSER", &SynthKick23::open, { "Browser", VALUE_STRING, .max = (float)fileBrowser.count });
+    Val<SynthKick23>& morph = val(this, 0.0f, "MORPH", &SynthKick23::setMorph, { "Morph", .min = 1.0, .max = ZIC_WAVETABLE_WAVEFORMS_COUNT, .step = 0.1, .floatingPoint = 1 });
+    Val<SynthKick23>& pitch = val(this, 0, "PITCH", &SynthKick23::setPitch, { "Pitch", .min = -12, .max = 12 });
+    Val<SynthKick23>& duration = val(this, 100.0f, "DURATION", &SynthKick23::setDuration, { "Duration", .min = 10.0, .max = 5000.0, .step = 10.0, .unit = "ms" });
 
     Val<SynthKick23> envAmpMod[ZIC_KICK_ENV_AMP_STEP] = {
-        { this, 0.5f, "ENVELOP_AMP_MOD_1", &SynthKick23::setEnvAmpMod1, { "Amp.Mod.1", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_MOD_2", &SynthKick23::setEnvAmpMod2, { "Amp.Mod.2", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_MOD_3", &SynthKick23::setEnvAmpMod3, { "Amp.Mod.3", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_MOD_4", &SynthKick23::setEnvAmpMod4, { "Amp.Mod.4", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_AMP_MOD_1", &SynthKick23::setEnvAmpMod1, { "Amp.Mod.1", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_AMP_MOD_2", &SynthKick23::setEnvAmpMod2, { "Amp.Mod.2", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_AMP_MOD_3", &SynthKick23::setEnvAmpMod3, { "Amp.Mod.3", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_AMP_MOD_4", &SynthKick23::setEnvAmpMod4, { "Amp.Mod.4", .unit = "%" } },
     };
     Val<SynthKick23> envAmpTime[ZIC_KICK_ENV_AMP_STEP] = {
-        { this, 0.5f, "ENVELOP_AMP_TIME_1", &SynthKick23::setEnvAmpTime1, { "Amp.Time 1", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_TIME_2", &SynthKick23::setEnvAmpTime2, { "Amp.Time 2", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_TIME_3", &SynthKick23::setEnvAmpTime3, { "Amp.Time 3", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_AMP_TIME_4", &SynthKick23::setEnvAmpTime4, { "Amp.Time 4", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_AMP_TIME_1", &SynthKick23::setEnvAmpTime1, { "Amp.Time 1", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_AMP_TIME_2", &SynthKick23::setEnvAmpTime2, { "Amp.Time 2", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_AMP_TIME_3", &SynthKick23::setEnvAmpTime3, { "Amp.Time 3", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_AMP_TIME_4", &SynthKick23::setEnvAmpTime4, { "Amp.Time 4", .unit = "%" } },
     };
     Val<SynthKick23> envFreqMod[ZIC_KICK_ENV_FREQ_STEP] = {
-        { this, 0.5f, "ENVELOP_FREQ_MOD_1", &SynthKick23::setEnvFreqMod1, { "Freq.Mod.1", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_MOD_2", &SynthKick23::setEnvFreqMod2, { "Freq.Mod.2", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_MOD_3", &SynthKick23::setEnvFreqMod3, { "Freq.Mod.3", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_MOD_4", &SynthKick23::setEnvFreqMod4, { "Freq.Mod.4", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_FREQ_MOD_1", &SynthKick23::setEnvFreqMod1, { "Freq.Mod.1", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_FREQ_MOD_2", &SynthKick23::setEnvFreqMod2, { "Freq.Mod.2", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_FREQ_MOD_3", &SynthKick23::setEnvFreqMod3, { "Freq.Mod.3", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_FREQ_MOD_4", &SynthKick23::setEnvFreqMod4, { "Freq.Mod.4", .unit = "%" } },
     };
     Val<SynthKick23> envFreqTime[ZIC_KICK_ENV_FREQ_STEP] = {
-        { this, 0.5f, "ENVELOP_FREQ_TIME_1", &SynthKick23::setEnvFreqTime1, { "Freq.Time 1", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_TIME_2", &SynthKick23::setEnvFreqTime2, { "Freq.Time 2", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_TIME_3", &SynthKick23::setEnvFreqTime3, { "Freq.Time 3", .unit = "%" } },
-        { this, 0.5f, "ENVELOP_FREQ_TIME_4", &SynthKick23::setEnvFreqTime4, { "Freq.Time 4", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_FREQ_TIME_1", &SynthKick23::setEnvFreqTime1, { "Freq.Time 1", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_FREQ_TIME_2", &SynthKick23::setEnvFreqTime2, { "Freq.Time 2", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_FREQ_TIME_3", &SynthKick23::setEnvFreqTime3, { "Freq.Time 3", .unit = "%" } },
+        { this, 50.0f, "ENVELOP_FREQ_TIME_4", &SynthKick23::setEnvFreqTime4, { "Freq.Time 4", .unit = "%" } },
     };
 
     SynthKick23(AudioPlugin::Props& props, char* _name)
@@ -105,12 +105,12 @@ public:
         open(0.0, true);
 
         for (int i = 0; i < ZIC_KICK_ENV_AMP_STEP; i++) {
-            envAmpMod[i].setFloat(envelopAmp.data[i + 2].modulation);
-            envAmpTime[i].setFloat(envelopAmp.data[i + 2].time);
+            envAmpMod[i].setFloat(envelopAmp.data[i + 2].modulation * 100.0f);
+            envAmpTime[i].setFloat(envelopAmp.data[i + 2].time * 100.0f);
         }
         for (int i = 0; i < ZIC_KICK_ENV_FREQ_STEP; i++) {
-            envFreqMod[i].setFloat(envelopFreq.data[i + 1].modulation);
-            envFreqTime[i].setFloat(envelopFreq.data[i + 1].time);
+            envFreqMod[i].setFloat(envelopFreq.data[i + 1].modulation * 100.0f);
+            envFreqTime[i].setFloat(envelopFreq.data[i + 1].time * 100.0f);
         }
     }
 
@@ -132,7 +132,7 @@ public:
     SynthKick23& setEnvAmpMod(float value, uint8_t index)
     {
         envAmpMod[index].setFloat(value);
-        envelopAmp.data[index + 2].modulation = envAmpMod[index].get();
+        envelopAmp.data[index + 2].modulation = envAmpMod[index].pct();
         updateUi(&envelopAmp.data);
         return *this;
     }
@@ -153,7 +153,7 @@ public:
             return *this;
         }
         envAmpTime[index].setFloat(value);
-        envelopAmp.data[index + 2].time = envAmpTime[index].get();
+        envelopAmp.data[index + 2].time = envAmpTime[index].pct();
         updateUi(&envelopAmp.data);
         return *this;
     }
@@ -165,7 +165,7 @@ public:
     SynthKick23& setEnvFreqMod(float value, uint8_t index)
     {
         envFreqMod[index].setFloat(value);
-        envelopFreq.data[index + 1].modulation = envFreqMod[index].get();
+        envelopFreq.data[index + 1].modulation = envFreqMod[index].pct();
         updateUi(&envelopFreq.data);
         return *this;
     }
@@ -186,7 +186,7 @@ public:
             return *this;
         }
         envFreqTime[index].setFloat(value);
-        envelopFreq.data[index + 1].time = envFreqTime[index].get();
+        envelopFreq.data[index + 1].time = envFreqTime[index].pct();
         updateUi(&envelopFreq.data);
         return *this;
     }
@@ -194,7 +194,7 @@ public:
     SynthKick23& setPitch(float value)
     {
         pitch.setFloat(value);
-        pitchMult = pitch.get() + 0.5f;
+        pitchMult = pitch.pct() + 0.5f; // FIXME
         updateUi(NULL);
         return *this;
     }
@@ -202,7 +202,7 @@ public:
     SynthKick23& setMorph(float value)
     {
         morph.setFloat(value);
-        sampleStart = morph.get() * bufferSampleCount;
+        sampleStart = morph.pct() * bufferSampleCount;
         uint64_t max = bufferSampleCount / ZIC_WAVETABLE_WAVEFORMS_COUNT * (ZIC_WAVETABLE_WAVEFORMS_COUNT - 1); // TODO make this better :p
         if (sampleStart > max) {
             sampleStart = max;
@@ -215,7 +215,7 @@ public:
     SynthKick23& setDuration(float value)
     {
         duration.setFloat(value);
-        sampleCountDuration = duration.getAsInt() * (sampleRate * 0.0001f);
+        sampleCountDuration = duration.get() * (sampleRate * 0.0001f);
         updateUi(NULL);
         // printf(">>>>>>>>>>>>>>.... sampleCountDuration: %d (%d)\n", sampleCountDuration, duration.getAsInt());
         return *this;
@@ -251,7 +251,7 @@ public:
     SynthKick23& open(float value, bool force)
     {
         browser.setFloat(value);
-        int position = browser.get() * fileBrowser.count;
+        int position = browser.get();
         if (force || position != fileBrowser.position) {
             char* filepath = fileBrowser.getFilePath(position);
             browser.setString(fileBrowser.getFile(position));

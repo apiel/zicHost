@@ -128,14 +128,14 @@ protected:
     }
 
 public:
-    Val<Sequencer>& detune = val(this, 1.0f, "DETUNE", &Sequencer::setDetune, { "Detune", 48, VALUE_CENTERED, .asInt = [](int value) { return value - 24; } });
+    Val<Sequencer>& detune = val(this, 0.0f, "DETUNE", &Sequencer::setDetune, { "Detune", VALUE_CENTERED, -24.0f, 24.0f });
     Val<Sequencer>& pattern = val(this, 0.0f, "PATTERN", &Sequencer::setPattern, { "Pattern" });
-    Val<Sequencer>& selectedStep = val(this, 0.0f, "SELECTED_STEP", &Sequencer::setSelectedStep, { "Step", MAX_STEPS, .asInt = [](int value) { return value + 1; } });
+    Val<Sequencer>& selectedStep = val(this, 0.0f, "SELECTED_STEP", &Sequencer::setSelectedStep, { "Step", .min = 1.0f, .max = MAX_STEPS });
     Val<Sequencer>& stepVelocity = val(this, 0.0f, "STEP_VELOCITY", &Sequencer::setStepVelocity, { "Velocity" });
-    Val<Sequencer>& stepLength = val(this, 0.0f, "STEP_LENGTH", &Sequencer::setStepLength, { "Len", MAX_STEPS, .asInt = [](int value) { return value + 1; } });
-    Val<Sequencer>& stepCondition = val(this, 0.0f, "STEP_CONDITION", &Sequencer::setStepCondition, { "Condition", STEP_CONDITIONS_COUNT, VALUE_STRING });
-    Val<Sequencer>& stepNote = val(this, 0.0f, "STEP_NOTE", &Sequencer::setStepNote, { "Note", MIDI_NOTE_COUNT, VALUE_STRING });
-    Val<Sequencer>& stepEnabled = val(this, 0.0f, "STEP_ENABLED", &Sequencer::setStepEnabled, { "Enabled", 2, VALUE_STRING });
+    Val<Sequencer>& stepLength = val(this, 0.0f, "STEP_LENGTH", &Sequencer::setStepLength, { "Len", .min = 1.0f, .max = MAX_STEPS });
+    Val<Sequencer>& stepCondition = val(this, 1.0f, "STEP_CONDITION", &Sequencer::setStepCondition, { "Condition", VALUE_STRING, .min = 1.0f, .max = (float)STEP_CONDITIONS_COUNT });
+    Val<Sequencer>& stepNote = val(this, 0.0f, "STEP_NOTE", &Sequencer::setStepNote, { "Note", VALUE_STRING, .min = 1.0f, .max = (float)MIDI_NOTE_COUNT });
+    Val<Sequencer>& stepEnabled = val(this, 0.0f, "STEP_ENABLED", &Sequencer::setStepEnabled, { "Enabled", VALUE_STRING, .max = 1 });
 
     Sequencer(AudioPlugin::Props& props, char* _name)
         : Mapping(props, _name)
@@ -213,7 +213,7 @@ public:
     Sequencer& setPattern(float value)
     {
         pattern.set(value);
-        sprintf(patternFilename, "%s/%d.bin", folder, (uint)(pattern.get() * pattern.props().stepCount));
+        sprintf(patternFilename, "%s/%d.bin", folder, (uint)(pattern.get()));
         if (fileExists(patternFilename)) {
             FILE* file = fopen(patternFilename, "rb");
             fread(steps, sizeof(Step), MAX_STEPS, file);
@@ -229,14 +229,14 @@ public:
     Sequencer& setSelectedStep(float value)
     {
         selectedStep.setFloat(value);
-        uint8_t index = selectedStep.get() * MAX_STEPS;
+        uint8_t index = selectedStep.get();
         selectedStepPtr = &steps[index];
         // printf("Selected step: %d note: %d = %s\n", index, selectedStepPtr->note, (char*)MIDI_NOTES_STR[selectedStepPtr->note]);
 
-        stepVelocity.set(selectedStepPtr->velocity);
-        stepLength.set((selectedStepPtr->len - 1) / (float)stepLength.props().stepCount);
-        stepCondition.set(selectedStepPtr->condition / (float)stepCondition.props().stepCount);
-        stepNote.set(selectedStepPtr->note / (float)stepNote.props().stepCount);
+        stepVelocity.set(selectedStepPtr->velocity * 100);
+        stepLength.set(selectedStepPtr->len);
+        stepCondition.set(selectedStepPtr->condition + 1);
+        stepNote.set(selectedStepPtr->note);
         stepEnabled.set(selectedStepPtr->enabled ? 1.0 : 0.0);
 
         return *this;
@@ -245,7 +245,7 @@ public:
     Sequencer& setStepNote(float value)
     {
         stepNote.setFloat(value);
-        selectedStepPtr->note = stepNote.get() * stepNote.props().stepCount; // FIXME can this be stepNote.getAsInt()
+        selectedStepPtr->note = stepNote.get();
         stepNote.setString((char*)MIDI_NOTES_STR[selectedStepPtr->note]);
         // printf("Note: %d = %s\n", selectedStepPtr->note, (char*)MIDI_NOTES_STR[selectedStepPtr->note]);
         return *this;
@@ -254,21 +254,21 @@ public:
     Sequencer& setStepLength(float value)
     {
         stepLength.setFloat(value);
-        selectedStepPtr->len = (stepLength.get() * stepLength.props().stepCount) + 1;
+        selectedStepPtr->len = stepLength.get();
         return *this;
     }
 
     Sequencer& setStepVelocity(float value)
     {
         stepVelocity.setFloat(value);
-        selectedStepPtr->velocity = stepVelocity.get();
+        selectedStepPtr->velocity = stepVelocity.pct();
         return *this;
     }
 
     Sequencer& setStepCondition(float value)
     {
         stepCondition.setFloat(value);
-        selectedStepPtr->condition = stepCondition.get() * (stepCondition.props().stepCount - 1);
+        selectedStepPtr->condition = stepCondition.get() - 1;
         stepCondition.setString((char*)stepConditions[selectedStepPtr->condition].name);
         return *this;
     }
