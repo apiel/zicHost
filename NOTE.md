@@ -1,5 +1,7 @@
 # TODO
 
+- TODO use int value instead of float or float over 1.0...
+
 - TODO sequencer cleanup? --> stepCount...
 - TODO save sequencer state
 

@@ -17,7 +17,7 @@ so:
 
 build:
 	@echo "\n------------------ build ------------------\n"
-	g++ -o zicHost -Wall zicHost.cpp -fopenmp $(BUILD)
+	g++ -g -o zicHost -Wall zicHost.cpp -fopenmp $(BUILD)
 	@echo "\nbuild zicHost done."
 
 run:
